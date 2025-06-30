@@ -41,12 +41,21 @@ jobs:
           apt-get install -y fftw3-dev
           export FFTW_DIR=/usr
 
+          echo "GSL_DIR=$GSL_DIR" >> $GITHUB_ENV
+          echo "FFTW_DIR=$FFTW_DIR" >> $GITHUB_ENV
+
+
           wget https://root.cern/download/root_v6.26.14.Linux-ubuntu22-x86_64-gcc11.4.tar.gz
           tar xvf root_v6.26.14.Linux-ubuntu22-x86_64-gcc11.4.tar.gz
           export ROOTSYS=$PWD/root/
           export ROOT_DIR=$PWD/root/
 
+          echo "ROOTSYS=$ROOTSYS" >> $GITHUB_ENV
+          echo "ROOT_DIR=$ROOT_DIR" >> $GITHUB_ENV
+          
           export GEANT4_DIR=/opt/geant4/
+          echo "GEANT4_DIR=$GEANT4_DIR" >> $GITHUB_ENV
+          
 
 
 
