@@ -21,19 +21,19 @@ jobs:
 
       - name: Add Kitware APT repository key
         run: |
-          sudo apt-get update
-          sudo apt-get install -y gnupg curl
+          apt-get update
+          apt-get install -y gnupg curl
           curl -fsSL https://apt.kitware.com/keys/kitware-archive-latest.asc | \
             gpg --dearmor -o /usr/share/keyrings/kitware-archive-keyring.gpg
           echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ focal main' | \
-            sudo tee /etc/apt/sources.list.d/kitware.list > /dev/null
-          sudo apt-get update
+            tee /etc/apt/sources.list.d/kitware.list > /dev/null
+          apt-get update
 
       - name: Install dependencies (if needed)
         run: |
           #conda install -y cmake make gxx # Add other dependencies here
           #conda clean -a
-          apt-get update
+          # apt-get update
           apt-get install -y qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
           apt-get install libgsl-dev
           export GSL_DIR=/usr
