@@ -140,6 +140,7 @@ class TrackTimeLimiter : public G4VProcess {
 	class ParticleChange : public G4ParticleChange {
 	public:
 		ParticleChange() : G4ParticleChange() { }
+		ParticleChange(const ParticleChange&) = delete;
 	};
 	ParticleChange change;
 public:
@@ -149,7 +150,7 @@ public:
 		limit = 0.0;
 	}
 
-	G4VProcess *clone() { return new TrackTimeLimiter(*this); }
+	G4VProcess *clone() { return new TrackTimeLimiter(maxTime); }
 
 	virtual G4double PostStepGetPhysicalInteractionLength(
 			const G4Track& track, G4double   previousStepSize, 
