@@ -19,12 +19,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up environment (if needed)
-        run: |
-          echo "Environment: $(which python)"
-          python --version
-          root --version
-
       - name: Install dependencies (if needed)
         run: |
           #conda install -y cmake make gxx # Add other dependencies here
