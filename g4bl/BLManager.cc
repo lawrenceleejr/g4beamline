@@ -77,10 +77,12 @@ class ZStepLimiter : public G4VProcess {
 	class ParticleChange : public G4VParticleChange {
 	public:
 		ParticleChange() : G4VParticleChange() { }
+		ParticleChange(const ParticleChange&) = delete;
 	};
 	ParticleChange change;
 public:
-	ZStepLimiter() : G4VProcess("ZStepLimiter",fUserDefined), change() {
+	ZStepLimiter(double _maxStep=0) : G4VProcess("ZStepLimiter",fUserDefined), change() {
+		this->setMaxStep(_maxStep);
 	    G4ParticleTable::G4PTblDicIterator *myParticleIterator =
 			G4ParticleTable::GetParticleTable()->GetIterator();
 	    myParticleIterator->reset();
@@ -96,7 +98,7 @@ public:
 	    }
 	}
 
-	G4VProcess *clone() { return new ZStepLimiter(*this); }
+	G4VProcess *clone() { return new ZStepLimiter(maxStep); }
 
 	static void setMaxStep(G4double ms) { maxStep = ms; }
 
