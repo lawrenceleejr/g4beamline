@@ -1,0 +1,57 @@
+name: CI
+
+# on:
+#   push:
+#     branches: [ main ]
+#   pull_request:
+#     branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    container:
+      image: carlomt/geant4:11.0.2
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up environment (if needed)
+        run: |
+          echo "Environment: $(which python)"
+          python --version
+          root --version
+
+      - name: Install dependencies (if needed)
+        run: |
+          #conda install -y cmake make gxx # Add other dependencies here
+          #conda clean -a
+          apt-get update
+          apt-get install -y qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
+          apt-get install libgsl-dev
+          export GSL_DIR=/usr
+          apt-get install fftw3-dev
+          export FFTW_DIR=/usr
+
+          wget https://root.cern/download/root_v6.26.14.Linux-ubuntu22-x86_64-gcc11.4.tar.gz
+          tar xvf root_v6.26.14.Linux-ubuntu22-x86_64-gcc11.4.tar.gz
+          export ROOTSYS=$PWD/root/
+
+          export GEANT4_DIR=/opt/geant4/
+
+
+
+      - name: Build project
+        run: |
+          mkdir -p build
+          cd build
+          cmake ..
+          cmake --build . --config Release --target install
+
+      - name: Run tests
+        run: |
+          cd build
+          pwd; ls
+          #ctest --output-on-failure
+          # or replace with ./run_tests.sh or pytest
