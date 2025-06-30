@@ -36,9 +36,9 @@ jobs:
           #conda clean -a
           # apt-get update
           apt-get install -y qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
-          apt-get install libgsl-dev
+          apt-get install -y libgsl-dev
           export GSL_DIR=/usr
-          apt-get install fftw3-dev
+          apt-get install -y fftw3-dev
           export FFTW_DIR=/usr
 
           wget https://root.cern/download/root_v6.26.14.Linux-ubuntu22-x86_64-gcc11.4.tar.gz
