@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: carlomt/geant4:11.0.2
+      image: carlomt/geant4:11.1.2-gui
 
     steps:
       - name: Checkout repository
