@@ -1,0 +1,145 @@
+#	macosx_libraries - script to copy libraries into an app bundle
+#	modifying them to use @rpath
+#
+#	NOTE: all executables must be linked with @rpath set to $DEST.
+#	They can have other @rpath-s as well.
+#
+#	Mac OS X only.
+#
+#	USAGE: macosx_libraries application.app
+#	OR:    macosx_libraries .  (simple dir structure: bin, lib, and plugins)
+#
+#	Processes files in directories in DIRLIST (recursive).
+#	Copies in all shared objects whose names do not match SYSTEM_PATTERN.
+#	Library names should either be absolute paths or relative to FRAMEWORKS.
+
+set -e	# kill a build on failure so you'll see it
+echo macosx_libraries begun
+
+if test -d "$1/Contents"
+then
+	DIRLIST="$1/Contents/MacOS $1/Contents/lib $1/Contents/plugins"
+	DEST="$1/Contents/lib"
+else
+	DIRLIST="$1/bin $1/lib $1/plugins"
+	DEST="$1/lib"
+fi
+
+EXEORLIB='Mach-O'
+FRAMEWORKS="/Library/Frameworks"
+SYSTEM_PATTERN="^/System|^/usr/lib"
+
+mkdir -p "$DEST"
+
+###
+### copy libs that get missed -- these are referenced only via @rpath
+### in Root or Qt, and it's hard to figure that out; this is much simpler
+###
+cp /usr/local/lib/libpcre.1.dylib $DEST
+#cp $ROOTSYS/lib/root/libROOTNTuple.so $DEST
+#cp $ROOTSYS/lib/root/libROOTVecOps.so $DEST
+#cp $ROOTSYS/lib/root/libRIO.so $DEST
+#cp $ROOTSYS/lib/root/libCling.so $DEST
+#cp /usr/local/opt/xz/lib/liblzma.5.dylib $DEST
+#cp /usr/local/opt/lz4/lib/liblz4.1.dylib $DEST
+#cp /usr/local/opt/zstd/lib/libzstd.1.dylib $DEST
+#cp /usr/local/opt/tbb/lib/libtbb.12.dylib $DEST
+#cp /usr/local/opt/openssl@1.1/lib/libssl.1.1.dylib $DEST
+#cp /usr/local/opt/sqlite/lib/libsqlite3.0.dylib $DEST
+chmod u+w $DEST/*
+
+###
+### Get DIRS to be directories in DIRLIST that exist
+###
+DIRS=""
+for i in $DIRLIST
+do
+	if test -d "$i"
+	then
+		DIRS+=" $i"
+	fi
+done
+
+###
+### copy all non-system libraries into the app bundle
+###
+TEMP=$(mktemp)
+trap "rm $TEMP" EXIT
+for recursion in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 # limit
+do
+    MORE=false
+    find $DIRS -type f >$TEMP
+    while read F
+    do
+	# skip other file types
+	if ! file "$F" | grep -q "$EXEORLIB"; then continue; fi
+	# get the ID and libraries referenced by $F
+	LIBS=`otool -L "$F" | grep "^\t" | sed -e 's/^.//' -e 's/ (.*//'`
+	for L in $LIBS
+	do
+		# F is the EXEORLIB file; L is a library it references
+		# handle @rpath in L
+		if echo "$L" | grep -q '^@rpath'
+		then
+			LDIR=$(dirname "$F") 
+			L=$(echo $L | sed "s%^@rpath%$LDIR%")
+		fi
+		# skip libs with relative path
+		if echo "$L" | grep -q '^@'; then continue; fi
+		# skip system libs
+		if echo "$L" | egrep -q $SYSTEM_PATTERN; then continue; fi
+		# skip my id
+		if test `basename "$F"` = `basename $L`; then continue; fi
+		# copy $L if necessary
+		B=`basename "$L"`
+		if test -r "$L" -a ! -r "$DEST/$B"
+		then
+			cp "$L" "$DEST"
+			chmod u+w "$DEST/$B"
+			echo macosx_libraries copied "$L"
+			MORE=true
+		elif test -r "$FRAMEWORKS/$L" -a ! -r "$DEST/$B"
+		then
+			cp "$FRAMEWORKS/$L" "$DEST"
+			chmod u+w "$DEST/$B"
+			echo macosx_libraries copied "$FRAMEWORKS/$L"
+			MORE=true
+		fi
+	done
+    done <$TEMP
+    if ! $MORE; then break; fi
+done
+
+###
+### change the ID of each lib, and the path to each lib that is referenced
+###
+find $DIRS -type f | while read F
+do
+	# skip other file types
+	if ! file "$F" | grep -q "$EXEORLIB"; then continue; fi
+	# get the ID and libraries referenced by $F
+	LIBS=`otool -L "$F" | grep "^\t" | sed -e 's/^.//' -e 's/ (.*//'`
+	for L in $LIBS
+	do
+		# F is the EXEORLIB file; L is a library it references
+		B=`basename "$L"`
+		# skip libs with relative path
+		if echo "$L" | grep -q '^@'; then continue; fi
+		# skip system libs
+		if echo "$L" | egrep -q $SYSTEM_PATTERN; then continue; fi
+		# change id
+		if test `basename "$F"` = `basename $L`
+		then
+		    install_name_tool -id "@rpath/$B" "$F"
+		    #echo macosx_libraries change id of $(basename "$F")
+		    continue
+		fi
+		if test -r "$DEST/$B"
+		then
+		    #echo macosx_libraries change path of $B in $(basename "$F")
+		    install_name_tool -change "$L" "@rpath/$B" $F
+		fi
+	done
+done
+
+echo macosx_libraries complete recursion=$recursion

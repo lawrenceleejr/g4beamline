@@ -1,0 +1,1041 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DOCUMENT Type="Advanced Installer" CreateVersion="13.7" version="19.9" Modules="simple" RootPath="." Language="en" Id="{0F01B74F-58E1-45F7-8DCA-25348289C29C}">
+  <COMPONENT cid="caphyon.advinst.msicomp.ProjectOptionsComponent">
+    <ROW Name="HiddenItems" Value="AppXAppDetailsComponent;FixupComponent;AppXCapabilitiesComponent;AppXDependenciesComponent;AppXProductDetailsComponent;AppXVisualAssetsComponent;AppXAppDeclarationsComponent;AppXUriRulesComponent;MsiXDiffComponent;MsixManifestEditorComponent"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiPropsComponent">
+    <ROW Property="AI_BITMAP_DISPLAY_MODE" Value="0"/>
+    <ROW Property="AI_CURRENT_YEAR" Value="2022" ValueLocId="-"/>
+    <ROW Property="AI_PACKAGING_TOOL" Value="Advanced Installer 19.9 build de6d6401" ValueLocId="-"/>
+    <ROW Property="AI_UPGRADE" Value="No"/>
+    <ROW Property="ALLUSERS" Value="1" MultiBuildValue="Win32_Release:2"/>
+    <ROW Property="ARPPRODUCTICON" Value="g4blgui.exe" Type="8"/>
+    <ROW Property="ARPURLINFOABOUT" Value="http://g4beamline.muonsinc.com"/>
+    <ROW Property="Manufacturer" Value="Muons, Inc."/>
+    <ROW Property="ProductCode" Value="1033:{12201D43-BA4D-4D0D-B9BA-EDF8C51098B1} " Type="16"/>
+    <ROW Property="ProductLanguage" Value="1033"/>
+    <ROW Property="ProductName" Value="G4beamline"/>
+    <ROW Property="ProductVersion" Value="3.08"/>
+    <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
+    <ROW Property="UpgradeCode" Value="{4CE12A59-30B0-400E-BB8B-A05D122B104A}"/>
+    <ROW Property="WindowsType9X" MultiBuildValue="Win32_Release:Windows 9x/ME" ValueLocId="-"/>
+    <ROW Property="WindowsType9XDisplay" MultiBuildValue="Win32_Release:Windows 9x/ME" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT" MultiBuildValue="Win32_Release:Windows 9x/ME/NT/2000/XP/Vista/Windows 7/Windows 8 x86/Windows 8.1 x86/Windows 10 x86" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT40" MultiBuildValue="Win32_Release:Windows NT 4.0" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT40Display" MultiBuildValue="Win32_Release:Windows NT 4.0" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT50" MultiBuildValue="Win32_Release:Windows 2000" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT50Display" MultiBuildValue="Win32_Release:Windows 2000" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT5X" MultiBuildValue="Win32_Release:Windows XP/2003" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT5XDisplay" MultiBuildValue="Win32_Release:Windows XP/2003" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT64" MultiBuildValue="Win32_Release:Windows Vista x64" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT64Display" MultiBuildValue="Win32_Release:Windows Vista x64" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNTDisplay" MultiBuildValue="Win32_Release:32-bit Windows versions" ValueLocId="-"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiDirsComponent">
+    <ROW Directory="APPDIR" Directory_Parent="TARGETDIR" DefaultDir="APPDIR:." IsPseudoRoot="1"/>
+    <ROW Directory="ConstructG4blicon_Dir" Directory_Parent="g4beamline_Dir" DefaultDir="CONSTR~1|ConstructG4blicon"/>
+    <ROW Directory="DesktopFolder" Directory_Parent="TARGETDIR" DefaultDir="DESKTO~1|DesktopFolder" IsPseudoRoot="1"/>
+    <ROW Directory="Magnets_1_Dir" Directory_Parent="examples_1_Dir" DefaultDir="Magnets"/>
+    <ROW Directory="Magnets_Dir" Directory_Parent="examples_Dir" DefaultDir="Magnets"/>
+    <ROW Directory="PersonalFolder" Directory_Parent="TARGETDIR" DefaultDir="PERSON~1|PersonalFolder" IsPseudoRoot="1"/>
+    <ROW Directory="ProgramMenuFolder" Directory_Parent="TARGETDIR" DefaultDir="PROGRA~1|ProgramMenuFolder" IsPseudoRoot="1"/>
+    <ROW Directory="Resources_Dir" Directory_Parent="APPDIR" DefaultDir="RESOUR~1|Resources"/>
+    <ROW Directory="SHORTCUTDIR" Directory_Parent="TARGETDIR" DefaultDir="SHORTC~1|SHORTCUTDIR" IsPseudoRoot="1"/>
+    <ROW Directory="StartMenuFolder" Directory_Parent="TARGETDIR" DefaultDir="STARTM~1|StartMenuFolder" IsPseudoRoot="1"/>
+    <ROW Directory="TARGETDIR" DefaultDir="SourceDir"/>
+    <ROW Directory="Windows_1_Dir" Directory_Parent="examples_1_Dir" DefaultDir="Windows"/>
+    <ROW Directory="Windows_Dir" Directory_Parent="examples_Dir" DefaultDir="Windows"/>
+    <ROW Directory="audio_Dir" Directory_Parent="plugins_Dir" DefaultDir="audio"/>
+    <ROW Directory="bearer_Dir" Directory_Parent="plugins_Dir" DefaultDir="bearer"/>
+    <ROW Directory="bin_Dir" Directory_Parent="APPDIR" DefaultDir="bin"/>
+    <ROW Directory="canbus_Dir" Directory_Parent="plugins_Dir" DefaultDir="canbus"/>
+    <ROW Directory="designer_Dir" Directory_Parent="plugins_Dir" DefaultDir="designer"/>
+    <ROW Directory="doc_Dir" Directory_Parent="APPDIR" DefaultDir="doc"/>
+    <ROW Directory="examples_1_Dir" Directory_Parent="PersonalFolder" DefaultDir="G4BEAM~1|G4beamlineExamples"/>
+    <ROW Directory="examples_Dir" Directory_Parent="APPDIR" DefaultDir="examples"/>
+    <ROW Directory="g4beamline_Dir" Directory_Parent="share_Dir" DefaultDir="G4BEAM~1|g4beamline"/>
+    <ROW Directory="gamepads_Dir" Directory_Parent="plugins_Dir" DefaultDir="gamepads"/>
+    <ROW Directory="generic_Dir" Directory_Parent="plugins_Dir" DefaultDir="generic"/>
+    <ROW Directory="geometryloaders_Dir" Directory_Parent="plugins_Dir" DefaultDir="GEOMET~1|geometryloaders"/>
+    <ROW Directory="geoservices_Dir" Directory_Parent="plugins_Dir" DefaultDir="GEOSER~1|geoservices"/>
+    <ROW Directory="iconengines_Dir" Directory_Parent="plugins_Dir" DefaultDir="ICONEN~1|iconengines"/>
+    <ROW Directory="imageformats_Dir" Directory_Parent="plugins_Dir" DefaultDir="IMAGEF~1|imageformats"/>
+    <ROW Directory="mediaservice_Dir" Directory_Parent="plugins_Dir" DefaultDir="MEDIAS~1|mediaservice"/>
+    <ROW Directory="platforms_Dir" Directory_Parent="plugins_Dir" DefaultDir="PLATFO~1|platforms"/>
+    <ROW Directory="platformthemes_Dir" Directory_Parent="plugins_Dir" DefaultDir="PLATFO~2|platformthemes"/>
+    <ROW Directory="playlistformats_Dir" Directory_Parent="plugins_Dir" DefaultDir="PLAYLI~1|playlistformats"/>
+    <ROW Directory="plugins_Dir" Directory_Parent="APPDIR" DefaultDir="plugins"/>
+    <ROW Directory="position_Dir" Directory_Parent="plugins_Dir" DefaultDir="position"/>
+    <ROW Directory="printsupport_Dir" Directory_Parent="plugins_Dir" DefaultDir="PRINTS~1|printsupport"/>
+    <ROW Directory="qmltooling_Dir" Directory_Parent="plugins_Dir" DefaultDir="QMLTOO~1|qmltooling"/>
+    <ROW Directory="renderplugins_Dir" Directory_Parent="plugins_Dir" DefaultDir="RENDER~1|renderplugins"/>
+    <ROW Directory="scenegraph_Dir" Directory_Parent="plugins_Dir" DefaultDir="SCENEG~1|scenegraph"/>
+    <ROW Directory="sceneparsers_Dir" Directory_Parent="plugins_Dir" DefaultDir="SCENEP~1|sceneparsers"/>
+    <ROW Directory="sensorgestures_Dir" Directory_Parent="plugins_Dir" DefaultDir="SENSOR~1|sensorgestures"/>
+    <ROW Directory="sensors_Dir" Directory_Parent="plugins_Dir" DefaultDir="sensors"/>
+    <ROW Directory="share_Dir" Directory_Parent="APPDIR" DefaultDir="share"/>
+    <ROW Directory="sqldrivers_Dir" Directory_Parent="plugins_Dir" DefaultDir="SQLDRI~1|sqldrivers"/>
+    <ROW Directory="styles_Dir" Directory_Parent="plugins_Dir" DefaultDir="styles"/>
+    <ROW Directory="test_Dir" Directory_Parent="APPDIR" DefaultDir="test"/>
+    <ROW Directory="texttospeech_Dir" Directory_Parent="plugins_Dir" DefaultDir="TEXTTO~1|texttospeech"/>
+    <ROW Directory="validation_Dir" Directory_Parent="APPDIR" DefaultDir="VALIDA~1|validation"/>
+    <ROW Directory="webview_Dir" Directory_Parent="plugins_Dir" DefaultDir="webview"/>
+    <ROW Directory="xvpics_Dir" Directory_Parent="g4beamline_Dir" DefaultDir="XVPICS~1|.xvpics"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
+    <ROW Component="APPDIR" ComponentId="{B057274E-06E6-4FB0-9E85-D6B2F94D135B}" Directory_="APPDIR" Attributes="0"/>
+    <ROW Component="BUILD.txt.swp" ComponentId="{33887762-E2AD-425B-915E-FDD19E8FBAF5}" Directory_="doc_Dir" Attributes="0" KeyPath="BUILD.txt" Type="0"/>
+    <ROW Component="DS_Store" ComponentId="{03DDE45A-86B9-4A3A-B807-B38AA5D41DE0}" Directory_="g4beamline_Dir" Attributes="0" KeyPath="DS_Store_2" Type="0"/>
+    <ROW Component="DS_Store_1" ComponentId="{A6A42BB8-8764-4396-BAE9-25E910905E8A}" Directory_="ConstructG4blicon_Dir" Attributes="0" KeyPath="DS_Store_3" Type="0"/>
+    <ROW Component="DecaySolenoid" ComponentId="{6675B2A3-555A-4C5A-814F-5932A81C913F}" Directory_="Magnets_Dir" Attributes="0" KeyPath="DecaySolenoid" Type="0"/>
+    <ROW Component="DecaySolenoid_1" ComponentId="{15359C38-76B4-4FC0-9571-39E019D35A2A}" Directory_="Magnets_1_Dir" Attributes="0" KeyPath="DecaySolenoid_1" Type="0"/>
+    <ROW Component="G4FR.dll" ComponentId="{8A600A2C-A42F-4C2C-A2ED-2517020BAD6C}" Directory_="bin_Dir" Attributes="256" KeyPath="G4FR.dll"/>
+    <ROW Component="G4GMocren.dll" ComponentId="{F7188EAC-7EBA-4C3A-99F6-869B7967C8E8}" Directory_="bin_Dir" Attributes="256" KeyPath="G4GMocren.dll"/>
+    <ROW Component="G4OpenGL.dll" ComponentId="{86028C75-43A1-4A5F-B9F0-42446B664EBF}" Directory_="bin_Dir" Attributes="256" KeyPath="G4OpenGL.dll"/>
+    <ROW Component="G4RayTracer.dll" ComponentId="{FE654E13-2C53-48DD-B9D8-0D6C1C144CDE}" Directory_="bin_Dir" Attributes="256" KeyPath="G4RayTracer.dll"/>
+    <ROW Component="G4Tree.dll" ComponentId="{6D70F4FD-2164-44D2-8D9A-1711D6AA347F}" Directory_="bin_Dir" Attributes="256" KeyPath="G4Tree.dll"/>
+    <ROW Component="G4VRML.dll" ComponentId="{78E31DD7-9F6D-43E5-B7C4-C172F06885EF}" Directory_="bin_Dir" Attributes="256" KeyPath="G4VRML.dll"/>
+    <ROW Component="G4analysis.dll" ComponentId="{2C1A63E5-6376-4724-88CD-5D15711276CE}" Directory_="bin_Dir" Attributes="256" KeyPath="G4analysis.dll"/>
+    <ROW Component="G4clhep.dll" ComponentId="{1E56925D-14AB-4F9C-8365-17DD0F09B2DB}" Directory_="bin_Dir" Attributes="256" KeyPath="G4clhep.dll"/>
+    <ROW Component="G4digits_hits.dll" ComponentId="{4B5B21DE-B6DE-4D68-A754-2E1E30A06C84}" Directory_="bin_Dir" Attributes="256" KeyPath="G4digits_hits.dll"/>
+    <ROW Component="G4error_propagation.dll" ComponentId="{5808BF4D-1338-4DE6-9E74-81CFCE4E18C0}" Directory_="bin_Dir" Attributes="256" KeyPath="G4error_propagation.dll"/>
+    <ROW Component="G4event.dll" ComponentId="{2C464310-584E-4707-834A-AFA47DFD2AE7}" Directory_="bin_Dir" Attributes="256" KeyPath="G4event.dll"/>
+    <ROW Component="G4expat.dll" ComponentId="{C7F3B216-D9E8-4DBE-992F-3EB5844AED8D}" Directory_="bin_Dir" Attributes="256" KeyPath="G4expat.dll"/>
+    <ROW Component="G4geometry.dll" ComponentId="{74A38260-0718-4110-AFD0-9323A4C65FE0}" Directory_="bin_Dir" Attributes="256" KeyPath="G4geometry.dll"/>
+    <ROW Component="G4gl2ps.dll" ComponentId="{0E77F1DD-0496-42B9-9505-D28EADBEB87D}" Directory_="bin_Dir" Attributes="256" KeyPath="G4gl2ps.dll"/>
+    <ROW Component="G4global.dll" ComponentId="{4A3CFE9A-A2F7-4008-B0A7-42D69FCF6337}" Directory_="bin_Dir" Attributes="256" KeyPath="G4global.dll"/>
+    <ROW Component="G4graphics_reps.dll" ComponentId="{6C2A0D64-3628-43D7-998F-2A5C453EC292}" Directory_="bin_Dir" Attributes="256" KeyPath="G4graphics_reps.dll"/>
+    <ROW Component="G4intercoms.dll" ComponentId="{591B8089-792D-47F1-A0A9-8E75A8621420}" Directory_="bin_Dir" Attributes="256" KeyPath="G4intercoms.dll"/>
+    <ROW Component="G4interfaces.dll" ComponentId="{13B77696-E036-4590-AE30-49274069A414}" Directory_="bin_Dir" Attributes="256" KeyPath="G4interfaces.dll"/>
+    <ROW Component="G4materials.dll" ComponentId="{2E17A214-6C27-4339-881A-C4DAA4545143}" Directory_="bin_Dir" Attributes="256" KeyPath="G4materials.dll"/>
+    <ROW Component="G4modeling.dll" ComponentId="{DE3869D1-52D5-44C7-BEEA-EAFBB6A14AB1}" Directory_="bin_Dir" Attributes="256" KeyPath="G4modeling.dll"/>
+    <ROW Component="G4parmodels.dll" ComponentId="{9569957D-2FD5-46C6-BE88-8B6AF9F045FD}" Directory_="bin_Dir" Attributes="256" KeyPath="G4parmodels.dll"/>
+    <ROW Component="G4particles.dll" ComponentId="{25A6A24B-0699-4371-9C3A-917B15A44734}" Directory_="bin_Dir" Attributes="256" KeyPath="G4particles.dll"/>
+    <ROW Component="G4persistency.dll" ComponentId="{42512997-BFBD-4957-912C-7D257AF307E9}" Directory_="bin_Dir" Attributes="256" KeyPath="G4persistency.dll"/>
+    <ROW Component="G4physicslists.dll" ComponentId="{F380CEDC-A646-400E-AC13-80A0046EF9D7}" Directory_="bin_Dir" Attributes="256" KeyPath="G4physicslists.dll"/>
+    <ROW Component="G4processes.dll" ComponentId="{5EB4E0EE-92FE-404D-9742-EEBA171B2DE5}" Directory_="bin_Dir" Attributes="256" KeyPath="G4processes.dll"/>
+    <ROW Component="G4ptl.dll" ComponentId="{488E5001-9D76-4CE3-87FC-D02A5BE75BC3}" Directory_="bin_Dir" Attributes="256" KeyPath="G4ptl.dll"/>
+    <ROW Component="G4readout.dll" ComponentId="{67729375-B205-41E0-8494-3A0BAB318B6A}" Directory_="bin_Dir" Attributes="256" KeyPath="G4readout.dll"/>
+    <ROW Component="G4run.dll" ComponentId="{07A6523A-50E2-41FA-BAC6-1EB288FAFC1D}" Directory_="bin_Dir" Attributes="256" KeyPath="G4run.dll"/>
+    <ROW Component="G4tasking.dll" ComponentId="{AAF3E311-EB0D-495A-97AD-98FE9C3673CF}" Directory_="bin_Dir" Attributes="256" KeyPath="G4tasking.dll"/>
+    <ROW Component="G4tools.dll" ComponentId="{724CE3A2-CD13-4D0A-817B-7DB7F9D81E73}" Directory_="bin_Dir" Attributes="256" KeyPath="G4tools.dll"/>
+    <ROW Component="G4track.dll" ComponentId="{57B05D72-DE6C-421E-ADB9-6F5021EC5D5A}" Directory_="bin_Dir" Attributes="256" KeyPath="G4track.dll"/>
+    <ROW Component="G4tracking.dll" ComponentId="{D525DB84-5E07-422E-AAA1-CA3B38B0A3EA}" Directory_="bin_Dir" Attributes="256" KeyPath="G4tracking.dll"/>
+    <ROW Component="G4visHepRep.dll" ComponentId="{051B28A0-493E-4D6E-AAE5-ABB15D522D78}" Directory_="bin_Dir" Attributes="256" KeyPath="G4visHepRep.dll"/>
+    <ROW Component="G4vis_management.dll" ComponentId="{5881DD63-115A-4057-B9ED-13E2E34EA626}" Directory_="bin_Dir" Attributes="256" KeyPath="G4vis_management.dll"/>
+    <ROW Component="G4zlib.dll" ComponentId="{215D7933-CEE1-4A4A-8ABD-A6FA1F6F6441}" Directory_="bin_Dir" Attributes="256" KeyPath="G4zlib.dll"/>
+    <ROW Component="MagnetCapture2.png" ComponentId="{A32E4620-A0AE-480F-BF16-A00F43D76ACE}" Directory_="xvpics_Dir" Attributes="0" KeyPath="MagnetCapture2.png" Type="0"/>
+    <ROW Component="ProductInformation" ComponentId="{5AA9BA7C-2FDF-4E9D-9B1B-2776070190B1}" Directory_="APPDIR" Attributes="260" KeyPath="Version"/>
+    <ROW Component="Qt5Core.dll" ComponentId="{A8894EE1-4A6A-4F32-96D4-EFD8928972AA}" Directory_="bin_Dir" Attributes="256" KeyPath="Qt5Core.dll"/>
+    <ROW Component="Qt5Gui.dll" ComponentId="{937C2939-73C6-498D-8E3E-3EAE271D90CC}" Directory_="bin_Dir" Attributes="256" KeyPath="Qt5Gui.dll"/>
+    <ROW Component="Qt5Network.dll" ComponentId="{5F593E66-C1DE-4C08-897A-7DEDDDDAA659}" Directory_="bin_Dir" Attributes="256" KeyPath="Qt5Network.dll"/>
+    <ROW Component="Qt5OpenGL.dll" ComponentId="{687BB124-24C2-4A34-82B7-79144540773D}" Directory_="bin_Dir" Attributes="256" KeyPath="Qt5OpenGL.dll"/>
+    <ROW Component="Qt5Widgets.dll" ComponentId="{8E0F520C-3F2E-44F4-8638-CA218E7E2D4F}" Directory_="bin_Dir" Attributes="256" KeyPath="Qt5Widgets.dll"/>
+    <ROW Component="SHORTCUTDIR" ComponentId="{C8C8DB9A-7FE8-4882-AFE1-FB7A3F6A20F9}" Directory_="SHORTCUTDIR" Attributes="0"/>
+    <ROW Component="abs300" ComponentId="{4AAE896F-0E72-4542-9D40-9E76E7EB771D}" Directory_="Windows_Dir" Attributes="0" KeyPath="abs300" Type="0"/>
+    <ROW Component="abs300_1" ComponentId="{141A346F-806F-423E-B8A3-4856CD207CA9}" Directory_="Windows_1_Dir" Attributes="0" KeyPath="abs300_1" Type="0"/>
+    <ROW Component="assimpsceneimport.dll" ComponentId="{FCF579FB-0BF8-400E-80DE-7D7BFEC4E507}" Directory_="sceneparsers_Dir" Attributes="256" KeyPath="assimpsceneimport.dll"/>
+    <ROW Component="assimpsceneimportd.dll" ComponentId="{DC8D99C3-2E4C-4C57-B5FE-DDFE0FE5544C}" Directory_="sceneparsers_Dir" Attributes="256" KeyPath="assimpsceneimportd.dll"/>
+    <ROW Component="bend.g4bl" ComponentId="{50914BB9-C57F-46B6-B99B-61C4E7A7F71C}" Directory_="validation_Dir" Attributes="0" KeyPath="bend.g4bl" Type="0"/>
+    <ROW Component="bookmarkFile" ComponentId="{656540F4-2A44-46F9-A540-21B209CEC88B}" Directory_="examples_Dir" Attributes="0" KeyPath="bookmarkFile" Type="0"/>
+    <ROW Component="bookmarkFile_1" ComponentId="{7A98C342-179F-4EDD-8845-8CBE4929BCCF}" Directory_="examples_1_Dir" Attributes="0" KeyPath="bookmarkFile_1" Type="0"/>
+    <ROW Component="bsdtar.exe" ComponentId="{8A8E7F75-05DD-42E0-B011-F0CFB6172EB6}" Directory_="bin_Dir" Attributes="0" KeyPath="bsdtar.exe"/>
+    <ROW Component="bzip2.dll" ComponentId="{ABEB9014-18FE-4DC5-A10D-73140CC74E32}" Directory_="bin_Dir" Attributes="0" KeyPath="bzip2.dll"/>
+    <ROW Component="defaultgeometryloader.dll" ComponentId="{2B394106-BAEC-4704-A5D2-7BE73939ABD0}" Directory_="geometryloaders_Dir" Attributes="256" KeyPath="defaultgeometryloader.dll"/>
+    <ROW Component="defaultgeometryloaderd.dll" ComponentId="{092132F0-9811-4101-AEC6-8C2659EB776D}" Directory_="geometryloaders_Dir" Attributes="256" KeyPath="defaultgeometryloaderd.dll"/>
+    <ROW Component="dsengine.dll" ComponentId="{8CDB93CF-5EEB-4FAB-9385-303547F0BEF4}" Directory_="mediaservice_Dir" Attributes="256" KeyPath="dsengine.dll"/>
+    <ROW Component="dsengined.dll" ComponentId="{D4341D0A-A6DE-4A5D-A766-BA1D80B20BF8}" Directory_="mediaservice_Dir" Attributes="256" KeyPath="dsengined.dll"/>
+    <ROW Component="g4bl.exe" ComponentId="{7F7F5999-D852-441D-B174-C6037E661619}" Directory_="bin_Dir" Attributes="256" KeyPath="g4bl.exe"/>
+    <ROW Component="g4bldata.exe" ComponentId="{35AE450E-5228-439A-9B82-FA6D7376F556}" Directory_="bin_Dir" Attributes="256" KeyPath="g4bldata.exe"/>
+    <ROW Component="g4blgui.exe" ComponentId="{D195F7A9-0F79-47DF-969F-C0E13869FCDA}" Directory_="bin_Dir" Attributes="256" KeyPath="g4blgui.exe"/>
+    <ROW Component="g4blmpi.exe" ComponentId="{99309372-4833-4CA7-B5F3-FA03AC6776B6}" Directory_="bin_Dir" Attributes="256" KeyPath="g4blmpi.exe"/>
+    <ROW Component="g4blsetup.csh" ComponentId="{3B6D8290-26D9-47DC-BC27-1CC0ED02A1B2}" Directory_="bin_Dir" Attributes="0" KeyPath="g4blsetup.csh" Type="0"/>
+    <ROW Component="g4bltest.exe" ComponentId="{8A9A8EB9-49B7-4797-9853-69299B9596AC}" Directory_="bin_Dir" Attributes="256" KeyPath="g4bltest.exe"/>
+    <ROW Component="gltfgeometryloader.dll" ComponentId="{42588A60-1964-44D0-B72C-4C25F327AD31}" Directory_="geometryloaders_Dir" Attributes="256" KeyPath="gltfgeometryloader.dll"/>
+    <ROW Component="gltfgeometryloaderd.dll" ComponentId="{45D6A278-0329-4388-A274-C0BBD8A78EBA}" Directory_="geometryloaders_Dir" Attributes="256" KeyPath="gltfgeometryloaderd.dll"/>
+    <ROW Component="gltfsceneexport.dll" ComponentId="{5242FD74-A458-479A-838C-3C8D1F1031FB}" Directory_="sceneparsers_Dir" Attributes="256" KeyPath="gltfsceneexport.dll"/>
+    <ROW Component="gltfsceneexportd.dll" ComponentId="{25B32803-4D9E-4540-8648-B3EA265BABCB}" Directory_="sceneparsers_Dir" Attributes="256" KeyPath="gltfsceneexportd.dll"/>
+    <ROW Component="gltfsceneimport.dll" ComponentId="{4C22A046-B23A-4ED0-B710-45627641B51B}" Directory_="sceneparsers_Dir" Attributes="256" KeyPath="gltfsceneimport.dll"/>
+    <ROW Component="gltfsceneimportd.dll" ComponentId="{78A359A1-E80E-4DEC-BC36-476A79202E62}" Directory_="sceneparsers_Dir" Attributes="256" KeyPath="gltfsceneimportd.dll"/>
+    <ROW Component="gsl.dll" ComponentId="{0ED0E9E2-F7B4-4078-9C55-BFB704434975}" Directory_="bin_Dir" Attributes="256" KeyPath="gsl.dll"/>
+    <ROW Component="gslcblas.dll" ComponentId="{D279EC18-D508-41D0-B3A5-5F1BF476D962}" Directory_="bin_Dir" Attributes="256" KeyPath="gslcblas.dll"/>
+    <ROW Component="libarchive2.dll" ComponentId="{504D2E42-2968-46F5-9A3D-3E33DD4DE0F1}" Directory_="bin_Dir" Attributes="0" KeyPath="libarchive2.dll"/>
+    <ROW Component="libfftw3f3.dll" ComponentId="{838EEC72-6B2E-48EB-904F-0728F2282DE3}" Directory_="bin_Dir" Attributes="256" KeyPath="libfftw3f3.dll"/>
+    <ROW Component="msvcp140.dll" ComponentId="{5D201371-376F-42E2-B976-F75A01DBB9B4}" Directory_="bin_Dir" Attributes="256" KeyPath="msvcp140.dll"/>
+    <ROW Component="qaxwidget.dll" ComponentId="{9EB55120-B2E7-41F1-9121-D73E31853362}" Directory_="designer_Dir" Attributes="256" KeyPath="qaxwidget.dll"/>
+    <ROW Component="qdirect2d.dll" ComponentId="{67128047-10C4-4FE2-8161-A6BF55E2E4C0}" Directory_="platforms_Dir" Attributes="256" KeyPath="qdirect2d.dll"/>
+    <ROW Component="qdirect2dd.dll" ComponentId="{FEABD34C-519E-4D52-A7AB-88CCECF3C2D8}" Directory_="platforms_Dir" Attributes="256" KeyPath="qdirect2dd.dll"/>
+    <ROW Component="qgenericbearer.dll" ComponentId="{2859BA56-EE51-4CEE-AE96-7F944AEBF51C}" Directory_="bearer_Dir" Attributes="256" KeyPath="qgenericbearer.dll"/>
+    <ROW Component="qgenericbearerd.dll" ComponentId="{AE681108-3E92-45A5-8051-AB9031773459}" Directory_="bearer_Dir" Attributes="256" KeyPath="qgenericbearerd.dll"/>
+    <ROW Component="qgif.dll" ComponentId="{E4492F49-7265-47AA-87BE-CC50533121F3}" Directory_="imageformats_Dir" Attributes="256" KeyPath="qgif.dll"/>
+    <ROW Component="qgifd.dll" ComponentId="{7C63F406-46A6-4F72-B1ED-01D96596FE20}" Directory_="imageformats_Dir" Attributes="256" KeyPath="qgifd.dll"/>
+    <ROW Component="qicns.dll" ComponentId="{FE63FA10-CC65-4D2A-8364-7529FAE38807}" Directory_="imageformats_Dir" Attributes="256" KeyPath="qicns.dll"/>
+    <ROW Component="qicnsd.dll" ComponentId="{1A608E55-2B0F-4C76-9A3C-2DE8CC14D8D4}" Directory_="imageformats_Dir" Attributes="256" KeyPath="qicnsd.dll"/>
+    <ROW Component="qico.dll" ComponentId="{21356C03-5220-43B8-A5FF-D5EE33C14DB9}" Directory_="imageformats_Dir" Attributes="256" KeyPath="qico.dll"/>
+    <ROW Component="qicod.dll" ComponentId="{50FAE8E0-041E-49FF-90A3-8BF8BD2ED730}" Directory_="imageformats_Dir" Attributes="256" KeyPath="qicod.dll"/>
+    <ROW Component="qjpeg.dll" ComponentId="{1186DC98-2C5F-49B5-9F2B-C46F0A75AA10}" Directory_="imageformats_Dir" Attributes="256" KeyPath="qjpeg.dll"/>
+    <ROW Component="qjpegd.dll" ComponentId="{3408D0D5-E908-494F-9736-F48A873BCAB7}" Directory_="imageformats_Dir" Attributes="256" KeyPath="qjpegd.dll"/>
+    <ROW Component="qminimal.dll" ComponentId="{F6BA4DDE-E74A-4207-94F7-DD6E684DC247}" Directory_="platforms_Dir" Attributes="256" KeyPath="qminimal.dll"/>
+    <ROW Component="qminimald.dll" ComponentId="{D251A4B6-C3F6-40A7-98D2-F49F83510EFB}" Directory_="platforms_Dir" Attributes="256" KeyPath="qminimald.dll"/>
+    <ROW Component="qmldbg_debugger.dll" ComponentId="{0E9CCFD1-A883-4496-8356-1BBA62563DDC}" Directory_="qmltooling_Dir" Attributes="256" KeyPath="qmldbg_debugger.dll"/>
+    <ROW Component="qmldbg_debuggerd.dll" ComponentId="{1892F1E2-EE35-4211-A830-ACC897F351B6}" Directory_="qmltooling_Dir" Attributes="256" KeyPath="qmldbg_debuggerd.dll"/>
+    <ROW Component="qmldbg_inspector.dll" ComponentId="{61D406BC-C184-4941-81E7-5755E230AC13}" Directory_="qmltooling_Dir" Attributes="256" KeyPath="qmldbg_inspector.dll"/>
+    <ROW Component="qmldbg_inspectord.dll" ComponentId="{6B8F38F0-5BCD-46FA-B5C4-15B74D1D2B6C}" Directory_="qmltooling_Dir" Attributes="256" KeyPath="qmldbg_inspectord.dll"/>
+    <ROW Component="qmldbg_local.dll" ComponentId="{72EF6CDE-6130-4673-93A7-0B54122D3FEC}" Directory_="qmltooling_Dir" Attributes="256" KeyPath="qmldbg_local.dll"/>
+    <ROW Component="qmldbg_locald.dll" ComponentId="{EFD7207F-5FC5-4870-BC0C-963DE66B1520}" Directory_="qmltooling_Dir" Attributes="256" KeyPath="qmldbg_locald.dll"/>
+    <ROW Component="qmldbg_messages.dll" ComponentId="{6DF949F1-DA6B-43A1-B128-252A7B315227}" Directory_="qmltooling_Dir" Attributes="256" KeyPath="qmldbg_messages.dll"/>
+    <ROW Component="qmldbg_messagesd.dll" ComponentId="{40598509-3638-4BF7-8D7D-D4758965D04B}" Directory_="qmltooling_Dir" Attributes="256" KeyPath="qmldbg_messagesd.dll"/>
+    <ROW Component="qmldbg_native.dll" ComponentId="{9A544F31-54CD-44F7-B930-39BE26D4C14E}" Directory_="qmltooling_Dir" Attributes="256" KeyPath="qmldbg_native.dll"/>
+    <ROW Component="qmldbg_natived.dll" ComponentId="{84A29D8D-82C5-401A-9AB4-AE7383F7B4F6}" Directory_="qmltooling_Dir" Attributes="256" KeyPath="qmldbg_natived.dll"/>
+    <ROW Component="qmldbg_nativedebugger.dll" ComponentId="{18860289-99AE-4F49-B1F1-CAC42F092731}" Directory_="qmltooling_Dir" Attributes="256" KeyPath="qmldbg_nativedebugger.dll"/>
+    <ROW Component="qmldbg_nativedebuggerd.dll" ComponentId="{A6AC1A98-D356-4DAC-9BDA-CC36FB3FCA18}" Directory_="qmltooling_Dir" Attributes="256" KeyPath="qmldbg_nativedebuggerd.dll"/>
+    <ROW Component="qmldbg_preview.dll" ComponentId="{91B7D350-2D34-4FF7-AA49-DF1F4DFEEC2F}" Directory_="qmltooling_Dir" Attributes="256" KeyPath="qmldbg_preview.dll"/>
+    <ROW Component="qmldbg_previewd.dll" ComponentId="{24D3433D-C300-4902-91CC-A0248FD5AEDB}" Directory_="qmltooling_Dir" Attributes="256" KeyPath="qmldbg_previewd.dll"/>
+    <ROW Component="qmldbg_profiler.dll" ComponentId="{25233FE9-4776-47A2-9F9A-22B7C18F32E2}" Directory_="qmltooling_Dir" Attributes="256" KeyPath="qmldbg_profiler.dll"/>
+    <ROW Component="qmldbg_profilerd.dll" ComponentId="{9B4B07BD-9431-4DD6-8499-0D1EE220A6D9}" Directory_="qmltooling_Dir" Attributes="256" KeyPath="qmldbg_profilerd.dll"/>
+    <ROW Component="qmldbg_quickprofiler.dll" ComponentId="{52DEFA9D-683E-4B3D-A456-CEAE854F1627}" Directory_="qmltooling_Dir" Attributes="256" KeyPath="qmldbg_quickprofiler.dll"/>
+    <ROW Component="qmldbg_quickprofilerd.dll" ComponentId="{43365797-FD35-4A9F-809A-1C20D0B67E13}" Directory_="qmltooling_Dir" Attributes="256" KeyPath="qmldbg_quickprofilerd.dll"/>
+    <ROW Component="qmldbg_server.dll" ComponentId="{DD5FA011-88BB-4E91-8590-B31942B2A1A2}" Directory_="qmltooling_Dir" Attributes="256" KeyPath="qmldbg_server.dll"/>
+    <ROW Component="qmldbg_serverd.dll" ComponentId="{41FF8381-517C-42B2-A5E7-4C85DA1F674C}" Directory_="qmltooling_Dir" Attributes="256" KeyPath="qmldbg_serverd.dll"/>
+    <ROW Component="qmldbg_tcp.dll" ComponentId="{DBDF485C-FE5A-407E-8DCE-18BA9FABD49E}" Directory_="qmltooling_Dir" Attributes="256" KeyPath="qmldbg_tcp.dll"/>
+    <ROW Component="qmldbg_tcpd.dll" ComponentId="{94572916-1CC6-4C57-A95E-5C0333B00993}" Directory_="qmltooling_Dir" Attributes="256" KeyPath="qmldbg_tcpd.dll"/>
+    <ROW Component="qoffscreen.dll" ComponentId="{F5EDB123-F529-4947-8907-7BFE84BF4262}" Directory_="platforms_Dir" Attributes="256" KeyPath="qoffscreen.dll"/>
+    <ROW Component="qoffscreend.dll" ComponentId="{376286D2-4E95-499E-BD23-71BBC47A5776}" Directory_="platforms_Dir" Attributes="256" KeyPath="qoffscreend.dll"/>
+    <ROW Component="qquickwidget.dll" ComponentId="{08EE7F12-4045-4573-AB88-2D33E37BDFEE}" Directory_="designer_Dir" Attributes="256" KeyPath="qquickwidget.dll"/>
+    <ROW Component="qsgd3d12backend.dll" ComponentId="{01718861-C930-4613-97CC-FB4846816C86}" Directory_="scenegraph_Dir" Attributes="256" KeyPath="qsgd3d12backend.dll"/>
+    <ROW Component="qsgd3d12backendd.dll" ComponentId="{F3A6F643-A585-4B32-9E59-33137439FA79}" Directory_="scenegraph_Dir" Attributes="256" KeyPath="qsgd3d12backendd.dll"/>
+    <ROW Component="qsqlite.dll" ComponentId="{C2ED8E3F-3FBF-40BF-BC18-E3F60C23E208}" Directory_="sqldrivers_Dir" Attributes="256" KeyPath="qsqlite.dll"/>
+    <ROW Component="qsqlited.dll" ComponentId="{E8643076-22C5-49EB-A99F-FC785CBB9FE0}" Directory_="sqldrivers_Dir" Attributes="256" KeyPath="qsqlited.dll"/>
+    <ROW Component="qsqlodbc.dll" ComponentId="{ADD92200-D596-4B32-8E6C-0159B800E740}" Directory_="sqldrivers_Dir" Attributes="256" KeyPath="qsqlodbc.dll"/>
+    <ROW Component="qsqlodbcd.dll" ComponentId="{99EC75F3-63B1-4779-BA3C-56BD8F1CB988}" Directory_="sqldrivers_Dir" Attributes="256" KeyPath="qsqlodbcd.dll"/>
+    <ROW Component="qsqlpsql.dll" ComponentId="{98B059C8-6CDD-4B74-83EC-B50E1203D7CF}" Directory_="sqldrivers_Dir" Attributes="256" KeyPath="qsqlpsql.dll"/>
+    <ROW Component="qsqlpsqld.dll" ComponentId="{CF5F152E-23DC-4FB1-B5A5-B1D110F9C863}" Directory_="sqldrivers_Dir" Attributes="256" KeyPath="qsqlpsqld.dll"/>
+    <ROW Component="qsvg.dll" ComponentId="{55B2FFFC-CFCB-43AB-9421-2AA474B49148}" Directory_="imageformats_Dir" Attributes="256" KeyPath="qsvg.dll"/>
+    <ROW Component="qsvgd.dll" ComponentId="{615AA7C9-8060-407D-B955-37B81B1E7D46}" Directory_="imageformats_Dir" Attributes="256" KeyPath="qsvgd.dll"/>
+    <ROW Component="qsvgicon.dll" ComponentId="{D86D0FB6-DB6E-4745-9A5B-A4679F46128D}" Directory_="iconengines_Dir" Attributes="256" KeyPath="qsvgicon.dll"/>
+    <ROW Component="qsvgicond.dll" ComponentId="{6B03C514-0D9E-40A5-A7C3-87F660E2B995}" Directory_="iconengines_Dir" Attributes="256" KeyPath="qsvgicond.dll"/>
+    <ROW Component="qt.conf" ComponentId="{FA67FBAD-F220-443B-BBC6-AD50F7A53E5F}" Directory_="Resources_Dir" Attributes="0" KeyPath="qt.conf" Type="0"/>
+    <ROW Component="qtaudio_wasapi.dll" ComponentId="{147A6A27-B3FF-42F8-887A-D48636466E4C}" Directory_="audio_Dir" Attributes="256" KeyPath="qtaudio_wasapi.dll"/>
+    <ROW Component="qtaudio_wasapid.dll" ComponentId="{D6DD44E9-AA8A-4B1F-AA4E-728E8D58873E}" Directory_="audio_Dir" Attributes="256" KeyPath="qtaudio_wasapid.dll"/>
+    <ROW Component="qtaudio_windows.dll" ComponentId="{D2F122C3-6A9D-463E-AD84-944FC82FFF4A}" Directory_="audio_Dir" Attributes="256" KeyPath="qtaudio_windows.dll"/>
+    <ROW Component="qtaudio_windowsd.dll" ComponentId="{A0F018DC-A101-4549-902B-E58544CBE44E}" Directory_="audio_Dir" Attributes="256" KeyPath="qtaudio_windowsd.dll"/>
+    <ROW Component="qtexttospeech_sapi.dll" ComponentId="{1562A591-2296-462E-9C7B-E358198637BB}" Directory_="texttospeech_Dir" Attributes="256" KeyPath="qtexttospeech_sapi.dll"/>
+    <ROW Component="qtexttospeech_sapid.dll" ComponentId="{7840AE9B-B95F-477B-B65D-D4525CC46B27}" Directory_="texttospeech_Dir" Attributes="256" KeyPath="qtexttospeech_sapid.dll"/>
+    <ROW Component="qtga.dll" ComponentId="{E0AA87F4-4979-4CEE-95D4-AC4C1C051B6C}" Directory_="imageformats_Dir" Attributes="256" KeyPath="qtga.dll"/>
+    <ROW Component="qtgad.dll" ComponentId="{1C9248FA-1352-40AE-A041-2108A23226D2}" Directory_="imageformats_Dir" Attributes="256" KeyPath="qtgad.dll"/>
+    <ROW Component="qtgeoservices_esri.dll" ComponentId="{6298130E-B987-458B-A387-68C8A1221826}" Directory_="geoservices_Dir" Attributes="256" KeyPath="qtgeoservices_esri.dll"/>
+    <ROW Component="qtgeoservices_esrid.dll" ComponentId="{AB4399EB-63AF-4ACF-8A6B-7015E2BDA2F7}" Directory_="geoservices_Dir" Attributes="256" KeyPath="qtgeoservices_esrid.dll"/>
+    <ROW Component="qtgeoservices_itemsoverlay.dll" ComponentId="{B422AE22-E4C9-4591-ADB9-63A198E676FD}" Directory_="geoservices_Dir" Attributes="256" KeyPath="qtgeoservices_itemsoverlay.dll"/>
+    <ROW Component="qtgeoservices_itemsoverlayd.dll" ComponentId="{3885D48D-416A-40FF-8DD0-14DA2F230EB9}" Directory_="geoservices_Dir" Attributes="256" KeyPath="qtgeoservices_itemsoverlayd.dll"/>
+    <ROW Component="qtgeoservices_mapbox.dll" ComponentId="{2BFA4367-0F61-417C-A53D-55E936E8D6C1}" Directory_="geoservices_Dir" Attributes="256" KeyPath="qtgeoservices_mapbox.dll"/>
+    <ROW Component="qtgeoservices_mapboxd.dll" ComponentId="{7003A2D3-15B6-478D-A8C2-15B5D4D15C87}" Directory_="geoservices_Dir" Attributes="256" KeyPath="qtgeoservices_mapboxd.dll"/>
+    <ROW Component="qtgeoservices_nokia.dll" ComponentId="{7D45E9E3-E2D4-458C-B9F2-25976A9006D7}" Directory_="geoservices_Dir" Attributes="256" KeyPath="qtgeoservices_nokia.dll"/>
+    <ROW Component="qtgeoservices_nokiad.dll" ComponentId="{E8E32F9A-4778-4B9F-B239-2F03AF58FEBD}" Directory_="geoservices_Dir" Attributes="256" KeyPath="qtgeoservices_nokiad.dll"/>
+    <ROW Component="qtgeoservices_osm.dll" ComponentId="{00BA2CAE-D6E6-49C8-82FD-CF0C070DD8B7}" Directory_="geoservices_Dir" Attributes="256" KeyPath="qtgeoservices_osm.dll"/>
+    <ROW Component="qtgeoservices_osmd.dll" ComponentId="{9C914D11-7782-4BE8-A129-833D73652734}" Directory_="geoservices_Dir" Attributes="256" KeyPath="qtgeoservices_osmd.dll"/>
+    <ROW Component="qtiff.dll" ComponentId="{CDE029D7-025D-4346-94C0-566E7A8B8FE9}" Directory_="imageformats_Dir" Attributes="256" KeyPath="qtiff.dll"/>
+    <ROW Component="qtiffd.dll" ComponentId="{E291F10A-7BFE-4465-9095-4FF609E434FE}" Directory_="imageformats_Dir" Attributes="256" KeyPath="qtiffd.dll"/>
+    <ROW Component="qtmedia_audioengine.dll" ComponentId="{AEBD7513-5E37-413F-90AF-B7016AF0A879}" Directory_="mediaservice_Dir" Attributes="256" KeyPath="qtmedia_audioengine.dll"/>
+    <ROW Component="qtmedia_audioengined.dll" ComponentId="{3C3432D3-E222-4D80-A1AA-96D9D643D4D6}" Directory_="mediaservice_Dir" Attributes="256" KeyPath="qtmedia_audioengined.dll"/>
+    <ROW Component="qtmultimedia_m3u.dll" ComponentId="{E67A13BE-7812-4635-B7A7-4ADE3AF99321}" Directory_="playlistformats_Dir" Attributes="256" KeyPath="qtmultimedia_m3u.dll"/>
+    <ROW Component="qtmultimedia_m3ud.dll" ComponentId="{8C77DFDD-7D46-478A-B4C1-AF78B8CD1FE0}" Directory_="playlistformats_Dir" Attributes="256" KeyPath="qtmultimedia_m3ud.dll"/>
+    <ROW Component="qtpassthrucanbus.dll" ComponentId="{E650847F-AED1-4CD5-86FA-376028081238}" Directory_="canbus_Dir" Attributes="256" KeyPath="qtpassthrucanbus.dll"/>
+    <ROW Component="qtpassthrucanbusd.dll" ComponentId="{755D1D01-2AF7-47B2-AE04-7F6372883827}" Directory_="canbus_Dir" Attributes="256" KeyPath="qtpassthrucanbusd.dll"/>
+    <ROW Component="qtpeakcanbus.dll" ComponentId="{9C8D2E50-7B33-43C9-A8F5-A224F8FE8DB8}" Directory_="canbus_Dir" Attributes="256" KeyPath="qtpeakcanbus.dll"/>
+    <ROW Component="qtpeakcanbusd.dll" ComponentId="{C8666585-8C51-48FF-86F2-EC0F0DA6B043}" Directory_="canbus_Dir" Attributes="256" KeyPath="qtpeakcanbusd.dll"/>
+    <ROW Component="qtposition_positionpoll.dll" ComponentId="{BB8A2F69-4296-48C7-BB83-E51D8B78F358}" Directory_="position_Dir" Attributes="256" KeyPath="qtposition_positionpoll.dll"/>
+    <ROW Component="qtposition_positionpolld.dll" ComponentId="{12E26AB4-1D0B-43F8-9C10-FAE2A3A80F45}" Directory_="position_Dir" Attributes="256" KeyPath="qtposition_positionpolld.dll"/>
+    <ROW Component="qtposition_serialnmea.dll" ComponentId="{76E2D485-E911-49AD-906D-A181A6319ECE}" Directory_="position_Dir" Attributes="256" KeyPath="qtposition_serialnmea.dll"/>
+    <ROW Component="qtposition_serialnmead.dll" ComponentId="{DAB8C915-FF38-475B-A0EE-BA226C46B208}" Directory_="position_Dir" Attributes="256" KeyPath="qtposition_serialnmead.dll"/>
+    <ROW Component="qtposition_winrt.dll" ComponentId="{79597DCC-C5D8-4771-8ADC-9B06226737E3}" Directory_="position_Dir" Attributes="256" KeyPath="qtposition_winrt.dll"/>
+    <ROW Component="qtposition_winrtd.dll" ComponentId="{14AE5FF5-88BD-4F8C-ACD5-44B9493FF2ED}" Directory_="position_Dir" Attributes="256" KeyPath="qtposition_winrtd.dll"/>
+    <ROW Component="qtsensorgestures_plugin.dll" ComponentId="{F764A2F5-D4A6-4C97-9986-9A385AA3AE28}" Directory_="sensorgestures_Dir" Attributes="256" KeyPath="qtsensorgestures_plugin.dll"/>
+    <ROW Component="qtsensorgestures_plugind.dll" ComponentId="{600F7DA6-BE24-4D24-BE95-ACE2D20F0305}" Directory_="sensorgestures_Dir" Attributes="256" KeyPath="qtsensorgestures_plugind.dll"/>
+    <ROW Component="qtsensorgestures_shakeplugin.dll" ComponentId="{E7F90061-2939-496D-B33B-F6F1FD54262F}" Directory_="sensorgestures_Dir" Attributes="256" KeyPath="qtsensorgestures_shakeplugin.dll"/>
+    <ROW Component="qtsensorgestures_shakeplugind.dll" ComponentId="{D39D3E3D-8773-4B0B-91A1-0586B9BE1B75}" Directory_="sensorgestures_Dir" Attributes="256" KeyPath="qtsensorgestures_shakeplugind.dll"/>
+    <ROW Component="qtsensors_generic.dll" ComponentId="{9CDCC99F-66A3-4ACE-B20C-99A50E2464B3}" Directory_="sensors_Dir" Attributes="256" KeyPath="qtsensors_generic.dll"/>
+    <ROW Component="qtsensors_genericd.dll" ComponentId="{A3A356E3-7724-40D6-B455-300AF5532CC4}" Directory_="sensors_Dir" Attributes="256" KeyPath="qtsensors_genericd.dll"/>
+    <ROW Component="qtsysteccanbus.dll" ComponentId="{62FB52C1-122F-4F23-AE17-045700EA142D}" Directory_="canbus_Dir" Attributes="256" KeyPath="qtsysteccanbus.dll"/>
+    <ROW Component="qtsysteccanbusd.dll" ComponentId="{7C7299A5-99D5-448C-B519-9BA48C84D6CF}" Directory_="canbus_Dir" Attributes="256" KeyPath="qtsysteccanbusd.dll"/>
+    <ROW Component="qttinycanbus.dll" ComponentId="{0686D6A0-F998-4A91-925A-9C9EAC249CBA}" Directory_="canbus_Dir" Attributes="256" KeyPath="qttinycanbus.dll"/>
+    <ROW Component="qttinycanbusd.dll" ComponentId="{F462118A-46A2-48C3-8B91-322D9285312A}" Directory_="canbus_Dir" Attributes="256" KeyPath="qttinycanbusd.dll"/>
+    <ROW Component="qtuiotouchplugin.dll" ComponentId="{04A91481-9E1A-4B9D-B27A-A298EA56835C}" Directory_="generic_Dir" Attributes="256" KeyPath="qtuiotouchplugin.dll"/>
+    <ROW Component="qtuiotouchplugind.dll" ComponentId="{174D0298-C9F2-4328-AAC1-201DAF75EF1B}" Directory_="generic_Dir" Attributes="256" KeyPath="qtuiotouchplugind.dll"/>
+    <ROW Component="qtvectorcanbus.dll" ComponentId="{4EB5A8B2-3D08-4170-A082-C9552FEE43E7}" Directory_="canbus_Dir" Attributes="256" KeyPath="qtvectorcanbus.dll"/>
+    <ROW Component="qtvectorcanbusd.dll" ComponentId="{178940FA-0907-4FB8-AE95-FD0229CA28DE}" Directory_="canbus_Dir" Attributes="256" KeyPath="qtvectorcanbusd.dll"/>
+    <ROW Component="qtvirtualcanbus.dll" ComponentId="{A2A94EC0-6C3E-43B9-8AC1-EC358D6BFE1A}" Directory_="canbus_Dir" Attributes="256" KeyPath="qtvirtualcanbus.dll"/>
+    <ROW Component="qtvirtualcanbusd.dll" ComponentId="{5832EEA9-B085-4B0A-B0B4-A8B2ABE5C36B}" Directory_="canbus_Dir" Attributes="256" KeyPath="qtvirtualcanbusd.dll"/>
+    <ROW Component="qtwebview_webengine.dll" ComponentId="{DCB6ABB5-98AB-4B1B-8CB9-7E904007F0BC}" Directory_="webview_Dir" Attributes="256" KeyPath="qtwebview_webengine.dll"/>
+    <ROW Component="qtwebview_webengined.dll" ComponentId="{72F6EB1C-A641-4AAD-8E13-A08EE403AAEF}" Directory_="webview_Dir" Attributes="256" KeyPath="qtwebview_webengined.dll"/>
+    <ROW Component="qwbmp.dll" ComponentId="{1EEA9F9B-3B63-4C9C-B9B7-9F9CE32969FD}" Directory_="imageformats_Dir" Attributes="256" KeyPath="qwbmp.dll"/>
+    <ROW Component="qwbmpd.dll" ComponentId="{77583200-FD80-439D-893C-86453D1CF301}" Directory_="imageformats_Dir" Attributes="256" KeyPath="qwbmpd.dll"/>
+    <ROW Component="qwebp.dll" ComponentId="{82B7701E-0B77-4D73-B7B8-26EE7B597050}" Directory_="imageformats_Dir" Attributes="256" KeyPath="qwebp.dll"/>
+    <ROW Component="qwebpd.dll" ComponentId="{DFF4BB1C-6E74-44F0-89F4-3C1996595C45}" Directory_="imageformats_Dir" Attributes="256" KeyPath="qwebpd.dll"/>
+    <ROW Component="qwindows.dll" ComponentId="{3F60973A-105A-482B-B0B9-2292FD7B35A3}" Directory_="platforms_Dir" Attributes="256" KeyPath="qwindows.dll"/>
+    <ROW Component="qwindowsd.dll" ComponentId="{70302B77-79C5-48EA-AF67-9ACDD4C9D809}" Directory_="platforms_Dir" Attributes="256" KeyPath="qwindowsd.dll"/>
+    <ROW Component="qwindowsvistastyle.dll" ComponentId="{33535758-426B-4CE7-843B-AF774BEEC7FC}" Directory_="styles_Dir" Attributes="256" KeyPath="qwindowsvistastyle.dll"/>
+    <ROW Component="qwindowsvistastyled.dll" ComponentId="{C29E4CE8-7DDB-4EF2-A762-787A231DAB79}" Directory_="styles_Dir" Attributes="256" KeyPath="qwindowsvistastyled.dll"/>
+    <ROW Component="qxdgdesktopportal.dll" ComponentId="{4922686B-BB13-4143-86BE-6C8F491DB482}" Directory_="platformthemes_Dir" Attributes="256" KeyPath="qxdgdesktopportal.dll"/>
+    <ROW Component="qxdgdesktopportald.dll" ComponentId="{E47B2050-FEB8-4938-A26C-906F6FB48BF8}" Directory_="platformthemes_Dir" Attributes="256" KeyPath="qxdgdesktopportald.dll"/>
+    <ROW Component="scene2d.dll" ComponentId="{59B99F44-BC92-433E-A076-978EF0EBE2E9}" Directory_="renderplugins_Dir" Attributes="256" KeyPath="scene2d.dll"/>
+    <ROW Component="scene2dd.dll" ComponentId="{D71391E1-8E15-46B7-9EBD-C777EC885156}" Directory_="renderplugins_Dir" Attributes="256" KeyPath="scene2dd.dll"/>
+    <ROW Component="test000" ComponentId="{F75979CC-6CE5-4F34-8743-A2F0325179B5}" Directory_="test_Dir" Attributes="0" KeyPath="test000" Type="0"/>
+    <ROW Component="vcruntime140.dll" ComponentId="{4EB9F906-EB85-4896-9003-A24064969810}" Directory_="bin_Dir" Attributes="256" KeyPath="vcruntime140.dll"/>
+    <ROW Component="vcruntime140_1.dll" ComponentId="{50199CBA-6A83-4300-884A-380D25A90DA1}" Directory_="bin_Dir" Attributes="256" KeyPath="vcruntime140_1.dll"/>
+    <ROW Component="windowsprintersupport.dll" ComponentId="{F8439122-46D6-41AB-8878-7339AEDA0057}" Directory_="printsupport_Dir" Attributes="256" KeyPath="windowsprintersupport.dll"/>
+    <ROW Component="windowsprintersupportd.dll" ComponentId="{F4F1A16A-85D7-435A-94EA-0B55EF353F87}" Directory_="printsupport_Dir" Attributes="256" KeyPath="windowsprintersupportd.dll"/>
+    <ROW Component="wmfengine.dll" ComponentId="{903E303E-09AE-45F6-A459-D85D55C949AC}" Directory_="mediaservice_Dir" Attributes="256" KeyPath="wmfengine.dll"/>
+    <ROW Component="wmfengined.dll" ComponentId="{A65AA7CC-B942-4872-BB2C-E06FB792E4F6}" Directory_="mediaservice_Dir" Attributes="256" KeyPath="wmfengined.dll"/>
+    <ROW Component="xinputgamepad.dll" ComponentId="{32E6B9E8-D477-42D0-AA8B-4EE803A2B1A3}" Directory_="gamepads_Dir" Attributes="256" KeyPath="xinputgamepad.dll"/>
+    <ROW Component="xinputgamepadd.dll" ComponentId="{9876EA5B-5E01-478A-BA29-235B3ADCBEB7}" Directory_="gamepads_Dir" Attributes="256" KeyPath="xinputgamepadd.dll"/>
+    <ROW Component="zlib1.dll" ComponentId="{953F98D4-51B1-41D6-8F92-AABBAEE0C285}" Directory_="bin_Dir" Attributes="0" KeyPath="zlib1.dll"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
+    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0"/>
+    <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
+    <ROW File="BUILD.txt" Component_="BUILD.txt.swp" FileName="BUILD.txt" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\doc\BUILD.txt" SelfReg="false"/>
+    <ROW File="Doxyfile" Component_="BUILD.txt.swp" FileName="Doxyfile" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\doc\Doxyfile" SelfReg="false"/>
+    <ROW File="footer" Component_="BUILD.txt.swp" FileName="footer" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\doc\footer" SelfReg="false"/>
+    <ROW File="G4beamlinePresentation.pdf" Component_="BUILD.txt.swp" FileName="G4BEAM~1.PDF|G4beamlinePresentation.pdf" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\doc\G4beamlinePresentation.pdf" SelfReg="false"/>
+    <ROW File="G4beamlineUsersGuide.pdf" Component_="BUILD.txt.swp" FileName="G4BEAM~2.PDF|G4beamlineUsersGuide.pdf" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\doc\G4beamlineUsersGuide.pdf" SelfReg="false"/>
+    <ROW File="G4beamlineValidation.pdf" Component_="BUILD.txt.swp" FileName="G4BEAM~3.PDF|G4beamlineValidation.pdf" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\doc\G4beamlineValidation.pdf" SelfReg="false"/>
+    <ROW File="History.txt" Component_="BUILD.txt.swp" FileName="History.txt" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\doc\History.txt" SelfReg="false"/>
+    <ROW File="mainpage.md" Component_="BUILD.txt.swp" FileName="mainpage.md" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\doc\mainpage.md" SelfReg="false"/>
+    <ROW File="README.txt" Component_="BUILD.txt.swp" FileName="README.txt" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\doc\README.txt" SelfReg="false"/>
+    <ROW File="bookmarkFile" Component_="bookmarkFile" FileName="BOOKMA~1|.bookmarkFile" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\.bookmarkFile" SelfReg="false"/>
+    <ROW File="DS_Store_1" Component_="bookmarkFile" FileName="DS_STO~1|.DS_Store" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\.DS_Store" SelfReg="false"/>
+    <ROW File="C.dat" Component_="bookmarkFile" FileName="C.dat" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\C.dat" SelfReg="false"/>
+    <ROW File="emittancematch.sh" Component_="bookmarkFile" FileName="EMITTA~1.SH|emittancematch.sh" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\emittancematch.sh" SelfReg="false"/>
+    <ROW File="Example1.g4bl" Component_="bookmarkFile" FileName="EXAMPL~1.G4B|Example1.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Example1.g4bl" SelfReg="false"/>
+    <ROW File="ExampleN02.g4bl" Component_="bookmarkFile" FileName="EXAMPL~2.G4B|ExampleN02.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\ExampleN02.g4bl" SelfReg="false"/>
+    <ROW File="FieldLines.g4bl" Component_="bookmarkFile" FileName="FIELDL~1.G4B|FieldLines.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\FieldLines.g4bl" SelfReg="false"/>
+    <ROW File="g4beamline.root" Component_="bookmarkFile" FileName="G4BEAM~1.ROO|g4beamline.root" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\g4beamline.root" SelfReg="false"/>
+    <ROW File="g4bl.out" Component_="bookmarkFile" FileName="g4bl.out" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\g4bl.out" SelfReg="false"/>
+    <ROW File="Idealized_g2.g4bl" Component_="bookmarkFile" FileName="IDEALI~1.G4B|Idealized_g-2.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Idealized_g-2.g4bl" SelfReg="false"/>
+    <ROW File="DecaySolenoid" Component_="DecaySolenoid" FileName="DECAYS~1|DecaySolenoid" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Magnets\DecaySolenoid" SelfReg="false"/>
+    <ROW File="RALBend1" Component_="DecaySolenoid" FileName="RALBend1" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Magnets\RALBend1" SelfReg="false"/>
+    <ROW File="MICE_StageVI.g4bl" Component_="bookmarkFile" FileName="MICE_S~1.G4B|MICE_StageVI.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\MICE_StageVI.g4bl" SelfReg="false"/>
+    <ROW File="Movie.in" Component_="bookmarkFile" FileName="Movie.in" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Movie.in" SelfReg="false"/>
+    <ROW File="MultipleScattering.g4bl" Component_="bookmarkFile" FileName="MULTIP~1.G4B|MultipleScattering.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\MultipleScattering.g4bl" SelfReg="false"/>
+    <ROW File="SampleMovie.g4bl" Component_="bookmarkFile" FileName="SAMPLE~1.G4B|SampleMovie.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\SampleMovie.g4bl" SelfReg="false"/>
+    <ROW File="SpaceCharge.g4bl" Component_="bookmarkFile" FileName="SPACEC~1.G4B|SpaceCharge.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\SpaceCharge.g4bl" SelfReg="false"/>
+    <ROW File="Study2Cooling.g4bl" Component_="bookmarkFile" FileName="STUDY2~1.G4B|Study2Cooling.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Study2Cooling.g4bl" SelfReg="false"/>
+    <ROW File="triplet.sh" Component_="bookmarkFile" FileName="triplet.sh" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\triplet.sh" SelfReg="false"/>
+    <ROW File="TungstenTarget.g4bl" Component_="bookmarkFile" FileName="TUNGST~1.G4B|TungstenTarget.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\TungstenTarget.g4bl" SelfReg="false"/>
+    <ROW File="abs300" Component_="abs300" FileName="abs300" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Windows\abs300" SelfReg="false"/>
+    <ROW File="abs360" Component_="abs300" FileName="abs360" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Windows\abs360" SelfReg="false"/>
+    <ROW File="H2BellowWindowconcaveconvexcoord21TJR.xls" Component_="abs300" FileName="H2-BEL~1.XLS|H2-Bellow-Window-concave-convex-coord-2 (1) - TJR.xls" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Windows\H2-Bellow-Window-concave-convex-coord-2 (1) - TJR.xls" SelfReg="false"/>
+    <ROW File="H2BellowWindowconcaveconvexcoord21.xls" Component_="abs300" FileName="H2-BEL~2.XLS|H2-Bellow-Window-concave-convex-coord-2 (1).xls" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Windows\H2-Bellow-Window-concave-convex-coord-2 (1).xls" SelfReg="false"/>
+    <ROW File="H2BellowWindowconcaveconvexcoord3.xls" Component_="abs300" FileName="H2-BEL~3.XLS|H2-Bellow-Window-concave-convex-coord-3.xls" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Windows\H2-Bellow-Window-concave-convex-coord-3.xls" SelfReg="false"/>
+    <ROW File="safe320" Component_="abs300" FileName="safe320" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Windows\safe320" SelfReg="false"/>
+    <ROW File="safe480" Component_="abs300" FileName="safe480" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Windows\safe480" SelfReg="false"/>
+    <ROW File="testwin" Component_="abs300" FileName="testwin" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Windows\testwin" SelfReg="false"/>
+    <ROW File="qtaudio_wasapi.dll" Component_="qtaudio_wasapi.dll" FileName="QTAUDI~1.DLL|qtaudio_wasapi.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\audio\qtaudio_wasapi.dll" SelfReg="false"/>
+    <ROW File="qtaudio_wasapid.dll" Component_="qtaudio_wasapid.dll" FileName="QTAUDI~2.DLL|qtaudio_wasapid.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\audio\qtaudio_wasapid.dll" SelfReg="false"/>
+    <ROW File="qtaudio_windows.dll" Component_="qtaudio_windows.dll" FileName="QTAUDI~3.DLL|qtaudio_windows.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\audio\qtaudio_windows.dll" SelfReg="false"/>
+    <ROW File="qtaudio_windowsd.dll" Component_="qtaudio_windowsd.dll" FileName="QTAUDI~4.DLL|qtaudio_windowsd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\audio\qtaudio_windowsd.dll" SelfReg="false"/>
+    <ROW File="qgenericbearer.dll" Component_="qgenericbearer.dll" FileName="QGENER~1.DLL|qgenericbearer.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\bearer\qgenericbearer.dll" SelfReg="false"/>
+    <ROW File="qgenericbearerd.dll" Component_="qgenericbearerd.dll" FileName="QGENER~2.DLL|qgenericbearerd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\bearer\qgenericbearerd.dll" SelfReg="false"/>
+    <ROW File="qtpassthrucanbus.dll" Component_="qtpassthrucanbus.dll" FileName="QTPASS~1.DLL|qtpassthrucanbus.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\canbus\qtpassthrucanbus.dll" SelfReg="false"/>
+    <ROW File="qtpassthrucanbusd.dll" Component_="qtpassthrucanbusd.dll" FileName="QTPASS~2.DLL|qtpassthrucanbusd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\canbus\qtpassthrucanbusd.dll" SelfReg="false"/>
+    <ROW File="qtpeakcanbus.dll" Component_="qtpeakcanbus.dll" FileName="QTPEAK~1.DLL|qtpeakcanbus.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\canbus\qtpeakcanbus.dll" SelfReg="false"/>
+    <ROW File="qtpeakcanbusd.dll" Component_="qtpeakcanbusd.dll" FileName="QTPEAK~2.DLL|qtpeakcanbusd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\canbus\qtpeakcanbusd.dll" SelfReg="false"/>
+    <ROW File="qtsysteccanbus.dll" Component_="qtsysteccanbus.dll" FileName="QTSYST~1.DLL|qtsysteccanbus.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\canbus\qtsysteccanbus.dll" SelfReg="false"/>
+    <ROW File="qtsysteccanbusd.dll" Component_="qtsysteccanbusd.dll" FileName="QTSYST~2.DLL|qtsysteccanbusd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\canbus\qtsysteccanbusd.dll" SelfReg="false"/>
+    <ROW File="qttinycanbus.dll" Component_="qttinycanbus.dll" FileName="QTTINY~1.DLL|qttinycanbus.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\canbus\qttinycanbus.dll" SelfReg="false"/>
+    <ROW File="qttinycanbusd.dll" Component_="qttinycanbusd.dll" FileName="QTTINY~2.DLL|qttinycanbusd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\canbus\qttinycanbusd.dll" SelfReg="false"/>
+    <ROW File="qtvectorcanbus.dll" Component_="qtvectorcanbus.dll" FileName="QTVECT~1.DLL|qtvectorcanbus.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\canbus\qtvectorcanbus.dll" SelfReg="false"/>
+    <ROW File="qtvectorcanbusd.dll" Component_="qtvectorcanbusd.dll" FileName="QTVECT~2.DLL|qtvectorcanbusd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\canbus\qtvectorcanbusd.dll" SelfReg="false"/>
+    <ROW File="qtvirtualcanbus.dll" Component_="qtvirtualcanbus.dll" FileName="QTVIRT~1.DLL|qtvirtualcanbus.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\canbus\qtvirtualcanbus.dll" SelfReg="false"/>
+    <ROW File="qtvirtualcanbusd.dll" Component_="qtvirtualcanbusd.dll" FileName="QTVIRT~2.DLL|qtvirtualcanbusd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\canbus\qtvirtualcanbusd.dll" SelfReg="false"/>
+    <ROW File="qaxwidget.dll" Component_="qaxwidget.dll" FileName="QAXWID~1.DLL|qaxwidget.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\designer\qaxwidget.dll" SelfReg="false"/>
+    <ROW File="qquickwidget.dll" Component_="qquickwidget.dll" FileName="QQUICK~1.DLL|qquickwidget.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\designer\qquickwidget.dll" SelfReg="false"/>
+    <ROW File="xinputgamepad.dll" Component_="xinputgamepad.dll" FileName="XINPUT~1.DLL|xinputgamepad.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\gamepads\xinputgamepad.dll" SelfReg="false"/>
+    <ROW File="xinputgamepadd.dll" Component_="xinputgamepadd.dll" FileName="XINPUT~2.DLL|xinputgamepadd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\gamepads\xinputgamepadd.dll" SelfReg="false"/>
+    <ROW File="qtuiotouchplugin.dll" Component_="qtuiotouchplugin.dll" FileName="QTUIOT~1.DLL|qtuiotouchplugin.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\generic\qtuiotouchplugin.dll" SelfReg="false"/>
+    <ROW File="qtuiotouchplugind.dll" Component_="qtuiotouchplugind.dll" FileName="QTUIOT~2.DLL|qtuiotouchplugind.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\generic\qtuiotouchplugind.dll" SelfReg="false"/>
+    <ROW File="defaultgeometryloader.dll" Component_="defaultgeometryloader.dll" FileName="DEFAUL~1.DLL|defaultgeometryloader.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\geometryloaders\defaultgeometryloader.dll" SelfReg="false"/>
+    <ROW File="defaultgeometryloaderd.dll" Component_="defaultgeometryloaderd.dll" FileName="DEFAUL~2.DLL|defaultgeometryloaderd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\geometryloaders\defaultgeometryloaderd.dll" SelfReg="false"/>
+    <ROW File="gltfgeometryloader.dll" Component_="gltfgeometryloader.dll" FileName="GLTFGE~1.DLL|gltfgeometryloader.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\geometryloaders\gltfgeometryloader.dll" SelfReg="false"/>
+    <ROW File="gltfgeometryloaderd.dll" Component_="gltfgeometryloaderd.dll" FileName="GLTFGE~2.DLL|gltfgeometryloaderd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\geometryloaders\gltfgeometryloaderd.dll" SelfReg="false"/>
+    <ROW File="qtgeoservices_esri.dll" Component_="qtgeoservices_esri.dll" FileName="QTGEOS~1.DLL|qtgeoservices_esri.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\geoservices\qtgeoservices_esri.dll" SelfReg="false"/>
+    <ROW File="qtgeoservices_esrid.dll" Component_="qtgeoservices_esrid.dll" FileName="QTGEOS~2.DLL|qtgeoservices_esrid.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\geoservices\qtgeoservices_esrid.dll" SelfReg="false"/>
+    <ROW File="qtgeoservices_itemsoverlay.dll" Component_="qtgeoservices_itemsoverlay.dll" FileName="QTGEOS~3.DLL|qtgeoservices_itemsoverlay.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\geoservices\qtgeoservices_itemsoverlay.dll" SelfReg="false"/>
+    <ROW File="qtgeoservices_itemsoverlayd.dll" Component_="qtgeoservices_itemsoverlayd.dll" FileName="QTGEOS~4.DLL|qtgeoservices_itemsoverlayd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\geoservices\qtgeoservices_itemsoverlayd.dll" SelfReg="false"/>
+    <ROW File="qtgeoservices_mapbox.dll" Component_="qtgeoservices_mapbox.dll" FileName="QTGEOS~5.DLL|qtgeoservices_mapbox.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\geoservices\qtgeoservices_mapbox.dll" SelfReg="false"/>
+    <ROW File="qtgeoservices_mapboxd.dll" Component_="qtgeoservices_mapboxd.dll" FileName="QTGEOS~6.DLL|qtgeoservices_mapboxd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\geoservices\qtgeoservices_mapboxd.dll" SelfReg="false"/>
+    <ROW File="qtgeoservices_nokia.dll" Component_="qtgeoservices_nokia.dll" FileName="QTGEOS~7.DLL|qtgeoservices_nokia.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\geoservices\qtgeoservices_nokia.dll" SelfReg="false"/>
+    <ROW File="qtgeoservices_nokiad.dll" Component_="qtgeoservices_nokiad.dll" FileName="QTGEOS~8.DLL|qtgeoservices_nokiad.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\geoservices\qtgeoservices_nokiad.dll" SelfReg="false"/>
+    <ROW File="qtgeoservices_osm.dll" Component_="qtgeoservices_osm.dll" FileName="QTGEOS~9.DLL|qtgeoservices_osm.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\geoservices\qtgeoservices_osm.dll" SelfReg="false"/>
+    <ROW File="qtgeoservices_osmd.dll" Component_="qtgeoservices_osmd.dll" FileName="QTGEO~10.DLL|qtgeoservices_osmd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\geoservices\qtgeoservices_osmd.dll" SelfReg="false"/>
+    <ROW File="qsvgicon.dll" Component_="qsvgicon.dll" FileName="qsvgicon.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\iconengines\qsvgicon.dll" SelfReg="false"/>
+    <ROW File="qsvgicond.dll" Component_="qsvgicond.dll" FileName="QSVGIC~1.DLL|qsvgicond.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\iconengines\qsvgicond.dll" SelfReg="false"/>
+    <ROW File="qgif.dll" Component_="qgif.dll" FileName="qgif.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\imageformats\qgif.dll" SelfReg="false"/>
+    <ROW File="qgifd.dll" Component_="qgifd.dll" FileName="qgifd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\imageformats\qgifd.dll" SelfReg="false"/>
+    <ROW File="qicns.dll" Component_="qicns.dll" FileName="qicns.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\imageformats\qicns.dll" SelfReg="false"/>
+    <ROW File="qicnsd.dll" Component_="qicnsd.dll" FileName="qicnsd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\imageformats\qicnsd.dll" SelfReg="false"/>
+    <ROW File="qico.dll" Component_="qico.dll" FileName="qico.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\imageformats\qico.dll" SelfReg="false"/>
+    <ROW File="qicod.dll" Component_="qicod.dll" FileName="qicod.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\imageformats\qicod.dll" SelfReg="false"/>
+    <ROW File="qjpeg.dll" Component_="qjpeg.dll" FileName="qjpeg.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\imageformats\qjpeg.dll" SelfReg="false"/>
+    <ROW File="qjpegd.dll" Component_="qjpegd.dll" FileName="qjpegd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\imageformats\qjpegd.dll" SelfReg="false"/>
+    <ROW File="qsvg.dll" Component_="qsvg.dll" FileName="qsvg.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\imageformats\qsvg.dll" SelfReg="false"/>
+    <ROW File="qsvgd.dll" Component_="qsvgd.dll" FileName="qsvgd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\imageformats\qsvgd.dll" SelfReg="false"/>
+    <ROW File="qtga.dll" Component_="qtga.dll" FileName="qtga.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\imageformats\qtga.dll" SelfReg="false"/>
+    <ROW File="qtgad.dll" Component_="qtgad.dll" FileName="qtgad.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\imageformats\qtgad.dll" SelfReg="false"/>
+    <ROW File="qtiff.dll" Component_="qtiff.dll" FileName="qtiff.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\imageformats\qtiff.dll" SelfReg="false"/>
+    <ROW File="qtiffd.dll" Component_="qtiffd.dll" FileName="qtiffd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\imageformats\qtiffd.dll" SelfReg="false"/>
+    <ROW File="qwbmp.dll" Component_="qwbmp.dll" FileName="qwbmp.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\imageformats\qwbmp.dll" SelfReg="false"/>
+    <ROW File="qwbmpd.dll" Component_="qwbmpd.dll" FileName="qwbmpd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\imageformats\qwbmpd.dll" SelfReg="false"/>
+    <ROW File="qwebp.dll" Component_="qwebp.dll" FileName="qwebp.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\imageformats\qwebp.dll" SelfReg="false"/>
+    <ROW File="qwebpd.dll" Component_="qwebpd.dll" FileName="qwebpd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\imageformats\qwebpd.dll" SelfReg="false"/>
+    <ROW File="dsengine.dll" Component_="dsengine.dll" FileName="dsengine.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\mediaservice\dsengine.dll" SelfReg="false"/>
+    <ROW File="dsengined.dll" Component_="dsengined.dll" FileName="DSENGI~1.DLL|dsengined.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\mediaservice\dsengined.dll" SelfReg="false"/>
+    <ROW File="qtmedia_audioengine.dll" Component_="qtmedia_audioengine.dll" FileName="QTMEDI~1.DLL|qtmedia_audioengine.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\mediaservice\qtmedia_audioengine.dll" SelfReg="false"/>
+    <ROW File="qtmedia_audioengined.dll" Component_="qtmedia_audioengined.dll" FileName="QTMEDI~2.DLL|qtmedia_audioengined.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\mediaservice\qtmedia_audioengined.dll" SelfReg="false"/>
+    <ROW File="wmfengine.dll" Component_="wmfengine.dll" FileName="WMFENG~1.DLL|wmfengine.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\mediaservice\wmfengine.dll" SelfReg="false"/>
+    <ROW File="wmfengined.dll" Component_="wmfengined.dll" FileName="WMFENG~2.DLL|wmfengined.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\mediaservice\wmfengined.dll" SelfReg="false"/>
+    <ROW File="qdirect2d.dll" Component_="qdirect2d.dll" FileName="QDIREC~1.DLL|qdirect2d.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\platforms\qdirect2d.dll" SelfReg="false"/>
+    <ROW File="qdirect2dd.dll" Component_="qdirect2dd.dll" FileName="QDIREC~2.DLL|qdirect2dd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\platforms\qdirect2dd.dll" SelfReg="false"/>
+    <ROW File="qminimal.dll" Component_="qminimal.dll" FileName="qminimal.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\platforms\qminimal.dll" SelfReg="false"/>
+    <ROW File="qminimald.dll" Component_="qminimald.dll" FileName="QMINIM~1.DLL|qminimald.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\platforms\qminimald.dll" SelfReg="false"/>
+    <ROW File="qoffscreen.dll" Component_="qoffscreen.dll" FileName="QOFFSC~1.DLL|qoffscreen.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\platforms\qoffscreen.dll" SelfReg="false"/>
+    <ROW File="qoffscreend.dll" Component_="qoffscreend.dll" FileName="QOFFSC~2.DLL|qoffscreend.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\platforms\qoffscreend.dll" SelfReg="false"/>
+    <ROW File="qwindows.dll" Component_="qwindows.dll" FileName="qwindows.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\platforms\qwindows.dll" SelfReg="false"/>
+    <ROW File="qwindowsd.dll" Component_="qwindowsd.dll" FileName="QWINDO~1.DLL|qwindowsd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\platforms\qwindowsd.dll" SelfReg="false"/>
+    <ROW File="qxdgdesktopportal.dll" Component_="qxdgdesktopportal.dll" FileName="QXDGDE~1.DLL|qxdgdesktopportal.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\platformthemes\qxdgdesktopportal.dll" SelfReg="false"/>
+    <ROW File="qxdgdesktopportald.dll" Component_="qxdgdesktopportald.dll" FileName="QXDGDE~2.DLL|qxdgdesktopportald.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\platformthemes\qxdgdesktopportald.dll" SelfReg="false"/>
+    <ROW File="qtmultimedia_m3u.dll" Component_="qtmultimedia_m3u.dll" FileName="QTMULT~1.DLL|qtmultimedia_m3u.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\playlistformats\qtmultimedia_m3u.dll" SelfReg="false"/>
+    <ROW File="qtmultimedia_m3ud.dll" Component_="qtmultimedia_m3ud.dll" FileName="QTMULT~2.DLL|qtmultimedia_m3ud.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\playlistformats\qtmultimedia_m3ud.dll" SelfReg="false"/>
+    <ROW File="qtposition_positionpoll.dll" Component_="qtposition_positionpoll.dll" FileName="QTPOSI~1.DLL|qtposition_positionpoll.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\position\qtposition_positionpoll.dll" SelfReg="false"/>
+    <ROW File="qtposition_positionpolld.dll" Component_="qtposition_positionpolld.dll" FileName="QTPOSI~2.DLL|qtposition_positionpolld.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\position\qtposition_positionpolld.dll" SelfReg="false"/>
+    <ROW File="qtposition_serialnmea.dll" Component_="qtposition_serialnmea.dll" FileName="QTPOSI~3.DLL|qtposition_serialnmea.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\position\qtposition_serialnmea.dll" SelfReg="false"/>
+    <ROW File="qtposition_serialnmead.dll" Component_="qtposition_serialnmead.dll" FileName="QTPOSI~4.DLL|qtposition_serialnmead.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\position\qtposition_serialnmead.dll" SelfReg="false"/>
+    <ROW File="qtposition_winrt.dll" Component_="qtposition_winrt.dll" FileName="QTPOSI~5.DLL|qtposition_winrt.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\position\qtposition_winrt.dll" SelfReg="false"/>
+    <ROW File="qtposition_winrtd.dll" Component_="qtposition_winrtd.dll" FileName="QTPOSI~6.DLL|qtposition_winrtd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\position\qtposition_winrtd.dll" SelfReg="false"/>
+    <ROW File="windowsprintersupport.dll" Component_="windowsprintersupport.dll" FileName="WINDOW~1.DLL|windowsprintersupport.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\printsupport\windowsprintersupport.dll" SelfReg="false"/>
+    <ROW File="windowsprintersupportd.dll" Component_="windowsprintersupportd.dll" FileName="WINDOW~2.DLL|windowsprintersupportd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\printsupport\windowsprintersupportd.dll" SelfReg="false"/>
+    <ROW File="qmldbg_debugger.dll" Component_="qmldbg_debugger.dll" FileName="QMLDBG~1.DLL|qmldbg_debugger.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\qmltooling\qmldbg_debugger.dll" SelfReg="false"/>
+    <ROW File="qmldbg_debuggerd.dll" Component_="qmldbg_debuggerd.dll" FileName="QMLDBG~2.DLL|qmldbg_debuggerd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\qmltooling\qmldbg_debuggerd.dll" SelfReg="false"/>
+    <ROW File="qmldbg_inspector.dll" Component_="qmldbg_inspector.dll" FileName="QMLDBG~3.DLL|qmldbg_inspector.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\qmltooling\qmldbg_inspector.dll" SelfReg="false"/>
+    <ROW File="qmldbg_inspectord.dll" Component_="qmldbg_inspectord.dll" FileName="QMLDBG~4.DLL|qmldbg_inspectord.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\qmltooling\qmldbg_inspectord.dll" SelfReg="false"/>
+    <ROW File="qmldbg_local.dll" Component_="qmldbg_local.dll" FileName="QMLDBG~5.DLL|qmldbg_local.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\qmltooling\qmldbg_local.dll" SelfReg="false"/>
+    <ROW File="qmldbg_locald.dll" Component_="qmldbg_locald.dll" FileName="QMLDBG~6.DLL|qmldbg_locald.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\qmltooling\qmldbg_locald.dll" SelfReg="false"/>
+    <ROW File="qmldbg_messages.dll" Component_="qmldbg_messages.dll" FileName="QMLDBG~7.DLL|qmldbg_messages.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\qmltooling\qmldbg_messages.dll" SelfReg="false"/>
+    <ROW File="qmldbg_messagesd.dll" Component_="qmldbg_messagesd.dll" FileName="QMLDBG~8.DLL|qmldbg_messagesd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\qmltooling\qmldbg_messagesd.dll" SelfReg="false"/>
+    <ROW File="qmldbg_native.dll" Component_="qmldbg_native.dll" FileName="QMLDBG~9.DLL|qmldbg_native.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\qmltooling\qmldbg_native.dll" SelfReg="false"/>
+    <ROW File="qmldbg_natived.dll" Component_="qmldbg_natived.dll" FileName="QMLDB~10.DLL|qmldbg_natived.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\qmltooling\qmldbg_natived.dll" SelfReg="false"/>
+    <ROW File="qmldbg_nativedebugger.dll" Component_="qmldbg_nativedebugger.dll" FileName="QMLDB~11.DLL|qmldbg_nativedebugger.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\qmltooling\qmldbg_nativedebugger.dll" SelfReg="false"/>
+    <ROW File="qmldbg_nativedebuggerd.dll" Component_="qmldbg_nativedebuggerd.dll" FileName="QMLDB~12.DLL|qmldbg_nativedebuggerd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\qmltooling\qmldbg_nativedebuggerd.dll" SelfReg="false"/>
+    <ROW File="qmldbg_preview.dll" Component_="qmldbg_preview.dll" FileName="QMLDB~13.DLL|qmldbg_preview.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\qmltooling\qmldbg_preview.dll" SelfReg="false"/>
+    <ROW File="qmldbg_previewd.dll" Component_="qmldbg_previewd.dll" FileName="QMLDB~14.DLL|qmldbg_previewd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\qmltooling\qmldbg_previewd.dll" SelfReg="false"/>
+    <ROW File="qmldbg_profiler.dll" Component_="qmldbg_profiler.dll" FileName="QMLDB~15.DLL|qmldbg_profiler.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\qmltooling\qmldbg_profiler.dll" SelfReg="false"/>
+    <ROW File="qmldbg_profilerd.dll" Component_="qmldbg_profilerd.dll" FileName="QMLDB~16.DLL|qmldbg_profilerd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\qmltooling\qmldbg_profilerd.dll" SelfReg="false"/>
+    <ROW File="qmldbg_quickprofiler.dll" Component_="qmldbg_quickprofiler.dll" FileName="QMLDB~17.DLL|qmldbg_quickprofiler.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\qmltooling\qmldbg_quickprofiler.dll" SelfReg="false"/>
+    <ROW File="qmldbg_quickprofilerd.dll" Component_="qmldbg_quickprofilerd.dll" FileName="QMLDB~18.DLL|qmldbg_quickprofilerd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\qmltooling\qmldbg_quickprofilerd.dll" SelfReg="false"/>
+    <ROW File="qmldbg_server.dll" Component_="qmldbg_server.dll" FileName="QMLDB~19.DLL|qmldbg_server.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\qmltooling\qmldbg_server.dll" SelfReg="false"/>
+    <ROW File="qmldbg_serverd.dll" Component_="qmldbg_serverd.dll" FileName="QMLDB~20.DLL|qmldbg_serverd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\qmltooling\qmldbg_serverd.dll" SelfReg="false"/>
+    <ROW File="qmldbg_tcp.dll" Component_="qmldbg_tcp.dll" FileName="QMLDB~21.DLL|qmldbg_tcp.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\qmltooling\qmldbg_tcp.dll" SelfReg="false"/>
+    <ROW File="qmldbg_tcpd.dll" Component_="qmldbg_tcpd.dll" FileName="QMLDB~22.DLL|qmldbg_tcpd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\qmltooling\qmldbg_tcpd.dll" SelfReg="false"/>
+    <ROW File="scene2d.dll" Component_="scene2d.dll" FileName="scene2d.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\renderplugins\scene2d.dll" SelfReg="false"/>
+    <ROW File="scene2dd.dll" Component_="scene2dd.dll" FileName="scene2dd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\renderplugins\scene2dd.dll" SelfReg="false"/>
+    <ROW File="qsgd3d12backend.dll" Component_="qsgd3d12backend.dll" FileName="QSGD3D~1.DLL|qsgd3d12backend.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\scenegraph\qsgd3d12backend.dll" SelfReg="false"/>
+    <ROW File="qsgd3d12backendd.dll" Component_="qsgd3d12backendd.dll" FileName="QSGD3D~2.DLL|qsgd3d12backendd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\scenegraph\qsgd3d12backendd.dll" SelfReg="false"/>
+    <ROW File="assimpsceneimport.dll" Component_="assimpsceneimport.dll" FileName="ASSIMP~1.DLL|assimpsceneimport.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\sceneparsers\assimpsceneimport.dll" SelfReg="false"/>
+    <ROW File="assimpsceneimportd.dll" Component_="assimpsceneimportd.dll" FileName="ASSIMP~2.DLL|assimpsceneimportd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\sceneparsers\assimpsceneimportd.dll" SelfReg="false"/>
+    <ROW File="gltfsceneexport.dll" Component_="gltfsceneexport.dll" FileName="GLTFSC~1.DLL|gltfsceneexport.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\sceneparsers\gltfsceneexport.dll" SelfReg="false"/>
+    <ROW File="gltfsceneexportd.dll" Component_="gltfsceneexportd.dll" FileName="GLTFSC~2.DLL|gltfsceneexportd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\sceneparsers\gltfsceneexportd.dll" SelfReg="false"/>
+    <ROW File="gltfsceneimport.dll" Component_="gltfsceneimport.dll" FileName="GLTFSC~3.DLL|gltfsceneimport.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\sceneparsers\gltfsceneimport.dll" SelfReg="false"/>
+    <ROW File="gltfsceneimportd.dll" Component_="gltfsceneimportd.dll" FileName="GLTFSC~4.DLL|gltfsceneimportd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\sceneparsers\gltfsceneimportd.dll" SelfReg="false"/>
+    <ROW File="qtsensorgestures_plugin.dll" Component_="qtsensorgestures_plugin.dll" FileName="QTSENS~1.DLL|qtsensorgestures_plugin.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\sensorgestures\qtsensorgestures_plugin.dll" SelfReg="false"/>
+    <ROW File="qtsensorgestures_plugind.dll" Component_="qtsensorgestures_plugind.dll" FileName="QTSENS~2.DLL|qtsensorgestures_plugind.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\sensorgestures\qtsensorgestures_plugind.dll" SelfReg="false"/>
+    <ROW File="qtsensorgestures_shakeplugin.dll" Component_="qtsensorgestures_shakeplugin.dll" FileName="QTSENS~3.DLL|qtsensorgestures_shakeplugin.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\sensorgestures\qtsensorgestures_shakeplugin.dll" SelfReg="false"/>
+    <ROW File="qtsensorgestures_shakeplugind.dll" Component_="qtsensorgestures_shakeplugind.dll" FileName="QTSENS~4.DLL|qtsensorgestures_shakeplugind.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\sensorgestures\qtsensorgestures_shakeplugind.dll" SelfReg="false"/>
+    <ROW File="qtsensors_generic.dll" Component_="qtsensors_generic.dll" FileName="QTSENS~1.DLL|qtsensors_generic.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\sensors\qtsensors_generic.dll" SelfReg="false"/>
+    <ROW File="qtsensors_genericd.dll" Component_="qtsensors_genericd.dll" FileName="QTSENS~2.DLL|qtsensors_genericd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\sensors\qtsensors_genericd.dll" SelfReg="false"/>
+    <ROW File="qsqlite.dll" Component_="qsqlite.dll" FileName="qsqlite.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\sqldrivers\qsqlite.dll" SelfReg="false"/>
+    <ROW File="qsqlited.dll" Component_="qsqlited.dll" FileName="qsqlited.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\sqldrivers\qsqlited.dll" SelfReg="false"/>
+    <ROW File="qsqlodbc.dll" Component_="qsqlodbc.dll" FileName="qsqlodbc.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\sqldrivers\qsqlodbc.dll" SelfReg="false"/>
+    <ROW File="qsqlodbcd.dll" Component_="qsqlodbcd.dll" FileName="QSQLOD~1.DLL|qsqlodbcd.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\sqldrivers\qsqlodbcd.dll" SelfReg="false"/>
+    <ROW File="qsqlpsql.dll" Component_="qsqlpsql.dll" FileName="qsqlpsql.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\sqldrivers\qsqlpsql.dll" SelfReg="false"/>
+    <ROW File="qsqlpsqld.dll" Component_="qsqlpsqld.dll" FileName="QSQLPS~1.DLL|qsqlpsqld.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\sqldrivers\qsqlpsqld.dll" SelfReg="false"/>
+    <ROW File="qwindowsvistastyle.dll" Component_="qwindowsvistastyle.dll" FileName="QWINDO~1.DLL|qwindowsvistastyle.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\styles\qwindowsvistastyle.dll" SelfReg="false"/>
+    <ROW File="qwindowsvistastyled.dll" Component_="qwindowsvistastyled.dll" FileName="QWINDO~2.DLL|qwindowsvistastyled.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\styles\qwindowsvistastyled.dll" SelfReg="false"/>
+    <ROW File="qtexttospeech_sapi.dll" Component_="qtexttospeech_sapi.dll" FileName="QTEXTT~1.DLL|qtexttospeech_sapi.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\texttospeech\qtexttospeech_sapi.dll" SelfReg="false"/>
+    <ROW File="qtexttospeech_sapid.dll" Component_="qtexttospeech_sapid.dll" FileName="QTEXTT~2.DLL|qtexttospeech_sapid.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\texttospeech\qtexttospeech_sapid.dll" SelfReg="false"/>
+    <ROW File="qtwebview_webengine.dll" Component_="qtwebview_webengine.dll" FileName="QTWEBV~1.DLL|qtwebview_webengine.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\webview\qtwebview_webengine.dll" SelfReg="false"/>
+    <ROW File="qtwebview_webengined.dll" Component_="qtwebview_webengined.dll" FileName="QTWEBV~2.DLL|qtwebview_webengined.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\plugins\webview\qtwebview_webengined.dll" SelfReg="false"/>
+    <ROW File="qt.conf" Component_="qt.conf" FileName="QT~1.CON|qt.conf" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\Resources\qt.conf" SelfReg="false"/>
+    <ROW File="DS_Store_2" Component_="DS_Store" FileName="DS_STO~1|.DS_Store" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\.DS_Store" SelfReg="false"/>
+    <ROW File="MagnetCapture2.png" Component_="MagnetCapture2.png" FileName="3MAGNE~1.PNG|3MagnetCapture2.png" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\.xvpics\3MagnetCapture2.png" SelfReg="false"/>
+    <ROW File="MagnetCapture3.png" Component_="MagnetCapture2.png" FileName="3MAGNE~2.PNG|3MagnetCapture3.png" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\.xvpics\3MagnetCapture3.png" SelfReg="false"/>
+    <ROW File="MagnetCapture4.png" Component_="MagnetCapture2.png" FileName="3MAGNE~3.PNG|3MagnetCapture4.png" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\.xvpics\3MagnetCapture4.png" SelfReg="false"/>
+    <ROW File="g4blicon.bmp" Component_="MagnetCapture2.png" FileName="g4blicon.bmp" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\.xvpics\g4blicon.bmp" SelfReg="false"/>
+    <ROW File="g4blicon.png" Component_="MagnetCapture2.png" FileName="g4blicon.png" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\.xvpics\g4blicon.png" SelfReg="false"/>
+    <ROW File="historooticon.png" Component_="MagnetCapture2.png" FileName="HISTOR~1.PNG|historooticon.png" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\.xvpics\historooticon.png" SelfReg="false"/>
+    <ROW File="historooticon2.bmp" Component_="MagnetCapture2.png" FileName="HISTOR~1.BMP|historooticon2.bmp" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\.xvpics\historooticon2.bmp" SelfReg="false"/>
+    <ROW File="historooticon3.png" Component_="MagnetCapture2.png" FileName="HISTOR~2.PNG|historooticon3.png" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\.xvpics\historooticon3.png" SelfReg="false"/>
+    <ROW File="historooticon4.png" Component_="MagnetCapture2.png" FileName="HISTOR~3.PNG|historooticon4.png" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\.xvpics\historooticon4.png" SelfReg="false"/>
+    <ROW File="DS_Store_3" Component_="DS_Store_1" FileName="DS_STO~1|.DS_Store" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\ConstructG4blicon\.DS_Store" SelfReg="false"/>
+    <ROW File="MagnetCapture.tiff" Component_="DS_Store_1" FileName="3MAGNE~1.TIF|3MagnetCapture.tiff" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\ConstructG4blicon\3MagnetCapture.tiff" SelfReg="false"/>
+    <ROW File="MagnetCapture2.png_1" Component_="DS_Store_1" FileName="3MAGNE~1.PNG|3MagnetCapture2.png" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\ConstructG4blicon\3MagnetCapture2.png" SelfReg="false"/>
+    <ROW File="MagnetCapture3.png_1" Component_="DS_Store_1" FileName="3MAGNE~2.PNG|3MagnetCapture3.png" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\ConstructG4blicon\3MagnetCapture3.png" SelfReg="false"/>
+    <ROW File="g4blicon.in" Component_="DS_Store_1" FileName="g4blicon.in" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\ConstructG4blicon\g4blicon.in" SelfReg="false"/>
+    <ROW File="G4blDataIcon.icns" Component_="DS_Store" FileName="G4BLDA~1.ICN|G4blDataIcon.icns" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\G4blDataIcon.icns" SelfReg="false"/>
+    <ROW File="G4blDataIcon.ico" Component_="DS_Store" FileName="G4BLDA~1.ICO|G4blDataIcon.ico" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\G4blDataIcon.ico" SelfReg="false"/>
+    <ROW File="G4blDataIcon.png" Component_="DS_Store" FileName="G4BLDA~1.PNG|G4blDataIcon.png" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\G4blDataIcon.png" SelfReg="false"/>
+    <ROW File="G4blGuiInstructions.html" Component_="DS_Store" FileName="G4BLGU~1.HTM|G4blGuiInstructions.html" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\G4blGuiInstructions.html" SelfReg="false"/>
+    <ROW File="g4blicon.icns" Component_="DS_Store" FileName="G4BLIC~1.ICN|g4blicon.icns" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\g4blicon.icns" SelfReg="false"/>
+    <ROW File="g4blicon.ico" Component_="DS_Store" FileName="g4blicon.ico" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\g4blicon.ico" SelfReg="false"/>
+    <ROW File="g4blicon.png_1" Component_="DS_Store" FileName="g4blicon.png" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\g4blicon.png" SelfReg="false"/>
+    <ROW File="G4blMovie.C" Component_="DS_Store" FileName="G4BLMO~1.C|G4blMovie.C" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\G4blMovie.C" SelfReg="false"/>
+    <ROW File="Help.html_1" Component_="DS_Store" FileName="HELP~1.HTM|Help.html" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\Help.html" SelfReg="false"/>
+    <ROW File="MuonsInc.png" Component_="DS_Store" FileName="MuonsInc.png" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\MuonsInc.png" SelfReg="false"/>
+    <ROW File="viewer.def" Component_="DS_Store" FileName="viewer.def" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\viewer.def" SelfReg="false"/>
+    <ROW File="test000" Component_="test000" FileName="test000" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test000" SelfReg="false"/>
+    <ROW File="test001" Component_="test000" FileName="test001" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test001" SelfReg="false"/>
+    <ROW File="test002" Component_="test000" FileName="test002" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test002" SelfReg="false"/>
+    <ROW File="test003" Component_="test000" FileName="test003" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test003" SelfReg="false"/>
+    <ROW File="test004" Component_="test000" FileName="test004" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test004" SelfReg="false"/>
+    <ROW File="test005" Component_="test000" FileName="test005" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test005" SelfReg="false"/>
+    <ROW File="test006" Component_="test000" FileName="test006" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test006" SelfReg="false"/>
+    <ROW File="test007" Component_="test000" FileName="test007" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test007" SelfReg="false"/>
+    <ROW File="test008" Component_="test000" FileName="test008" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test008" SelfReg="false"/>
+    <ROW File="test009" Component_="test000" FileName="test009" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test009" SelfReg="false"/>
+    <ROW File="test010" Component_="test000" FileName="test010" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test010" SelfReg="false"/>
+    <ROW File="test011" Component_="test000" FileName="test011" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test011" SelfReg="false"/>
+    <ROW File="test012" Component_="test000" FileName="test012" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test012" SelfReg="false"/>
+    <ROW File="test013" Component_="test000" FileName="test013" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test013" SelfReg="false"/>
+    <ROW File="test014" Component_="test000" FileName="test014" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test014" SelfReg="false"/>
+    <ROW File="test015" Component_="test000" FileName="test015" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test015" SelfReg="false"/>
+    <ROW File="test016" Component_="test000" FileName="test016" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test016" SelfReg="false"/>
+    <ROW File="test017" Component_="test000" FileName="test017" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test017" SelfReg="false"/>
+    <ROW File="test018" Component_="test000" FileName="test018" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test018" SelfReg="false"/>
+    <ROW File="test019" Component_="test000" FileName="test019" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test019" SelfReg="false"/>
+    <ROW File="test020" Component_="test000" FileName="test020" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test020" SelfReg="false"/>
+    <ROW File="test021" Component_="test000" FileName="test021" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test021" SelfReg="false"/>
+    <ROW File="test022" Component_="test000" FileName="test022" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test022" SelfReg="false"/>
+    <ROW File="test023" Component_="test000" FileName="test023" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test023" SelfReg="false"/>
+    <ROW File="test024" Component_="test000" FileName="test024" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test024" SelfReg="false"/>
+    <ROW File="test025" Component_="test000" FileName="test025" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test025" SelfReg="false"/>
+    <ROW File="test026" Component_="test000" FileName="test026" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test026" SelfReg="false"/>
+    <ROW File="test027" Component_="test000" FileName="test027" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test027" SelfReg="false"/>
+    <ROW File="test028" Component_="test000" FileName="test028" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test028" SelfReg="false"/>
+    <ROW File="test029" Component_="test000" FileName="test029" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test029" SelfReg="false"/>
+    <ROW File="test030" Component_="test000" FileName="test030" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test030" SelfReg="false"/>
+    <ROW File="test031" Component_="test000" FileName="test031" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test031" SelfReg="false"/>
+    <ROW File="test032" Component_="test000" FileName="test032" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test032" SelfReg="false"/>
+    <ROW File="test033" Component_="test000" FileName="test033" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test033" SelfReg="false"/>
+    <ROW File="test034" Component_="test000" FileName="test034" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test034" SelfReg="false"/>
+    <ROW File="test035" Component_="test000" FileName="test035" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test035" SelfReg="false"/>
+    <ROW File="test036" Component_="test000" FileName="test036" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test036" SelfReg="false"/>
+    <ROW File="test037" Component_="test000" FileName="test037" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test037" SelfReg="false"/>
+    <ROW File="test038" Component_="test000" FileName="test038" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test038" SelfReg="false"/>
+    <ROW File="test039" Component_="test000" FileName="test039" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test039" SelfReg="false"/>
+    <ROW File="test040" Component_="test000" FileName="test040" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test040" SelfReg="false"/>
+    <ROW File="test041" Component_="test000" FileName="test041" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test041" SelfReg="false"/>
+    <ROW File="test042" Component_="test000" FileName="test042" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test042" SelfReg="false"/>
+    <ROW File="test043" Component_="test000" FileName="test043" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test043" SelfReg="false"/>
+    <ROW File="test044" Component_="test000" FileName="test044" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test044" SelfReg="false"/>
+    <ROW File="test045" Component_="test000" FileName="test045" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test045" SelfReg="false"/>
+    <ROW File="test046" Component_="test000" FileName="test046" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test046" SelfReg="false"/>
+    <ROW File="test047" Component_="test000" FileName="test047" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test047" SelfReg="false"/>
+    <ROW File="test048" Component_="test000" FileName="test048" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test048" SelfReg="false"/>
+    <ROW File="test049" Component_="test000" FileName="test049" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test049" SelfReg="false"/>
+    <ROW File="test050" Component_="test000" FileName="test050" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test050" SelfReg="false"/>
+    <ROW File="test051" Component_="test000" FileName="test051" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test051" SelfReg="false"/>
+    <ROW File="test052" Component_="test000" FileName="test052" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test052" SelfReg="false"/>
+    <ROW File="test053" Component_="test000" FileName="test053" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test053" SelfReg="false"/>
+    <ROW File="test054" Component_="test000" FileName="test054" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test054" SelfReg="false"/>
+    <ROW File="test055" Component_="test000" FileName="test055" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test055" SelfReg="false"/>
+    <ROW File="test056" Component_="test000" FileName="test056" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test056" SelfReg="false"/>
+    <ROW File="test057" Component_="test000" FileName="test057" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test057" SelfReg="false"/>
+    <ROW File="test058" Component_="test000" FileName="test058" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test058" SelfReg="false"/>
+    <ROW File="test059" Component_="test000" FileName="test059" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test059" SelfReg="false"/>
+    <ROW File="test060" Component_="test000" FileName="test060" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test060" SelfReg="false"/>
+    <ROW File="test061" Component_="test000" FileName="test061" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test061" SelfReg="false"/>
+    <ROW File="test062" Component_="test000" FileName="test062" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test062" SelfReg="false"/>
+    <ROW File="test063" Component_="test000" FileName="test063" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test063" SelfReg="false"/>
+    <ROW File="test064" Component_="test000" FileName="test064" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test064" SelfReg="false"/>
+    <ROW File="test065" Component_="test000" FileName="test065" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test065" SelfReg="false"/>
+    <ROW File="test066" Component_="test000" FileName="test066" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test066" SelfReg="false"/>
+    <ROW File="test067" Component_="test000" FileName="test067" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test067" SelfReg="false"/>
+    <ROW File="test068" Component_="test000" FileName="test068" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test068" SelfReg="false"/>
+    <ROW File="test069" Component_="test000" FileName="test069" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test069" SelfReg="false"/>
+    <ROW File="test070" Component_="test000" FileName="test070" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test070" SelfReg="false"/>
+    <ROW File="test071" Component_="test000" FileName="test071" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test071" SelfReg="false"/>
+    <ROW File="test072" Component_="test000" FileName="test072" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test072" SelfReg="false"/>
+    <ROW File="test073" Component_="test000" FileName="test073" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test073" SelfReg="false"/>
+    <ROW File="test074" Component_="test000" FileName="test074" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test074" SelfReg="false"/>
+    <ROW File="test075" Component_="test000" FileName="test075" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test075" SelfReg="false"/>
+    <ROW File="test076" Component_="test000" FileName="test076" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test076" SelfReg="false"/>
+    <ROW File="test077" Component_="test000" FileName="test077" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test077" SelfReg="false"/>
+    <ROW File="test078" Component_="test000" FileName="test078" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test078" SelfReg="false"/>
+    <ROW File="test079" Component_="test000" FileName="test079" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test079" SelfReg="false"/>
+    <ROW File="test080" Component_="test000" FileName="test080" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test080" SelfReg="false"/>
+    <ROW File="test081" Component_="test000" FileName="test081" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test081" SelfReg="false"/>
+    <ROW File="test082" Component_="test000" FileName="test082" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test082" SelfReg="false"/>
+    <ROW File="test083" Component_="test000" FileName="test083" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test083" SelfReg="false"/>
+    <ROW File="test084" Component_="test000" FileName="test084" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test084" SelfReg="false"/>
+    <ROW File="test085" Component_="test000" FileName="test085" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test085" SelfReg="false"/>
+    <ROW File="test086" Component_="test000" FileName="test086" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test086" SelfReg="false"/>
+    <ROW File="test087" Component_="test000" FileName="test087" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test087" SelfReg="false"/>
+    <ROW File="test088" Component_="test000" FileName="test088" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test088" SelfReg="false"/>
+    <ROW File="test089" Component_="test000" FileName="test089" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test089" SelfReg="false"/>
+    <ROW File="test090" Component_="test000" FileName="test090" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test090" SelfReg="false"/>
+    <ROW File="test091" Component_="test000" FileName="test091" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test091" SelfReg="false"/>
+    <ROW File="test092" Component_="test000" FileName="test092" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test092" SelfReg="false"/>
+    <ROW File="test093" Component_="test000" FileName="test093" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test093" SelfReg="false"/>
+    <ROW File="test094" Component_="test000" FileName="test094" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test094" SelfReg="false"/>
+    <ROW File="test095" Component_="test000" FileName="test095" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test095" SelfReg="false"/>
+    <ROW File="test096" Component_="test000" FileName="test096" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test096" SelfReg="false"/>
+    <ROW File="test097" Component_="test000" FileName="test097" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test097" SelfReg="false"/>
+    <ROW File="test098" Component_="test000" FileName="test098" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test098" SelfReg="false"/>
+    <ROW File="test099" Component_="test000" FileName="test099" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test099" SelfReg="false"/>
+    <ROW File="test100" Component_="test000" FileName="test100" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test100" SelfReg="false"/>
+    <ROW File="test101" Component_="test000" FileName="test101" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test101" SelfReg="false"/>
+    <ROW File="test102" Component_="test000" FileName="test102" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test102" SelfReg="false"/>
+    <ROW File="test103" Component_="test000" FileName="test103" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test103" SelfReg="false"/>
+    <ROW File="test104" Component_="test000" FileName="test104" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test104" SelfReg="false"/>
+    <ROW File="test105" Component_="test000" FileName="test105" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test105" SelfReg="false"/>
+    <ROW File="test106" Component_="test000" FileName="test106" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test106" SelfReg="false"/>
+    <ROW File="test107" Component_="test000" FileName="test107" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test107" SelfReg="false"/>
+    <ROW File="test108" Component_="test000" FileName="test108" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test108" SelfReg="false"/>
+    <ROW File="test109" Component_="test000" FileName="test109" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test109" SelfReg="false"/>
+    <ROW File="test110" Component_="test000" FileName="test110" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test110" SelfReg="false"/>
+    <ROW File="test111" Component_="test000" FileName="test111" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test111" SelfReg="false"/>
+    <ROW File="test112" Component_="test000" FileName="test112" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test112" SelfReg="false"/>
+    <ROW File="test113" Component_="test000" FileName="test113" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\test\test113" SelfReg="false"/>
+    <ROW File="bend.g4bl" Component_="bend.g4bl" FileName="BEND~1.G4B|bend.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\bend.g4bl" SelfReg="false"/>
+    <ROW File="chaos.g4bl" Component_="bend.g4bl" FileName="CHAOS~1.G4B|chaos.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\chaos.g4bl" SelfReg="false"/>
+    <ROW File="collective.g4bl" Component_="bend.g4bl" FileName="COLLEC~1.G4B|collective.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\collective.g4bl" SelfReg="false"/>
+    <ROW File="dataio.g4bl" Component_="bend.g4bl" FileName="DATAIO~1.G4B|dataio.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\dataio.g4bl" SelfReg="false"/>
+    <ROW File="decay.g4bl" Component_="bend.g4bl" FileName="DECAY~1.G4B|decay.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\decay.g4bl" SelfReg="false"/>
+    <ROW File="eloss.g4bl" Component_="bend.g4bl" FileName="ELOSS~1.G4B|eloss.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\eloss.g4bl" SelfReg="false"/>
+    <ROW File="fieldexpr.g4bl" Component_="bend.g4bl" FileName="FIELDE~1.G4B|fieldexpr.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\fieldexpr.g4bl" SelfReg="false"/>
+    <ROW File="fieldmap.B" Component_="bend.g4bl" FileName="fieldmap.B" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\fieldmap.B" SelfReg="false"/>
+    <ROW File="fieldmap.g4bl" Component_="bend.g4bl" FileName="FIELDM~1.G4B|fieldmap.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\fieldmap.g4bl" SelfReg="false"/>
+    <ROW File="g2.g4bl" Component_="bend.g4bl" FileName="G-2~1.G4B|g-2.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\g-2.g4bl" SelfReg="false"/>
+    <ROW File="helicaldipole.g4bl" Component_="bend.g4bl" FileName="HELICA~1.G4B|helicaldipole.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\helicaldipole.g4bl" SelfReg="false"/>
+    <ROW File="helmholtz.g4bl" Component_="bend.g4bl" FileName="HELMHO~1.G4B|helmholtz.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\helmholtz.g4bl" SelfReg="false"/>
+    <ROW File="material.g4bl" Component_="bend.g4bl" FileName="MATERI~1.G4B|material.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\material.g4bl" SelfReg="false"/>
+    <ROW File="mudecay.g4bl" Component_="bend.g4bl" FileName="MUDECA~1.G4B|mudecay.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\mudecay.g4bl" SelfReg="false"/>
+    <ROW File="multipole.g4bl" Component_="bend.g4bl" FileName="MULTIP~1.G4B|multipole.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\multipole.g4bl" SelfReg="false"/>
+    <ROW File="muscat.g4bl" Component_="bend.g4bl" FileName="MUSCAT~1.G4B|muscat.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\muscat.g4bl" SelfReg="false"/>
+    <ROW File="pidecay.g4bl" Component_="bend.g4bl" FileName="PIDECA~1.G4B|pidecay.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\pidecay.g4bl" SelfReg="false"/>
+    <ROW File="pillbox.g4bl" Component_="bend.g4bl" FileName="PILLBO~1.G4B|pillbox.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\pillbox.g4bl" SelfReg="false"/>
+    <ROW File="placement.g4bl" Component_="bend.g4bl" FileName="PLACEM~1.G4B|placement.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\placement.g4bl" SelfReg="false"/>
+    <ROW File="quad.g4bl" Component_="bend.g4bl" FileName="QUAD~1.G4B|quad.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\quad.g4bl" SelfReg="false"/>
+    <ROW File="sectorbend.g4bl" Component_="bend.g4bl" FileName="SECTOR~1.G4B|sectorbend.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\sectorbend.g4bl" SelfReg="false"/>
+    <ROW File="solenoid.g4bl" Component_="bend.g4bl" FileName="SOLENO~1.G4B|solenoid.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\solenoid.g4bl" SelfReg="false"/>
+    <ROW File="straggling.g4bl" Component_="bend.g4bl" FileName="STRAGG~1.G4B|straggling.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\straggling.g4bl" SelfReg="false"/>
+    <ROW File="straggling2.g4bl" Component_="bend.g4bl" FileName="STRAGG~2.G4B|straggling2.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\straggling2.g4bl" SelfReg="false"/>
+    <ROW File="transport.g4bl" Component_="bend.g4bl" FileName="TRANSP~1.G4B|transport.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\transport.g4bl" SelfReg="false"/>
+    <ROW File="visualization.g4bl" Component_="bend.g4bl" FileName="VISUAL~1.G4B|visualization.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\validation\visualization.g4bl" SelfReg="false"/>
+    <ROW File="bookmarkFile_1" Component_="bookmarkFile_1" FileName="BOOKMA~1|.bookmarkFile" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\.bookmarkFile" SelfReg="false"/>
+    <ROW File="DS_Store_4" Component_="bookmarkFile_1" FileName="DS_STO~1|.DS_Store" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\.DS_Store" SelfReg="false"/>
+    <ROW File="C.dat_1" Component_="bookmarkFile_1" FileName="C.dat" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\C.dat" SelfReg="false"/>
+    <ROW File="emittancematch.sh_1" Component_="bookmarkFile_1" FileName="EMITTA~1.SH|emittancematch.sh" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\emittancematch.sh" SelfReg="false"/>
+    <ROW File="Example1.g4bl_1" Component_="bookmarkFile_1" FileName="EXAMPL~1.G4B|Example1.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Example1.g4bl" SelfReg="false"/>
+    <ROW File="ExampleN02.g4bl_1" Component_="bookmarkFile_1" FileName="EXAMPL~2.G4B|ExampleN02.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\ExampleN02.g4bl" SelfReg="false"/>
+    <ROW File="FieldLines.g4bl_1" Component_="bookmarkFile_1" FileName="FIELDL~1.G4B|FieldLines.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\FieldLines.g4bl" SelfReg="false"/>
+    <ROW File="g4beamline.root_1" Component_="bookmarkFile_1" FileName="G4BEAM~1.ROO|g4beamline.root" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\g4beamline.root" SelfReg="false"/>
+    <ROW File="g4bl.out_1" Component_="bookmarkFile_1" FileName="g4bl.out" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\g4bl.out" SelfReg="false"/>
+    <ROW File="Idealized_g2.g4bl_1" Component_="bookmarkFile_1" FileName="IDEALI~1.G4B|Idealized_g-2.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Idealized_g-2.g4bl" SelfReg="false"/>
+    <ROW File="DecaySolenoid_1" Component_="DecaySolenoid_1" FileName="DECAYS~1|DecaySolenoid" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Magnets\DecaySolenoid" SelfReg="false"/>
+    <ROW File="RALBend1_1" Component_="DecaySolenoid_1" FileName="RALBend1" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Magnets\RALBend1" SelfReg="false"/>
+    <ROW File="MICE_StageVI.g4bl_1" Component_="bookmarkFile_1" FileName="MICE_S~1.G4B|MICE_StageVI.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\MICE_StageVI.g4bl" SelfReg="false"/>
+    <ROW File="Movie.in_1" Component_="bookmarkFile_1" FileName="Movie.in" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Movie.in" SelfReg="false"/>
+    <ROW File="MultipleScattering.g4bl_1" Component_="bookmarkFile_1" FileName="MULTIP~1.G4B|MultipleScattering.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\MultipleScattering.g4bl" SelfReg="false"/>
+    <ROW File="SampleMovie.g4bl_1" Component_="bookmarkFile_1" FileName="SAMPLE~1.G4B|SampleMovie.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\SampleMovie.g4bl" SelfReg="false"/>
+    <ROW File="SpaceCharge.g4bl_1" Component_="bookmarkFile_1" FileName="SPACEC~1.G4B|SpaceCharge.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\SpaceCharge.g4bl" SelfReg="false"/>
+    <ROW File="Study2Cooling.g4bl_1" Component_="bookmarkFile_1" FileName="STUDY2~1.G4B|Study2Cooling.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Study2Cooling.g4bl" SelfReg="false"/>
+    <ROW File="triplet.sh_1" Component_="bookmarkFile_1" FileName="triplet.sh" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\triplet.sh" SelfReg="false"/>
+    <ROW File="TungstenTarget.g4bl_1" Component_="bookmarkFile_1" FileName="TUNGST~1.G4B|TungstenTarget.g4bl" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\TungstenTarget.g4bl" SelfReg="false"/>
+    <ROW File="abs300_1" Component_="abs300_1" FileName="abs300" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Windows\abs300" SelfReg="false"/>
+    <ROW File="abs360_1" Component_="abs300_1" FileName="abs360" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Windows\abs360" SelfReg="false"/>
+    <ROW File="H2BellowWindowconcaveconvexcoord21TJR.xls_1" Component_="abs300_1" FileName="H2-BEL~1.XLS|H2-Bellow-Window-concave-convex-coord-2 (1) - TJR.xls" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Windows\H2-Bellow-Window-concave-convex-coord-2 (1) - TJR.xls" SelfReg="false"/>
+    <ROW File="H2BellowWindowconcaveconvexcoord21.xls_1" Component_="abs300_1" FileName="H2-BEL~2.XLS|H2-Bellow-Window-concave-convex-coord-2 (1).xls" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Windows\H2-Bellow-Window-concave-convex-coord-2 (1).xls" SelfReg="false"/>
+    <ROW File="H2BellowWindowconcaveconvexcoord3.xls_1" Component_="abs300_1" FileName="H2-BEL~3.XLS|H2-Bellow-Window-concave-convex-coord-3.xls" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Windows\H2-Bellow-Window-concave-convex-coord-3.xls" SelfReg="false"/>
+    <ROW File="safe320_1" Component_="abs300_1" FileName="safe320" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Windows\safe320" SelfReg="false"/>
+    <ROW File="safe480_1" Component_="abs300_1" FileName="safe480" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Windows\safe480" SelfReg="false"/>
+    <ROW File="testwin_1" Component_="abs300_1" FileName="testwin" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\examples\Windows\testwin" SelfReg="false"/>
+    <ROW File="bsdtar.exe" Component_="bsdtar.exe" FileName="bsdtar.exe" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\bsdtar.exe" SelfReg="false" DigSign="true"/>
+    <ROW File="bzip2.dll" Component_="bzip2.dll" FileName="bzip2.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\bzip2.dll" SelfReg="false"/>
+    <ROW File="G4analysis.dll" Component_="G4analysis.dll" FileName="G4ANAL~1.DLL|G4analysis.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4analysis.dll" SelfReg="false"/>
+    <ROW File="g4blsetup.csh" Component_="g4blsetup.csh" FileName="G4BL-S~1.CSH|g4bl-setup.csh" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\g4bl-setup.csh" SelfReg="false"/>
+    <ROW File="g4blsetup.sh" Component_="g4blsetup.csh" FileName="G4BL-S~1.SH|g4bl-setup.sh" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\g4bl-setup.sh" SelfReg="false"/>
+    <ROW File="g4bl.exe" Component_="g4bl.exe" FileName="g4bl.exe" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\g4bl.exe" SelfReg="false" DigSign="true"/>
+    <ROW File="g4bldata.exe" Component_="g4bldata.exe" FileName="g4bldata.exe" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\g4bldata.exe" SelfReg="false" DigSign="true"/>
+    <ROW File="g4blgui.exe" Component_="g4blgui.exe" FileName="g4blgui.exe" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\g4blgui.exe" SelfReg="false" DigSign="true"/>
+    <ROW File="g4blmpi.exe" Component_="g4blmpi.exe" FileName="g4blmpi.exe" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\g4blmpi.exe" SelfReg="false" DigSign="true"/>
+    <ROW File="g4bltest.exe" Component_="g4bltest.exe" FileName="g4bltest.exe" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\g4bltest.exe" SelfReg="false" DigSign="true"/>
+    <ROW File="G4clhep.dll" Component_="G4clhep.dll" FileName="G4clhep.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4clhep.dll" SelfReg="false"/>
+    <ROW File="G4digits_hits.dll" Component_="G4digits_hits.dll" FileName="G4DIGI~1.DLL|G4digits_hits.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4digits_hits.dll" SelfReg="false"/>
+    <ROW File="G4error_propagation.dll" Component_="G4error_propagation.dll" FileName="G4ERRO~1.DLL|G4error_propagation.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4error_propagation.dll" SelfReg="false"/>
+    <ROW File="G4event.dll" Component_="G4event.dll" FileName="G4event.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4event.dll" SelfReg="false"/>
+    <ROW File="G4expat.dll" Component_="G4expat.dll" FileName="G4expat.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4expat.dll" SelfReg="false"/>
+    <ROW File="G4FR.dll" Component_="G4FR.dll" FileName="G4FR.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4FR.dll" SelfReg="false"/>
+    <ROW File="G4geometry.dll" Component_="G4geometry.dll" FileName="G4GEOM~1.DLL|G4geometry.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4geometry.dll" SelfReg="false"/>
+    <ROW File="G4gl2ps.dll" Component_="G4gl2ps.dll" FileName="G4gl2ps.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4gl2ps.dll" SelfReg="false"/>
+    <ROW File="G4global.dll" Component_="G4global.dll" FileName="G4global.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4global.dll" SelfReg="false"/>
+    <ROW File="G4GMocren.dll" Component_="G4GMocren.dll" FileName="G4GMOC~1.DLL|G4GMocren.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4GMocren.dll" SelfReg="false"/>
+    <ROW File="G4graphics_reps.dll" Component_="G4graphics_reps.dll" FileName="G4GRAP~1.DLL|G4graphics_reps.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4graphics_reps.dll" SelfReg="false"/>
+    <ROW File="G4intercoms.dll" Component_="G4intercoms.dll" FileName="G4INTE~1.DLL|G4intercoms.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4intercoms.dll" SelfReg="false"/>
+    <ROW File="G4interfaces.dll" Component_="G4interfaces.dll" FileName="G4INTE~2.DLL|G4interfaces.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4interfaces.dll" SelfReg="false"/>
+    <ROW File="G4materials.dll" Component_="G4materials.dll" FileName="G4MATE~1.DLL|G4materials.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4materials.dll" SelfReg="false"/>
+    <ROW File="G4modeling.dll" Component_="G4modeling.dll" FileName="G4MODE~1.DLL|G4modeling.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4modeling.dll" SelfReg="false"/>
+    <ROW File="G4OpenGL.dll" Component_="G4OpenGL.dll" FileName="G4OpenGL.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4OpenGL.dll" SelfReg="false"/>
+    <ROW File="G4parmodels.dll" Component_="G4parmodels.dll" FileName="G4PARM~1.DLL|G4parmodels.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4parmodels.dll" SelfReg="false"/>
+    <ROW File="G4particles.dll" Component_="G4particles.dll" FileName="G4PART~1.DLL|G4particles.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4particles.dll" SelfReg="false"/>
+    <ROW File="G4persistency.dll" Component_="G4persistency.dll" FileName="G4PERS~1.DLL|G4persistency.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4persistency.dll" SelfReg="false"/>
+    <ROW File="G4physicslists.dll" Component_="G4physicslists.dll" FileName="G4PHYS~1.DLL|G4physicslists.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4physicslists.dll" SelfReg="false"/>
+    <ROW File="G4processes.dll" Component_="G4processes.dll" FileName="G4PROC~1.DLL|G4processes.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4processes.dll" SelfReg="false"/>
+    <ROW File="G4ptl.dll" Component_="G4ptl.dll" FileName="G4ptl.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4ptl.dll" SelfReg="false"/>
+    <ROW File="G4RayTracer.dll" Component_="G4RayTracer.dll" FileName="G4RAYT~1.DLL|G4RayTracer.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4RayTracer.dll" SelfReg="false"/>
+    <ROW File="G4readout.dll" Component_="G4readout.dll" FileName="G4READ~1.DLL|G4readout.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4readout.dll" SelfReg="false"/>
+    <ROW File="G4run.dll" Component_="G4run.dll" FileName="G4run.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4run.dll" SelfReg="false"/>
+    <ROW File="G4tasking.dll" Component_="G4tasking.dll" FileName="G4TASK~1.DLL|G4tasking.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4tasking.dll" SelfReg="false"/>
+    <ROW File="G4tools.dll" Component_="G4tools.dll" FileName="G4tools.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4tools.dll" SelfReg="false"/>
+    <ROW File="G4track.dll" Component_="G4track.dll" FileName="G4track.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4track.dll" SelfReg="false"/>
+    <ROW File="G4tracking.dll" Component_="G4tracking.dll" FileName="G4TRAC~1.DLL|G4tracking.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4tracking.dll" SelfReg="false"/>
+    <ROW File="G4Tree.dll" Component_="G4Tree.dll" FileName="G4Tree.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4Tree.dll" SelfReg="false"/>
+    <ROW File="G4visHepRep.dll" Component_="G4visHepRep.dll" FileName="G4VISH~1.DLL|G4visHepRep.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4visHepRep.dll" SelfReg="false"/>
+    <ROW File="G4vis_management.dll" Component_="G4vis_management.dll" FileName="G4VIS_~1.DLL|G4vis_management.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4vis_management.dll" SelfReg="false"/>
+    <ROW File="G4VRML.dll" Component_="G4VRML.dll" FileName="G4VRML.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4VRML.dll" SelfReg="false"/>
+    <ROW File="G4zlib.dll" Component_="G4zlib.dll" FileName="G4zlib.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\G4zlib.dll" SelfReg="false"/>
+    <ROW File="gsl.dll" Component_="gsl.dll" FileName="gsl.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\gsl.dll" SelfReg="false"/>
+    <ROW File="gslcblas.dll" Component_="gslcblas.dll" FileName="gslcblas.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\gslcblas.dll" SelfReg="false"/>
+    <ROW File="libarchive2.dll" Component_="libarchive2.dll" FileName="LIBARC~1.DLL|libarchive2.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\libarchive2.dll" SelfReg="false"/>
+    <ROW File="libfftw3f3.dll" Component_="libfftw3f3.dll" FileName="LIBFFT~1.DLL|libfftw3f-3.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\libfftw3f-3.dll" SelfReg="false"/>
+    <ROW File="msvcp140.dll" Component_="msvcp140.dll" FileName="msvcp140.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\msvcp140.dll" SelfReg="false"/>
+    <ROW File="Qt5Core.dll" Component_="Qt5Core.dll" FileName="Qt5Core.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\Qt5Core.dll" SelfReg="false"/>
+    <ROW File="Qt5Gui.dll" Component_="Qt5Gui.dll" FileName="Qt5Gui.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\Qt5Gui.dll" SelfReg="false"/>
+    <ROW File="Qt5Network.dll" Component_="Qt5Network.dll" FileName="QT5NET~1.DLL|Qt5Network.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\Qt5Network.dll" SelfReg="false"/>
+    <ROW File="Qt5OpenGL.dll" Component_="Qt5OpenGL.dll" FileName="QT5OPE~1.DLL|Qt5OpenGL.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\Qt5OpenGL.dll" SelfReg="false"/>
+    <ROW File="Qt5Widgets.dll" Component_="Qt5Widgets.dll" FileName="QT5WID~1.DLL|Qt5Widgets.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\Qt5Widgets.dll" SelfReg="false"/>
+    <ROW File="vcruntime140.dll" Component_="vcruntime140.dll" FileName="VCRUNT~1.DLL|vcruntime140.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\vcruntime140.dll" SelfReg="false"/>
+    <ROW File="vcruntime140_1.dll" Component_="vcruntime140_1.dll" FileName="VCRUNT~2.DLL|vcruntime140_1.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\vcruntime140_1.dll" SelfReg="false"/>
+    <ROW File="zlib1.dll" Component_="zlib1.dll" FileName="zlib1.dll" Attributes="0" SourcePath="C:\Users\tjrob\G4beamline-3.08\bin\zlib1.dll" SelfReg="false"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.BuildComponent">
+    <ROW BuildKey="Win32_Release" BuildName="Win32_Release" BuildOrder="1" BuildType="0" PackageFolder="C:\Users\tjrob" PackageFileName="G4beamline-3.08" Languages="en" InstallationType="4" UseLargeSchema="true" MsiPackageType="x64"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.DictionaryComponent">
+    <ROW Path="&lt;AI_DICTS&gt;ui.ail"/>
+    <ROW Path="&lt;AI_DICTS&gt;ui_en.ail"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.FragmentComponent">
+    <ROW Fragment="CommonUI.aip" Path="&lt;AI_FRAGS&gt;CommonUI.aip"/>
+    <ROW Fragment="FolderDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\FolderDlg.aip"/>
+    <ROW Fragment="MaintenanceTypeDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\MaintenanceTypeDlg.aip"/>
+    <ROW Fragment="MaintenanceWelcomeDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\MaintenanceWelcomeDlg.aip"/>
+    <ROW Fragment="SequenceDialogs.aip" Path="&lt;AI_THEMES&gt;classic\fragments\SequenceDialogs.aip"/>
+    <ROW Fragment="Sequences.aip" Path="&lt;AI_FRAGS&gt;Sequences.aip"/>
+    <ROW Fragment="StaticUIStrings.aip" Path="&lt;AI_FRAGS&gt;StaticUIStrings.aip"/>
+    <ROW Fragment="Themes.aip" Path="&lt;AI_FRAGS&gt;Themes.aip"/>
+    <ROW Fragment="UI.aip" Path="&lt;AI_THEMES&gt;classic\fragments\UI.aip"/>
+    <ROW Fragment="Validation.aip" Path="&lt;AI_FRAGS&gt;Validation.aip"/>
+    <ROW Fragment="VerifyRemoveDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\VerifyRemoveDlg.aip"/>
+    <ROW Fragment="VerifyRepairDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\VerifyRepairDlg.aip"/>
+    <ROW Fragment="WelcomeDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\WelcomeDlg.aip"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiBinaryComponent">
+    <ROW Name="aicustact.dll" SourcePath="&lt;AI_CUSTACTS&gt;aicustact.dll"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiControlEventComponent">
+    <ROW Dialog_="WelcomeDlg" Control_="Next" Event="NewDialog" Argument="FolderDlg" Condition="AI_INSTALL" Ordering="1"/>
+    <ROW Dialog_="FolderDlg" Control_="Next" Event="NewDialog" Argument="VerifyReadyDlg" Condition="AI_INSTALL" Ordering="201"/>
+    <ROW Dialog_="FolderDlg" Control_="Back" Event="NewDialog" Argument="WelcomeDlg" Condition="AI_INSTALL" Ordering="1"/>
+    <ROW Dialog_="MaintenanceWelcomeDlg" Control_="Next" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT" Ordering="99"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_MAINT" Ordering="198"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Back" Event="NewDialog" Argument="CustomizeDlg" Condition="AI_MAINT" Ordering="202"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_INSTALL" Ordering="197"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Back" Event="NewDialog" Argument="FolderDlg" Condition="AI_INSTALL" Ordering="201"/>
+    <ROW Dialog_="CustomizeDlg" Control_="Next" Event="NewDialog" Argument="VerifyReadyDlg" Condition="AI_MAINT" Ordering="101"/>
+    <ROW Dialog_="CustomizeDlg" Control_="Back" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT" Ordering="1"/>
+    <ROW Dialog_="MaintenanceTypeDlg" Control_="ChangeButton" Event="NewDialog" Argument="CustomizeDlg" Condition="AI_MAINT" Ordering="501"/>
+    <ROW Dialog_="MaintenanceTypeDlg" Control_="Back" Event="NewDialog" Argument="MaintenanceWelcomeDlg" Condition="AI_MAINT" Ordering="1"/>
+    <ROW Dialog_="MaintenanceTypeDlg" Control_="RemoveButton" Event="NewDialog" Argument="VerifyRemoveDlg" Condition="AI_MAINT AND InstallMode=&quot;Remove&quot;" Ordering="601"/>
+    <ROW Dialog_="VerifyRemoveDlg" Control_="Back" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT AND InstallMode=&quot;Remove&quot;" Ordering="1"/>
+    <ROW Dialog_="MaintenanceTypeDlg" Control_="RepairButton" Event="NewDialog" Argument="VerifyRepairDlg" Condition="AI_MAINT AND InstallMode=&quot;Repair&quot;" Ordering="601"/>
+    <ROW Dialog_="VerifyRepairDlg" Control_="Back" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT AND InstallMode=&quot;Repair&quot;" Ordering="1"/>
+    <ROW Dialog_="VerifyRepairDlg" Control_="Repair" Event="EndDialog" Argument="Return" Condition="AI_MAINT AND InstallMode=&quot;Repair&quot;" Ordering="399" Options="1"/>
+    <ROW Dialog_="VerifyRemoveDlg" Control_="Remove" Event="EndDialog" Argument="Return" Condition="AI_MAINT AND InstallMode=&quot;Remove&quot;" Ordering="299" Options="1"/>
+    <ROW Dialog_="PatchWelcomeDlg" Control_="Next" Event="NewDialog" Argument="VerifyReadyDlg" Condition="AI_PATCH" Ordering="201"/>
+    <ROW Dialog_="ResumeDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_RESUME" Ordering="299"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_PATCH" Ordering="199"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Back" Event="NewDialog" Argument="PatchWelcomeDlg" Condition="AI_PATCH" Ordering="203"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiCreateFolderComponent">
+    <ROW Directory_="APPDIR" Component_="APPDIR" ManualDelete="true"/>
+    <ROW Directory_="SHORTCUTDIR" Component_="SHORTCUTDIR" ManualDelete="false"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiCustActComponent">
+    <ROW Action="AI_DpiContentScale" Type="1" Source="aicustact.dll" Target="DpiContentScale"/>
+    <ROW Action="AI_EnableDebugLog" Type="321" Source="aicustact.dll" Target="EnableDebugLog"/>
+    <ROW Action="AI_InstallModeCheck" Type="1" Source="aicustact.dll" Target="UpdateInstallMode" WithoutSeq="true"/>
+    <ROW Action="AI_PREPARE_UPGRADE" Type="65" Source="aicustact.dll" Target="PrepareUpgrade"/>
+    <ROW Action="AI_ResolveKnownFolders" Type="1" Source="aicustact.dll" Target="AI_ResolveKnownFolders"/>
+    <ROW Action="AI_SETMIXINSTLOCATION" Type="1" Source="aicustact.dll" Target="MixedAllUsersInstallLocation"/>
+    <ROW Action="AI_SHOW_LOG" Type="65" Source="aicustact.dll" Target="LaunchLogFile" WithoutSeq="true"/>
+    <ROW Action="AI_STORE_LOCATION" Type="51" Source="ARPINSTALLLOCATION" Target="[APPDIR]"/>
+    <ROW Action="SET_APPDIR" Type="307" Source="APPDIR" Target="[ProgramFilesFolder][Manufacturer]\[ProductName]" MultiBuildTarget="Win32_Release:[AI_UserProgramFiles][Manufacturer]\[ProductName]"/>
+    <ROW Action="SET_SHORTCUTDIR" Type="307" Source="SHORTCUTDIR" Target="[ProgramMenuFolder][ProductName]"/>
+    <ROW Action="SET_TARGETDIR_TO_APPDIR" Type="51" Source="TARGETDIR" Target="[APPDIR]"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatCompsComponent">
+    <ROW Feature_="MainFeature" Component_="ProductInformation"/>
+    <ROW Feature_="MainFeature" Component_="BUILD.txt.swp"/>
+    <ROW Feature_="MainFeature" Component_="bookmarkFile"/>
+    <ROW Feature_="MainFeature" Component_="DecaySolenoid"/>
+    <ROW Feature_="MainFeature" Component_="abs300"/>
+    <ROW Feature_="MainFeature" Component_="qtaudio_wasapi.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtaudio_wasapid.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtaudio_windows.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtaudio_windowsd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qgenericbearer.dll"/>
+    <ROW Feature_="MainFeature" Component_="qgenericbearerd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtpassthrucanbus.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtpassthrucanbusd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtpeakcanbus.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtpeakcanbusd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtsysteccanbus.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtsysteccanbusd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qttinycanbus.dll"/>
+    <ROW Feature_="MainFeature" Component_="qttinycanbusd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtvectorcanbus.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtvectorcanbusd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtvirtualcanbus.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtvirtualcanbusd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qaxwidget.dll"/>
+    <ROW Feature_="MainFeature" Component_="qquickwidget.dll"/>
+    <ROW Feature_="MainFeature" Component_="xinputgamepad.dll"/>
+    <ROW Feature_="MainFeature" Component_="xinputgamepadd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtuiotouchplugin.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtuiotouchplugind.dll"/>
+    <ROW Feature_="MainFeature" Component_="defaultgeometryloader.dll"/>
+    <ROW Feature_="MainFeature" Component_="defaultgeometryloaderd.dll"/>
+    <ROW Feature_="MainFeature" Component_="gltfgeometryloader.dll"/>
+    <ROW Feature_="MainFeature" Component_="gltfgeometryloaderd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtgeoservices_esri.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtgeoservices_esrid.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtgeoservices_itemsoverlay.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtgeoservices_itemsoverlayd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtgeoservices_mapbox.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtgeoservices_mapboxd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtgeoservices_nokia.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtgeoservices_nokiad.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtgeoservices_osm.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtgeoservices_osmd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qsvgicon.dll"/>
+    <ROW Feature_="MainFeature" Component_="qsvgicond.dll"/>
+    <ROW Feature_="MainFeature" Component_="qgif.dll"/>
+    <ROW Feature_="MainFeature" Component_="qgifd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qicns.dll"/>
+    <ROW Feature_="MainFeature" Component_="qicnsd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qico.dll"/>
+    <ROW Feature_="MainFeature" Component_="qicod.dll"/>
+    <ROW Feature_="MainFeature" Component_="qjpeg.dll"/>
+    <ROW Feature_="MainFeature" Component_="qjpegd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qsvg.dll"/>
+    <ROW Feature_="MainFeature" Component_="qsvgd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtga.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtgad.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtiff.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtiffd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qwbmp.dll"/>
+    <ROW Feature_="MainFeature" Component_="qwbmpd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qwebp.dll"/>
+    <ROW Feature_="MainFeature" Component_="qwebpd.dll"/>
+    <ROW Feature_="MainFeature" Component_="dsengine.dll"/>
+    <ROW Feature_="MainFeature" Component_="dsengined.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtmedia_audioengine.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtmedia_audioengined.dll"/>
+    <ROW Feature_="MainFeature" Component_="wmfengine.dll"/>
+    <ROW Feature_="MainFeature" Component_="wmfengined.dll"/>
+    <ROW Feature_="MainFeature" Component_="qdirect2d.dll"/>
+    <ROW Feature_="MainFeature" Component_="qdirect2dd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qminimal.dll"/>
+    <ROW Feature_="MainFeature" Component_="qminimald.dll"/>
+    <ROW Feature_="MainFeature" Component_="qoffscreen.dll"/>
+    <ROW Feature_="MainFeature" Component_="qoffscreend.dll"/>
+    <ROW Feature_="MainFeature" Component_="qwindows.dll"/>
+    <ROW Feature_="MainFeature" Component_="qwindowsd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qxdgdesktopportal.dll"/>
+    <ROW Feature_="MainFeature" Component_="qxdgdesktopportald.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtmultimedia_m3u.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtmultimedia_m3ud.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtposition_positionpoll.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtposition_positionpolld.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtposition_serialnmea.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtposition_serialnmead.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtposition_winrt.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtposition_winrtd.dll"/>
+    <ROW Feature_="MainFeature" Component_="windowsprintersupport.dll"/>
+    <ROW Feature_="MainFeature" Component_="windowsprintersupportd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qmldbg_debugger.dll"/>
+    <ROW Feature_="MainFeature" Component_="qmldbg_debuggerd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qmldbg_inspector.dll"/>
+    <ROW Feature_="MainFeature" Component_="qmldbg_inspectord.dll"/>
+    <ROW Feature_="MainFeature" Component_="qmldbg_local.dll"/>
+    <ROW Feature_="MainFeature" Component_="qmldbg_locald.dll"/>
+    <ROW Feature_="MainFeature" Component_="qmldbg_messages.dll"/>
+    <ROW Feature_="MainFeature" Component_="qmldbg_messagesd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qmldbg_native.dll"/>
+    <ROW Feature_="MainFeature" Component_="qmldbg_natived.dll"/>
+    <ROW Feature_="MainFeature" Component_="qmldbg_nativedebugger.dll"/>
+    <ROW Feature_="MainFeature" Component_="qmldbg_nativedebuggerd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qmldbg_preview.dll"/>
+    <ROW Feature_="MainFeature" Component_="qmldbg_previewd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qmldbg_profiler.dll"/>
+    <ROW Feature_="MainFeature" Component_="qmldbg_profilerd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qmldbg_quickprofiler.dll"/>
+    <ROW Feature_="MainFeature" Component_="qmldbg_quickprofilerd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qmldbg_server.dll"/>
+    <ROW Feature_="MainFeature" Component_="qmldbg_serverd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qmldbg_tcp.dll"/>
+    <ROW Feature_="MainFeature" Component_="qmldbg_tcpd.dll"/>
+    <ROW Feature_="MainFeature" Component_="scene2d.dll"/>
+    <ROW Feature_="MainFeature" Component_="scene2dd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qsgd3d12backend.dll"/>
+    <ROW Feature_="MainFeature" Component_="qsgd3d12backendd.dll"/>
+    <ROW Feature_="MainFeature" Component_="assimpsceneimport.dll"/>
+    <ROW Feature_="MainFeature" Component_="assimpsceneimportd.dll"/>
+    <ROW Feature_="MainFeature" Component_="gltfsceneexport.dll"/>
+    <ROW Feature_="MainFeature" Component_="gltfsceneexportd.dll"/>
+    <ROW Feature_="MainFeature" Component_="gltfsceneimport.dll"/>
+    <ROW Feature_="MainFeature" Component_="gltfsceneimportd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtsensorgestures_plugin.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtsensorgestures_plugind.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtsensorgestures_shakeplugin.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtsensorgestures_shakeplugind.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtsensors_generic.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtsensors_genericd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qsqlite.dll"/>
+    <ROW Feature_="MainFeature" Component_="qsqlited.dll"/>
+    <ROW Feature_="MainFeature" Component_="qsqlodbc.dll"/>
+    <ROW Feature_="MainFeature" Component_="qsqlodbcd.dll"/>
+    <ROW Feature_="MainFeature" Component_="qsqlpsql.dll"/>
+    <ROW Feature_="MainFeature" Component_="qsqlpsqld.dll"/>
+    <ROW Feature_="MainFeature" Component_="qwindowsvistastyle.dll"/>
+    <ROW Feature_="MainFeature" Component_="qwindowsvistastyled.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtexttospeech_sapi.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtexttospeech_sapid.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtwebview_webengine.dll"/>
+    <ROW Feature_="MainFeature" Component_="qtwebview_webengined.dll"/>
+    <ROW Feature_="MainFeature" Component_="qt.conf"/>
+    <ROW Feature_="MainFeature" Component_="APPDIR"/>
+    <ROW Feature_="MainFeature" Component_="bsdtar.exe"/>
+    <ROW Feature_="MainFeature" Component_="bzip2.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4analysis.dll"/>
+    <ROW Feature_="MainFeature" Component_="g4blsetup.csh"/>
+    <ROW Feature_="MainFeature" Component_="g4bl.exe"/>
+    <ROW Feature_="MainFeature" Component_="g4bldata.exe"/>
+    <ROW Feature_="MainFeature" Component_="g4blgui.exe"/>
+    <ROW Feature_="MainFeature" Component_="g4blmpi.exe"/>
+    <ROW Feature_="MainFeature" Component_="g4bltest.exe"/>
+    <ROW Feature_="MainFeature" Component_="G4clhep.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4digits_hits.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4error_propagation.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4event.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4expat.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4FR.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4geometry.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4gl2ps.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4global.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4GMocren.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4graphics_reps.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4intercoms.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4interfaces.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4materials.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4modeling.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4OpenGL.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4parmodels.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4particles.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4persistency.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4physicslists.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4processes.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4ptl.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4RayTracer.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4readout.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4run.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4tasking.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4tools.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4track.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4tracking.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4Tree.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4visHepRep.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4vis_management.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4VRML.dll"/>
+    <ROW Feature_="MainFeature" Component_="G4zlib.dll"/>
+    <ROW Feature_="MainFeature" Component_="gsl.dll"/>
+    <ROW Feature_="MainFeature" Component_="DS_Store"/>
+    <ROW Feature_="MainFeature" Component_="MagnetCapture2.png"/>
+    <ROW Feature_="MainFeature" Component_="DS_Store_1"/>
+    <ROW Feature_="MainFeature" Component_="test000"/>
+    <ROW Feature_="MainFeature" Component_="bend.g4bl"/>
+    <ROW Feature_="MainFeature" Component_="bookmarkFile_1"/>
+    <ROW Feature_="MainFeature" Component_="DecaySolenoid_1"/>
+    <ROW Feature_="MainFeature" Component_="abs300_1"/>
+    <ROW Feature_="MainFeature" Component_="gslcblas.dll"/>
+    <ROW Feature_="MainFeature" Component_="libarchive2.dll"/>
+    <ROW Feature_="MainFeature" Component_="libfftw3f3.dll"/>
+    <ROW Feature_="MainFeature" Component_="msvcp140.dll"/>
+    <ROW Feature_="MainFeature" Component_="Qt5Core.dll"/>
+    <ROW Feature_="MainFeature" Component_="Qt5Gui.dll"/>
+    <ROW Feature_="MainFeature" Component_="Qt5Network.dll"/>
+    <ROW Feature_="MainFeature" Component_="Qt5OpenGL.dll"/>
+    <ROW Feature_="MainFeature" Component_="Qt5Widgets.dll"/>
+    <ROW Feature_="MainFeature" Component_="vcruntime140.dll"/>
+    <ROW Feature_="MainFeature" Component_="vcruntime140_1.dll"/>
+    <ROW Feature_="MainFeature" Component_="zlib1.dll"/>
+    <ROW Feature_="MainFeature" Component_="SHORTCUTDIR"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
+    <ROW Name="g4blgui.exe" SourcePath="C:\Users\tjrob\G4beamline-3.08\share\g4beamline\g4blicon.ico" Index="0"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiInstExSeqComponent">
+    <ROW Action="AI_STORE_LOCATION" Condition="(Not Installed) OR REINSTALL" Sequence="1501"/>
+    <ROW Action="AI_PREPARE_UPGRADE" Condition="AI_UPGRADE=&quot;No&quot; AND (Not Installed)" Sequence="1399"/>
+    <ROW Action="AI_ResolveKnownFolders" Sequence="52"/>
+    <ROW Action="AI_EnableDebugLog" Sequence="51"/>
+    <ROW Action="AI_SETMIXINSTLOCATION" Sequence="748"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiInstallUISequenceComponent">
+    <ROW Action="AI_ResolveKnownFolders" Sequence="53"/>
+    <ROW Action="AI_DpiContentScale" Sequence="52"/>
+    <ROW Action="AI_EnableDebugLog" Sequence="51"/>
+    <ROW Action="AI_SETMIXINSTLOCATION" Sequence="748"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiLaunchConditionsComponent">
+    <ROW Condition="( Version9X OR ( NOT VersionNT64 ) OR ( VersionNT64 AND ((VersionNT64 &lt;&gt; 600) OR (MsiNTProductType &lt;&gt; 1)) ) )" Description="[ProductName] cannot be installed on the following Windows versions: [WindowsTypeNT64Display]." DescriptionLocId="AI.LaunchCondition.NoSpecificNT64" IsPredefined="true" Builds="Win32_Release"/>
+    <ROW Condition="( Version9X OR VersionNT64 )" Description="[ProductName] cannot be installed on [WindowsTypeNTDisplay]." DescriptionLocId="AI.LaunchCondition.NoNT" IsPredefined="true" Builds="Win32_Release"/>
+    <ROW Condition="((VersionNT &lt;&gt; 501) AND (VersionNT &lt;&gt; 502))" Description="[ProductName] cannot be installed on [WindowsTypeNT5XDisplay]." DescriptionLocId="AI.LaunchCondition.NoNT5X" IsPredefined="true" Builds="Win32_Release"/>
+    <ROW Condition="(VersionNT &lt;&gt; 400)" Description="[ProductName] cannot be installed on [WindowsTypeNT40Display]." DescriptionLocId="AI.LaunchCondition.NoNT40" IsPredefined="true" Builds="Win32_Release"/>
+    <ROW Condition="(VersionNT &lt;&gt; 500)" Description="[ProductName] cannot be installed on [WindowsTypeNT50Display]." DescriptionLocId="AI.LaunchCondition.NoNT50" IsPredefined="true" Builds="Win32_Release"/>
+    <ROW Condition="VersionNT" Description="[ProductName] cannot be installed on [WindowsType9XDisplay]." DescriptionLocId="AI.LaunchCondition.No9X" IsPredefined="true" Builds="Win32_Release"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiMergeModsComponent">
+    <ROW Module="Microsoft_VC140_MFC_x64.msm" Path="C:\Program Files (x86)\Common Files\Merge Modules\Microsoft_VC140_MFC_x64.msm" Feature="MainFeature" Directory="APPDIR" Order="1"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiRegsComponent">
+    <ROW Registry="Manufacturer" Root="-1" Key="Software\[Manufacturer]" Name="\"/>
+    <ROW Registry="Path" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Path" Value="[APPDIR]" Component_="ProductInformation"/>
+    <ROW Registry="ProductName" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="\"/>
+    <ROW Registry="Software" Root="-1" Key="Software" Name="\"/>
+    <ROW Registry="Version" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Version" Value="[ProductVersion]" Component_="ProductInformation"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiShortsComponent">
+    <ROW Shortcut="G4beamline3.08" Directory_="SHORTCUTDIR" Name="G4BEAM~1.08|G4beamline-3.08" Component_="g4blgui.exe" Target="[#g4blgui.exe]" Hotkey="0" Icon_="g4blgui.exe" IconIndex="0" ShowCmd="1" WkDir="PersonalFolder"/>
+    <ROW Shortcut="G4beamline3.08_1" Directory_="DesktopFolder" Name="G4BEAM~1.08|G4beamline-3.08" Component_="g4blgui.exe" Target="[#g4blgui.exe]" Hotkey="0" Icon_="g4blgui.exe" IconIndex="0" ShowCmd="1" WkDir="PersonalFolder"/>
+    <ROW Shortcut="G4beamline3.08_2" Directory_="StartMenuFolder" Name="G4BEAM~1.08|G4beamline-3.08" Component_="g4blgui.exe" Target="[#g4blgui.exe]" Hotkey="0" Icon_="g4blgui.exe" IconIndex="0" ShowCmd="1" WkDir="PersonalFolder"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiThemeComponent">
+    <ATTRIBUTE name="UsedTheme" value="classic"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiUpgradeComponent">
+    <ROW UpgradeCode="[|UpgradeCode]" VersionMin="0.0.1" VersionMax="[|ProductVersion]" Attributes="257" ActionProperty="OLDPRODUCTS"/>
+  </COMPONENT>
+</DOCUMENT>

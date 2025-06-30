@@ -1,0 +1,194 @@
+=multiple nested if/elseif/else/endif
+
+=file test040.in
+beam particle=mu+ nEvents=5
+
+# D100 should only be placed at z=100
+virtualdetector D100 height=100 width=100 length=1 format=ascii
+param i=100
+if $i==10 'place front=1 D100 z=10'
+if $i==20 'place front=1 D100 z=20'
+if $i==30 'place front=1 D100 z=30'
+if $i==40 'place front=1 D100 z=40'
+if $i==50 'place front=1 D100 z=50'
+if $i==60 'place front=1 D100 z=60'
+if $i==70 'place front=1 D100 z=70'
+if $i==80 'place front=1 D100 z=80'
+if $i==90 'place front=1 D100 z=90'
+if $i==100 'place front=1 D100 z=100'
+if $i==200 'place front=1 D100 z=200'
+
+# D200 should only be placed at z=200
+virtualdetector D200 height=100 width=100 length=1 format=ascii
+param i=200
+if $i==10 
+    place front=1 D200 z=10
+else
+    if $i==20
+	if $i==20
+            place front=1 D200 z=20
+	else
+            place front=1 D200 z=20
+	endif
+    else
+        if $i==30
+            if $i==30
+	        place front=1 D200 z=30
+	    else
+	        place front=1 D200 z=30
+	    endif
+        else
+            if $i==40
+                if $i==40
+		    place front=1 D200 z=40
+		else
+		    place front=1 D200 z=40
+		endif
+            else
+                if $i==50
+                    if $i==50
+		        place front=1 D200 z=50
+		    else
+		        place front=1 D200 z=50
+		    endif
+                else
+                    if $i==60
+                        if $i==60
+			    place front=1 D200 z=60
+			else
+			    place front=1 D200 z=60
+			endif
+                    else
+                        if $i==70
+                            if $i==70
+			        place front=1 D200 z=70
+			    else
+			        place front=1 D200 z=70
+			    endif
+                        else
+                            if $i==80
+                                if $i==80
+				    place front=1 D200 z=80
+				else
+				    place front=1 D200 z=80
+				endif
+			    else
+			    	if $i==90
+				    if $i==90
+				        place front=1 D200 z=90
+				    else
+				        place front=1 D200 z=90
+				    endif
+				else
+				    if $i==100
+				        if $i==100
+					    place front=1 D200 z=100
+					else
+					    place front=1 D200 z=100
+					endif
+				    else
+				        if $i==200
+					    place front=1 D200 z=200
+					endif
+			            endif
+				endif
+			    endif
+			endif
+		    endif
+		endif
+	    endif
+	endif
+    endif
+endif
+
+# D300 should only be placed at z=300
+virtualdetector D300 height=100 width=100 length=1 format=ascii
+param i=300
+if $i==10
+	place front=1 D300 z=10
+elseif $i==20
+	place front=1 D300 z=20
+elseif $i==30
+	place front=1 D300 z=30
+elseif $i==40
+	place front=1 D300 z=40
+elseif $i==50
+	place front=1 D300 z=50
+elseif $i==60
+	place front=1 D300 z=60
+elseif $i==70
+	place front=1 D300 z=70
+elseif $i==80
+	place front=1 D300 z=80
+elseif $i==90
+	place front=1 D300 z=90
+elseif $i==100
+	place front=1 D300 z=100
+elseif $i==200
+	place front=1 D300 z=200
+else
+	place front=1 D300 z=300
+endif
+
+# D456 should have three placements at z=400, z=500, and z=600
+virtualdetector D456 height=100 width=100 length=1 format=ascii
+place front=1 D456 z=400
+place front=1 D456 z=500
+place front=1 D456 z=600
+=file D100.good
+#BLTrackFile VirtualDetector/D100
+#x y z Px Py Pz t PDGid EventID TrackID ParentID Weight
+#mm mm mm MeV/c MeV/c MeV/c ns - - - - -
+0 0 100 0 0 200 0.377251 -13 1 1 0 1
+0 0 100 0 0 200 0.377251 -13 2 1 0 1
+0 0 100 0 0 200 0.377251 -13 3 1 0 1
+0 0 100 0 0 200 0.377251 -13 4 1 0 1
+0 0 100 0 0 200 0.377251 -13 5 1 0 1
+=file D200.good
+#BLTrackFile VirtualDetector/D200
+#x y z Px Py Pz t PDGid EventID TrackID ParentID Weight
+#mm mm mm MeV/c MeV/c MeV/c ns - - - - -
+0 0 200 0 0 200 0.754502 -13 1 1 0 1
+0 0 200 0 0 200 0.754502 -13 2 1 0 1
+0 0 200 0 0 200 0.754502 -13 3 1 0 1
+0 0 200 0 0 200 0.754502 -13 4 1 0 1
+0 0 200 0 0 200 0.754502 -13 5 1 0 1
+=file D300.good
+#BLTrackFile VirtualDetector/D300
+#x y z Px Py Pz t PDGid EventID TrackID ParentID Weight
+#mm mm mm MeV/c MeV/c MeV/c ns - - - - -
+0 0 300 0 0 200 1.13175 -13 1 1 0 1
+0 0 300 0 0 200 1.13175 -13 2 1 0 1
+0 0 300 0 0 200 1.13175 -13 3 1 0 1
+0 0 300 0 0 200 1.13175 -13 4 1 0 1
+0 0 300 0 0 200 1.13175 -13 5 1 0 1
+=file D456.good
+#BLTrackFile VirtualDetector/D456
+#x y z Px Py Pz t PDGid EventID TrackID ParentID Weight
+#mm mm mm MeV/c MeV/c MeV/c ns - - - - -
+#BLTrackFile VirtualDetector/D456
+#x y z Px Py Pz t PDGid EventID TrackID ParentID Weight
+#mm mm mm MeV/c MeV/c MeV/c ns - - - - -
+#BLTrackFile VirtualDetector/D456
+#x y z Px Py Pz t PDGid EventID TrackID ParentID Weight
+#mm mm mm MeV/c MeV/c MeV/c ns - - - - -
+0 0 400 0 0 200 1.509 -13 1 1 0 1
+0 0 500 0 0 200 1.88625 -13 1 1 0 1
+0 0 600 0 0 200 2.26351 -13 1 1 0 1
+0 0 400 0 0 200 1.509 -13 2 1 0 1
+0 0 500 0 0 200 1.88625 -13 2 1 0 1
+0 0 600 0 0 200 2.26351 -13 2 1 0 1
+0 0 400 0 0 200 1.509 -13 3 1 0 1
+0 0 500 0 0 200 1.88625 -13 3 1 0 1
+0 0 600 0 0 200 2.26351 -13 3 1 0 1
+0 0 400 0 0 200 1.509 -13 4 1 0 1
+0 0 500 0 0 200 1.88625 -13 4 1 0 1
+0 0 600 0 0 200 2.26351 -13 4 1 0 1
+0 0 400 0 0 200 1.509 -13 5 1 0 1
+0 0 500 0 0 200 1.88625 -13 5 1 0 1
+0 0 600 0 0 200 2.26351 -13 5 1 0 1
+=run g4bl test040.in
+=compare D100.txt D100.good 1 1 1 1 1 1 1 1 1 1 1
+=compare D200.txt D200.good 1 1 1 1 1 1 1 1 1 1 1
+=compare D300.txt D300.good 1 1 1 1 1 1 1 1 1 1 1
+=compare D456.txt D456.good 1 1 1 1 1 1 1 1 1 1 1
