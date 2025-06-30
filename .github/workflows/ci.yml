@@ -44,6 +44,7 @@ jobs:
           wget https://root.cern/download/root_v6.26.14.Linux-ubuntu22-x86_64-gcc11.4.tar.gz
           tar xvf root_v6.26.14.Linux-ubuntu22-x86_64-gcc11.4.tar.gz
           export ROOTSYS=$PWD/root/
+          export ROOT_DIR=$PWD/root/
 
           export GEANT4_DIR=/opt/geant4/
 
