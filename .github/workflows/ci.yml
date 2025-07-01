@@ -36,7 +36,7 @@ jobs:
           #conda clean -a
           # apt-get update
           apt-get install -y qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
-          apt-get install -y libgsl-dev
+          apt-get install -y libgsl-dev libssl-dev
           export GSL_DIR=/usr
           apt-get install -y fftw3-dev
           export FFTW_DIR=/usr
