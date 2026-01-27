@@ -207,7 +207,7 @@ public:
 		return mgr->ClassifyNewTrack(track);
 	}
 	void NewStage() { mgr->NewStage(); }
-	void PrepareNewEvent() { mgr->PrepareNewEvent(); }
+	void PrepareNewEvent(G4Event* evt) override { mgr->PrepareNewEvent(evt); }
 };
 
 BLManager::BLManager() : G4VUserDetectorConstruction(), 
@@ -1180,16 +1180,16 @@ void BLManager::NewStage()
 	}
 }
 
-void BLManager::PrepareNewEvent()
+void BLManager::PrepareNewEvent(G4Event* evt)
 {
 	if(sourceRun) {
-		sourceRun->PrepareNewEvent();
+		sourceRun->PrepareNewEvent(evt);
 		return;
 	}
 
 	std::vector<BLManager::StackingAction*>::iterator i;
 	for(i=stackingActionVector.begin(); i<stackingActionVector.end(); ++i) {
-		(*i)->PrepareNewEvent();
+		(*i)->PrepareNewEvent(evt);
 	}
 }
 

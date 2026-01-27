@@ -266,7 +266,7 @@ void BLRunManager::beamOnCollective(int nEvents)
 	for(nev=0; nev<nEvents; ++nev) {
 		currentEvent = GenerateEvent(nev);
 		if(!currentEvent || runAborted) break;
-		stackManager->PrepareNewEvent();
+		stackManager->PrepareNewEvent(currentEvent);
 		manager->BeginOfEventAction(currentEvent);
 		G4TrackVector *tv=transformer->GimmePrimaries(currentEvent,0);
 		int evId=currentEvent->GetEventID();

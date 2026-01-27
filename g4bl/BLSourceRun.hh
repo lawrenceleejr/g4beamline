@@ -72,7 +72,7 @@ public:
 	virtual G4ClassificationOfNewTrack ClassifyNewTrack(const G4Track*) 
 		{ return fUrgent; } // keeps all tracks by default
 	virtual void NewStage() { }
-	virtual void PrepareNewEvent() { }
+	virtual void PrepareNewEvent(G4Event* evt) { }
 
 	/// callbacks for generating the beam during the source run.
 	virtual bool nextSourceEvent(G4Event *event) { return false; }

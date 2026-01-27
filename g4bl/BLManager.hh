@@ -103,7 +103,7 @@ public:	// user Action classes
 	public: virtual G4ClassificationOfNewTrack 
 					ClassifyNewTrack(const G4Track*) = 0;
 	public:	virtual void NewStage() { }
-	public:	virtual void PrepareNewEvent() { }
+	public:	virtual void PrepareNewEvent(G4Event* evt) { }
 	};
 private:
 	struct ZStep {
@@ -539,7 +539,7 @@ public:
 	void NewStage();
 
 	/// PrepareNewEvent() from G4StackingAction.
-	void PrepareNewEvent();
+	void PrepareNewEvent(G4Event* evt);
 
 	/// clearTrackIDMap() clears the TrackID map.
 	void clearTrackIDMap() { trackIDMap.clear(); }
