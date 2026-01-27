@@ -81,9 +81,7 @@ RootNTuple *RootNTuple::first=0;
 	missing it prints an obscure error message and takes a segment 
 	violation. This workaround at least prints a sensible error message.
 ****/
-#ifdef __APPLE__
 typedef void (*sighandler_t) (int);
-#endif
 void rootSighandler(int sig)
 {
 	G4Exception("RootNTuple","Root needs the C++ compiler to be installed.",
