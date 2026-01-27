@@ -19,16 +19,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Add Kitware APT repo and GPG key
-        run: |
-          mkdir -p /etc/apt/keyrings
+      # - name: Add Kitware APT repo and GPG key
+      #   run: |
+      #     mkdir -p /etc/apt/keyrings
 
-          wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | \
-            gpg --dearmor -o /etc/apt/keyrings/kitware.gpg
+      #     wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | \
+      #       gpg --dearmor -o /etc/apt/keyrings/kitware.gpg
 
-          echo "deb [signed-by=/etc/apt/keyrings/kitware.gpg] https://apt.kitware.com/ubuntu/ focal main" > /etc/apt/sources.list.d/kitware.list
+      #     echo "deb [signed-by=/etc/apt/keyrings/kitware.gpg] https://apt.kitware.com/ubuntu/ focal main" > /etc/apt/sources.list.d/kitware.list
 
-          apt-get update
+      #     apt-get update
 
       - name: Install dependencies (if needed)
         run: |
@@ -37,7 +37,7 @@ jobs:
           apt-get install -y qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
           apt-get install -y libgsl-dev libssl-dev
           export GSL_DIR=/usr
-          apt-get install -y fftw3-dev
+          apt-get install -y libfftw3-dev
           export FFTW_DIR=/usr
 
           echo "GSL_DIR=$GSL_DIR" >> $GITHUB_ENV
@@ -48,6 +48,7 @@ jobs:
           tar xvf root_v6.26.14.Linux-ubuntu22-x86_64-gcc11.4.tar.gz
           export ROOTSYS=$PWD/root/
           export ROOT_DIR=$PWD/root/
+          source $ROOTSYS/bin/thisroot.sh
 
           echo "ROOTSYS=$ROOTSYS" >> $GITHUB_ENV
           echo "ROOT_DIR=$ROOT_DIR" >> $GITHUB_ENV
