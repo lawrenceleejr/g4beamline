@@ -1,0 +1,68 @@
+# Build artifacts
+*.o
+*.obj
+*.lo
+*.la
+*.al
+*.libs
+*.so
+*.so.*
+*.a
+*.lib
+*.dll
+*.dylib
+*.exe
+*.out
+*.app
+*.i
+*.ii
+*.gch
+
+# Build system directories
+/build/
+/bin/
+/lib/
+/CMakeFiles/
+/CMakeCache.txt
+Makefile
+cmake_install.cmake
+
+# Compiler generated files
+*.d
+*.dep
+*.gcno
+*.gcda
+*.gcov
+
+# IDE/editor files
+.vscode/
+.idea/
+*.sublime*
+*.code-workspace
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Backup and temporary files
+*~
+*.swp
+*.swo
+*.bak
+*.tmp
+*.old
+
+# Logs
+*.log
+
+# Generated files
+*.generated.*
+
+# Conan and vcpkg (C++ package managers)
+conan.lock
+conanbuildinfo.*
+conanfile.txt
+conanfile.py
+.vcpkg/
+vcpkg_installed/
+CMakeUserPresets.json
