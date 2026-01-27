@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: carlomt/geant4:11.1.2-gui
+      image: artemisbeta/geant4:11.3.2
 
     steps:
       - name: Checkout repository
