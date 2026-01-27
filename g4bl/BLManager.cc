@@ -207,7 +207,7 @@ public:
 		return mgr->ClassifyNewTrack(track);
 	}
 	void NewStage() { mgr->NewStage(); }
-	void PrepareNewEvent(G4Event* evt) override { mgr->PrepareNewEvent(evt); }
+	void PrepareNewEvent(G4Event* evt)  { mgr->PrepareNewEvent(evt); }
 };
 
 BLManager::BLManager() : G4VUserDetectorConstruction(), 
