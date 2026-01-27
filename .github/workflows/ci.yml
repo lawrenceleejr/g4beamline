@@ -52,10 +52,8 @@ jobs:
           echo "ROOTSYS=$ROOTSYS" >> $GITHUB_ENV
           echo "ROOT_DIR=$ROOT_DIR" >> $GITHUB_ENV
           
-          export GEANT4_DIR=/opt/geant4/
-          echo "GEANT4_DIR=$GEANT4_DIR" >> $GITHUB_ENV
-          
-
+          export Geant4_DIR=/usr/local/share/geant4/install/4.11.3/lib/cmake/Geant4
+          echo "Geant4_DIR=$Geant4_DIR" >> $GITHUB_ENV
 
 
       - name: Build project
