@@ -21,6 +21,7 @@ http://www.gnu.org/copyleft/gpl.html
 #include <stdio.h>
 #include <vector>
 #include <time.h>
+#include <signal.h>
 
 #include "BLAssert.hh"
 #include "BLNTuple.hh"
