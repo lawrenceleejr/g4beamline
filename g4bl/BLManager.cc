@@ -65,7 +65,7 @@ http://www.gnu.org/copyleft/gpl.html
 
 #include "mysnprintf.hh"
 
-extern void g4bl_exit(int); // in g4beamline.cc
+extern void g4bl_exit(int); // in g4bl.cc
 
 // Param definitions are all moved to the BLManager constructor, because
 // other initializers use BLmanager.
@@ -1304,7 +1304,7 @@ G4bool BLManager::Notify(const char* originOfException,
 		// avoid infinite abort loop
 		static int abortCount = 0;
 		if(++abortCount > 3) {
-			_exit(99);
+			g4bl_exit(99);
 		}
 		BLAlarm::clear();
 		fprintf(stdout,"g4beamline: attempting to close up after fatal G4Exception...\n");
