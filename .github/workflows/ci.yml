@@ -13,22 +13,11 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: carlomt/geant4:11.1.2-gui
+      image: artemisbeta/geant4:11.0.2
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Add Kitware APT repo and GPG key
-        run: |
-          mkdir -p /etc/apt/keyrings
-
-          wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | \
-            gpg --dearmor -o /etc/apt/keyrings/kitware.gpg
-
-          echo "deb [signed-by=/etc/apt/keyrings/kitware.gpg] https://apt.kitware.com/ubuntu/ focal main" > /etc/apt/sources.list.d/kitware.list
-
-          apt-get update
 
       - name: Install dependencies (if needed)
         run: |
@@ -53,8 +42,8 @@ jobs:
           echo "ROOTSYS=$ROOTSYS" >> $GITHUB_ENV
           echo "ROOT_DIR=$ROOT_DIR" >> $GITHUB_ENV
           
-          export GEANT4_DIR=/opt/geant4/
-          echo "GEANT4_DIR=$GEANT4_DIR" >> $GITHUB_ENV
+          export Geant4_DIR=/usr/local/share/geant4/install/4.11.0.2/lib/Geant4-11.0.2/
+          echo "Geant4_DIR=$Geant4_DIR" >> $GITHUB_ENV
           
 
 
