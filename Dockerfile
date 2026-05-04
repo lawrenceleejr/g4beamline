@@ -35,7 +35,8 @@ COPY . /g4beamline
 ARG BUILD_COMMIT=unknown
 
 # Build and install
-RUN mkdir -p /g4beamline/build && \
+RUN echo "Building commit: ${BUILD_COMMIT}" && \
+    mkdir -p /g4beamline/build && \
     cd /g4beamline/build && \
     cmake .. -DROOT_DIR=/opt/root && \
     cmake --build . --config Release --target install
