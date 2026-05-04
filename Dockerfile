@@ -13,9 +13,10 @@ ENV GSL_DIR=/usr
 ENV FFTW_DIR=/usr
 
 # Install ROOT
-RUN wget -q https://root.cern/download/root_v6.26.14.Linux-ubuntu22-x86_64-gcc11.4.tar.gz \
+RUN wget --no-verbose https://root.cern/download/root_v6.26.14.Linux-ubuntu22-x86_64-gcc11.4.tar.gz \
     && tar xf root_v6.26.14.Linux-ubuntu22-x86_64-gcc11.4.tar.gz -C /opt \
-    && rm root_v6.26.14.Linux-ubuntu22-x86_64-gcc11.4.tar.gz
+    && rm root_v6.26.14.Linux-ubuntu22-x86_64-gcc11.4.tar.gz \
+    && test -d /opt/root/bin
 
 ENV ROOTSYS=/opt/root
 ENV ROOT_DIR=/opt/root
@@ -31,7 +32,7 @@ COPY . /g4beamline
 # Build and install
 RUN mkdir -p /g4beamline/build && \
     cd /g4beamline/build && \
-    cmake .. && \
+    cmake .. -DROOT_DIR=/opt/root && \
     cmake --build . --config Release --target install
 
 WORKDIR /g4beamline/build
