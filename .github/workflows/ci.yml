@@ -12,23 +12,44 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
+    container:
+      image: artemisbeta/geant4:11.0.2
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Install dependencies
+        run: |
+          apt-get install -y qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
+          apt-get install -y libgsl-dev
+          apt-get install -y fftw3-dev wget
 
-      - name: Build Docker image
-        uses: docker/build-push-action@v6
-        env:
-          BUILDKIT_PROGRESS: plain
-        with:
-          context: .
-          push: false
-          build-args: BUILD_COMMIT=${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          echo "GSL_DIR=/usr" >> $GITHUB_ENV
+          echo "FFTW_DIR=/usr" >> $GITHUB_ENV
+
+          wget --no-verbose https://root.cern/download/root_v6.26.14.Linux-ubuntu22-x86_64-gcc11.4.tar.gz
+          tar xf root_v6.26.14.Linux-ubuntu22-x86_64-gcc11.4.tar.gz -C /opt
+          rm root_v6.26.14.Linux-ubuntu22-x86_64-gcc11.4.tar.gz
+          test -d /opt/root/bin
+
+          echo "ROOTSYS=/opt/root" >> $GITHUB_ENV
+          echo "ROOT_DIR=/opt/root" >> $GITHUB_ENV
+          echo "Geant4_DIR=/usr/local/share/geant4/install/4.11.0.2/lib/Geant4-11.0.2/" >> $GITHUB_ENV
+
+      - name: Build project
+        run: |
+          mkdir -p build
+          cd build
+          cmake .. -DROOT_DIR=/opt/root
+          cmake --build . --config Release --target install
+
+      - name: Verify build output
+        run: |
+          cd build
+          pwd
+          ls -la
+          test -x bin/g4bl
 
   docker-build-push:
     needs: build-and-test
@@ -73,6 +94,5 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: BUILD_COMMIT=${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

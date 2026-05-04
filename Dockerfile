@@ -26,22 +26,4 @@ ENV LD_LIBRARY_PATH="${ROOTSYS}/lib:${LD_LIBRARY_PATH}"
 # Set Geant4 directory
 ENV Geant4_DIR=/usr/local/share/geant4/install/4.11.0.2/lib/Geant4-11.0.2/
 
-# Copy source code
-COPY . /g4beamline
-
-# Cache-bust argument: changing this (or passing a unique value via --build-arg)
-# forces cmake to re-run even when earlier layers are cached by content hash.
-# In CI this is set to github.sha so every commit gets a fresh build.
-ARG BUILD_COMMIT=unknown
-
-# Build and install
-RUN echo "Building commit: ${BUILD_COMMIT}" && \
-    mkdir -p /g4beamline/build && \
-    cd /g4beamline/build && \
-    cmake .. -DROOT_DIR=/opt/root && \
-    cmake --build . --config Release --target install
-
-# Verify the build produced the expected binary
-RUN test -x /g4beamline/build/bin/g4bl
-
-WORKDIR /g4beamline/build
+WORKDIR /g4beamline
