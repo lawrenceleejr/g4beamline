@@ -36,6 +36,7 @@ COPY . .
 # land there without any additional copy step.
 RUN mkdir -p /g4beamline && cd /g4beamline \
     && cmake /src -DROOT_DIR=/opt/root \
-    && cmake --build . --config Release --target install
+    && cmake --build . --config Release --target install \
+    && test -x /g4beamline/bin/g4bl
 
 WORKDIR /g4beamline
