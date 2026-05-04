@@ -27,6 +27,7 @@ jobs:
           context: .
           push: false
           build-args: BUILD_COMMIT=${{ github.sha }}
+          cache-from: type=gha
           cache-to: type=gha,mode=max
 
   docker-build-push:
