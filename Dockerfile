@@ -26,15 +26,16 @@ ENV LD_LIBRARY_PATH="${ROOTSYS}/lib:${LD_LIBRARY_PATH}"
 # Set Geant4 directory
 ENV Geant4_DIR=/usr/local/share/geant4/install/4.11.0.2/lib/Geant4-11.0.2/
 
-# Copy source and build
+# Copy source into /src
 WORKDIR /src
 COPY . .
 
-RUN mkdir -p build && cd build \
-    && cmake .. -DROOT_DIR=/opt/root \
+# Build directly in /g4beamline.
+# CMakeLists.txt requires CMAKE_INSTALL_PREFIX == CMAKE_BINARY_DIR,
+# so building in /g4beamline means the binaries and installed files all
+# land there without any additional copy step.
+RUN mkdir -p /g4beamline && cd /g4beamline \
+    && cmake /src -DROOT_DIR=/opt/root \
     && cmake --build . --config Release --target install
-
-# Copy installed files into /g4beamline
-RUN cp -a /src/build/. /g4beamline/
 
 WORKDIR /g4beamline
