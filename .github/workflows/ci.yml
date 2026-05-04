@@ -12,55 +12,20 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
-    container:
-      image: artemisbeta/geant4:11.0.2
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install dependencies (if needed)
-        run: |
-          #conda install -y cmake make gxx # Add other dependencies here
-          #conda clean -a
-          # apt-get update
-          apt-get install -y qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
-          apt-get install -y libgsl-dev
-          export GSL_DIR=/usr
-          apt-get install -y fftw3-dev
-          export FFTW_DIR=/usr
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-          echo "GSL_DIR=$GSL_DIR" >> $GITHUB_ENV
-          echo "FFTW_DIR=$FFTW_DIR" >> $GITHUB_ENV
-
-
-          wget https://root.cern/download/root_v6.26.14.Linux-ubuntu22-x86_64-gcc11.4.tar.gz
-          tar xvf root_v6.26.14.Linux-ubuntu22-x86_64-gcc11.4.tar.gz
-          export ROOTSYS=$PWD/root/
-          export ROOT_DIR=$PWD/root/
-
-          echo "ROOTSYS=$ROOTSYS" >> $GITHUB_ENV
-          echo "ROOT_DIR=$ROOT_DIR" >> $GITHUB_ENV
-          
-          export Geant4_DIR=/usr/local/share/geant4/install/4.11.0.2/lib/Geant4-11.0.2/
-          echo "Geant4_DIR=$Geant4_DIR" >> $GITHUB_ENV
-          
-
-
-
-      - name: Build project
-        run: |
-          mkdir -p build
-          cd build
-          cmake ..
-          cmake --build . --config Release --target install
-
-      - name: Run tests
-        run: |
-          cd build
-          pwd; ls
-          #ctest --output-on-failure
-          # or replace with ./run_tests.sh or pytest
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
   docker-build-push:
     needs: build-and-test
@@ -75,6 +40,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
@@ -100,3 +68,5 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
