@@ -51,6 +51,13 @@ jobs:
           ls -la
           test -x bin/g4bl
 
+      - name: Upload distribution artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: g4beamline-ubuntu22
+          path: build/G4beamline-3.08-Ubuntu22.tgz
+          if-no-files-found: error
+
   docker-build-push:
     needs: build-and-test
     runs-on: ubuntu-latest
@@ -64,6 +71,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Download pre-built distribution artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: g4beamline-ubuntu22
+          path: .
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -100,8 +113,8 @@ jobs:
 
       - name: Verify Docker image
         run: |
-          IMAGE="ghcr.io/${{ github.repository }}:sha-$(echo '${{ github.sha }}' | cut -c1-7)"
-          docker pull "${IMAGE}"
-          docker run --rm "${IMAGE}" test -x /g4beamline/bin/g4bl
+          TAG="ghcr.io/${{ github.repository }}:sha-$(echo "${{ github.sha }}" | cut -c1-7)"
+          docker pull "${TAG}"
+          docker run --rm "${TAG}" ls -la /g4beamline/
+          docker run --rm "${TAG}" test -x /g4beamline/bin/g4bl
           echo "Verified: /g4beamline/bin/g4bl exists and is executable"
-          docker run --rm "${IMAGE}" ls -la /g4beamline/
