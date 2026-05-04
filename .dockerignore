@@ -1,0 +1,5 @@
+# Exclude everything from the Docker build context except the pre-built tgz.
+# The tgz is produced by the CI build-and-test job and downloaded
+# before docker/build-push-action runs.
+*
+!G4beamline-*.tgz
