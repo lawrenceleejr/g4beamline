@@ -463,6 +463,11 @@ void BLManager::trackTuneAndReferenceParticles()
 	state = IDLE;
 	beamIndex = 0;
 
+	printf("================= Prepare Realistic Tune Particle(s) with Stochastics turned ON===========\n");
+        physics->setDoStochastics(FORCE_ON,0);
+        runManager->Initialize();
+
+
 	printf("================= Begin Realistic Tune Particle(s) =============\n");
         state = REALISTICTUNE;
         setEventID(-4);
