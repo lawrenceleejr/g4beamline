@@ -45,13 +45,15 @@ class BLBeam;
 #undef VISUAL
 #undef TUNE
 #undef REFERENCE
+#undef REALISTICTUNE
+#undef REALISTICREFERENCE
 #undef BEAM
 #undef SPECIAL
 #undef SOURCE
 
 // State SPECIAL is used for pre-tracking in collective mode -- all
 // entries into NTuples should be omitted in SPECIAL mode.
-enum BLManagerState { IDLE, VISUAL, TUNE, REFERENCE, BEAM, SPECIAL, SOURCE };
+enum BLManagerState { IDLE, VISUAL, TUNE, REFERENCE, REALISTICTUNE, REALISTICREFERENCE, BEAM, SPECIAL, SOURCE };
 enum VerboseFormat { TAG,NSTEP,GLOBAL,CL,CLX,KE,STEP,VOL,PROCESS,B,E,MAT,
 		     P, ID, PART, SEG, WT, POLAR, NEWLINE, EXT };
 enum PRNGSeedMethod { EVENT_NUMBER, NO_SEED, TIME_US };
@@ -158,8 +160,12 @@ private:
 	std::map<G4VPhysicalVolume*,SteppingAction*> allStepMap;
 	std::map<G4VPhysicalVolume*,SteppingAction*> tpStepMap;
 	std::map<G4VPhysicalVolume*,SteppingAction*> rpStepMap;
+  std::map<G4VPhysicalVolume*,SteppingAction*> rtpStepMap;
+  std::map<G4VPhysicalVolume*,SteppingAction*> rrpStepMap;
 	std::vector<SteppingAction*> tpStepVector;
 	std::vector<SteppingAction*> rpStepVector;
+        std::vector<SteppingAction*> rtpStepVector;
+        std::vector<SteppingAction*> rrpStepVector;
 	std::map<G4VPhysicalVolume*,SteppingAction*> beamStepMap;
 	std::vector<SteppingAction*> beamStepVector;
 	std::vector<BLSourceRun*> sourceRunVector;
@@ -167,6 +173,8 @@ private:
 	G4double zTolerance;
 	std::vector<ZStep> tuneZStep;
 	std::vector<ZStep> referenceZStep;
+        std::vector<ZStep> realtuneZStep;
+        std::vector<ZStep> realreferenceZStep;
 	std::vector<ZStep> beamZStep;
 	std::vector<ZStep> *currentZStep;
 	unsigned indexZStep;
@@ -290,6 +298,33 @@ public:
 					SteppingAction *sa)
 		{ if(physicalVol != 0) rpStepMap[physicalVol] = sa; 
 		  else rpStepVector.push_back(sa); }
+
+
+      /// registerrealTuneParticleStep() registers a SteppingAction to                                                                                                                                           
+      /// be called for every realistic tune particle step involving the physicalVol.                                                                                                                                  
+      /// The callback will be called if physicalVol is either                                                                                                                                               
+      /// the pre- or post-step physical volume (once if both).                                                                                                                                              
+      /// If physicalVol==0 it is called every realistic tune particle step.                                                                                                                                           
+      /// LIMITATION: only one callback can be registered for a given                                                                                                                                        
+      /// physicalVol (except 0).                                                                                                                                                                            
+  void registerrealTuneParticleStep(G4VPhysicalVolume *physicalVol,
+				    SteppingAction *sa)
+  { if(physicalVol != 0) rtpStepMap[physicalVol] = sa;
+    else rtpStepVector.push_back(sa); }
+
+  /// registerrealReferenceParticleStep() registers a SteppingAction to                                                                                                                                      
+  /// be called for every reference particle step involving the                                                                                                                                          
+  /// physicalVol.                                                                                                                                                                                       
+  /// The callback will be called if physicalVol is either                                                                                                                                               
+  /// the pre- or post-step physical volume (once if both).                                                                                                                                              
+  /// If physicalVol==0 it is called every reference particle step.                                                                                                                                      
+  /// LIMITATION: only one callback can be registered for a given                                                                                                                                        
+  /// physicalVol (except 0).                                                                                                                                                                            
+  void registerrealReferenceParticleStep(G4VPhysicalVolume *physicalVol,
+				     SteppingAction *sa)
+  { if(physicalVol != 0) rrpStepMap[physicalVol] = sa;
+    else rrpStepVector.push_back(sa); }
+
 
 	/// registerBeamStep() registers a SteppingAction to
 	/// be called for every beam step involving the physicalVol.

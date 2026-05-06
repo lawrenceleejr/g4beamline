@@ -218,9 +218,9 @@ BLManager::BLManager() : G4VUserDetectorConstruction(),
 		replaceMainLoopCallbackVector(), visualizationCallbackVector(),
 		physicsCallbackVector(),
 		allStepVector(), allStepMap(), tpStepMap(), rpStepMap(),
-		tpStepVector(), rpStepVector(),
+	        tpStepVector(), rpStepVector(),rtpStepVector(), rrpStepVector(),
 		beamStepMap(), beamStepVector(), verboseFormat(),
-		tuneZStep(), referenceZStep(), beamZStep(), 
+                tuneZStep(), referenceZStep(),realtuneZStep(), realreferenceZStep(), beamZStep(), 
 		stackingActionVector(), trackIDMap(), userCodeVector(),
 		exceptionCount(), sourceRun(0)
 {
@@ -255,6 +255,10 @@ BLManager::BLManager() : G4VUserDetectorConstruction(),
 	tuneZStep.push_back(ZStep(DBL_MAX,0));
 	referenceZStep.push_back(ZStep(-DBL_MAX,0));
 	referenceZStep.push_back(ZStep(DBL_MAX,0));
+	realtuneZStep.push_back(ZStep(-DBL_MAX,0));
+        realtuneZStep.push_back(ZStep(DBL_MAX,0));
+        realreferenceZStep.push_back(ZStep(-DBL_MAX,0));
+        realreferenceZStep.push_back(ZStep(DBL_MAX,0));
 	beamZStep.push_back(ZStep(-DBL_MAX,0));
 	beamZStep.push_back(ZStep(DBL_MAX,0));
 	currentZStep = &beamZStep;
@@ -420,6 +424,8 @@ void BLManager::registerZStep(G4double z, ZSteppingAction *sa, G4int when)
 {
 	if(when & 1) insertZStep(tuneZStep,z,sa);
 	if(when & 2) insertZStep(referenceZStep,z,sa);
+	if(when & 8) insertZStep(realtuneZStep,z,sa);
+        if(when & 16) insertZStep(realreferenceZStep,z,sa);
 	if(when & 4) insertZStep(beamZStep,z,sa);
 }
 
@@ -456,6 +462,22 @@ void BLManager::trackTuneAndReferenceParticles()
 	runManager->BeamOn(referenceVector.size());
 	state = IDLE;
 	beamIndex = 0;
+
+	printf("================= Begin Realistic Tune Particle(s) =============\n");
+        state = REALISTICTUNE;
+        setEventID(-4);
+        beamIndex = 0;
+        runManager->BeamOn(referenceVector.size());
+        state = IDLE;
+
+        // now track center particle                                                                                                                                                                           
+        printf("================== Begin Realistic Reference Particle(s) ===============\n");
+        state = REALISTICREFERENCE;
+        setEventID(-3);
+	beamIndex = 0;
+        runManager->BeamOn(referenceVector.size());
+        state = IDLE;
+        beamIndex = 0;
 
 	physics->setDoStochastics(NORMAL,0);
 	runManager->setCollectiveMode(collectiveMode);
@@ -655,7 +677,7 @@ void BLManager::EndOfRunAction(const G4Run *run)
 	for(unsigned int i=0; i<runActionVector.size(); ++i)
 		runActionVector[i]->EndOfRunAction(run);
 
-	if(state == TUNE || state == REFERENCE)
+	if(state == TUNE || state == REFERENCE || state == REALISTICTUNE || state == REALISTICREFERENCE)
 		++eventsProcessed;
 
 	if(state != VISUAL)
@@ -806,6 +828,10 @@ void BLManager::PreUserTrackingAction(const G4Track *track)
 		currentZStep = &tuneZStep;
 	else if(state == REFERENCE)
 		currentZStep = &referenceZStep;
+	else if(state == REALISTICTUNE)
+	        currentZStep = &realtuneZStep;
+	else if(state == REALISTICREFERENCE)
+	        currentZStep = &realreferenceZStep;
 	else
 		currentZStep = &beamZStep;
 	indexZStep = 1;
@@ -1054,6 +1080,47 @@ noZstep:
 				goto quit;
 		}
 	}
+        // call Realistic Tune Particle stepping actions                                                                                                                                                                 
+	if(state == REALISTICTUNE) {
+	  std::vector<BLManager::SteppingAction*>::iterator i;
+	  for(i=rtpStepVector.begin(); i!=rtpStepVector.end(); ++i) {
+	    (*i)->UserSteppingAction(step);
+	    if(track->GetTrackStatus() != fAlive)
+	      goto quit;
+	  }
+	  if(preVol && rtpStepMap.count(preVol) > 0) {
+	    rtpStepMap[preVol]->UserSteppingAction(step);
+	    if(track->GetTrackStatus() != fAlive)
+	      goto quit;
+	  }
+	  if(postVol && preVol != postVol &&
+	     rtpStepMap.count(postVol) > 0) {
+	    rtpStepMap[postVol]->UserSteppingAction(step);
+	    if(track->GetTrackStatus() != fAlive)
+	      goto quit;
+	  }
+	}
+
+	// call Realistic Reference Particle stepping actions                                                                                                                                                            
+        if(state == REALISTICREFERENCE) {
+	  std::vector<BLManager::SteppingAction*>::iterator i;
+	  for(i=rrpStepVector.begin(); i!=rrpStepVector.end(); ++i) {
+	    (*i)->UserSteppingAction(step);
+	    if(track->GetTrackStatus() != fAlive)
+	      goto quit;
+	  }
+	  if(preVol && rrpStepMap.count(preVol) > 0) {
+	    rrpStepMap[preVol]->UserSteppingAction(step);
+	    if(track->GetTrackStatus() != fAlive)
+	      goto quit;
+	  }
+	  if(postVol && preVol != postVol &&
+	     rrpStepMap.count(postVol) > 0) {
+	    rrpStepMap[postVol]->UserSteppingAction(step);
+	    if(track->GetTrackStatus() != fAlive)
+	      goto quit;
+	  }
+        }
 
 	// call beam stepping actions
 	if(state == BEAM) {
@@ -1118,6 +1185,25 @@ void BLManager::GeneratePrimaries(G4Event *event)
 			   	return;
 		}
 		goto end_run;
+	case REALISTICTUNE:
+	        setEventID(-4);
+	        event->SetEventID(-4);
+		while(beamIndex < referenceVector.size()) {
+		  if(referenceVector[beamIndex++]->
+		     generateReferenceParticle(event))
+		    return;
+		}
+		goto end_run;
+        case REALISTICREFERENCE:
+	         setEventID(-3);
+	         event->SetEventID(-3);
+		 while(beamIndex < referenceVector.size()) {
+		   if(referenceVector[beamIndex++]->
+		      generateReferenceParticle(event))
+		     return;
+		 }
+		 goto end_run;
+
 	case VISUAL:
 	case BEAM:
 		// Checking skipEvent() has been moved into nextBeamEvent()
