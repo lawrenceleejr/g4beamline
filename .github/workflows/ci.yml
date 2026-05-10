@@ -108,6 +108,11 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
+      - name: Verify Docker image
+        run: |
+          TAG="ghcr.io/${{ github.repository }}:sha-$(echo "${{ github.sha }}" | cut -c1-7)"
+          docker pull "${TAG}"
+          docker run --rm "${TAG}" ls -la /g4beamline/
+          docker run --rm "${TAG}" test -x /g4beamline/bin/g4bl
+          echo "Verified: /g4beamline/bin/g4bl exists and is executable"
