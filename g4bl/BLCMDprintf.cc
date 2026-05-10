@@ -190,7 +190,7 @@ void BLCMDprintf::UserZSteppingAction(const G4Track *track)
 
 	eval.setTrackVariables(track,coordinateType,"",true);
 
-	eval.setVariable("tune",state==TUNE ? 1.0 : 0.0);
+	eval.setVariable("tune",state==TUNE ? 1.0 : state==STOCHASTIC_TUNE ? 2.0 : 0.0);
 	eval.setVariable("reference",state==REFERENCE ? 1.0 : 0.0);
 	eval.setVariable("beam",state==BEAM ? 1.0 : 0.0);
 

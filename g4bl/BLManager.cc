@@ -390,6 +390,8 @@ void BLManager::initialize()
 		beamVector[beamIndex]->init();
 	for(unsigned i=0; i<referenceVector.size(); ++i)
 		referenceVector[i]->init();
+	for(unsigned i=0; i<stochasticTuneVector.size(); ++i)
+		stochasticTuneVector[i]->init();
 	beamIndex = 0;
 
 	// create the ZStepLimiter
@@ -447,6 +449,22 @@ void BLManager::trackTuneAndReferenceParticles()
 	beamIndex = 0;
 	runManager->BeamOn(referenceVector.size());
 	state = IDLE;
+
+	// If any stochastic-tune beams are registered, run the ensemble phase
+	// with stochastics enabled so RF cavities can average over N particles.
+	if(stochasticTuneVector.size() > 0) {
+		printf("================= Begin Stochastic Tune Ensemble =============\n");
+		physics->setDoStochastics(NORMAL,0);
+		state = STOCHASTIC_TUNE;
+		beamIndex = 0;
+		// Fire all stochastic-tune beams; each returns true for each
+		// ensemble particle it generates, then false when exhausted.
+		runManager->BeamOn(0x7FFFFFFF);
+		state = IDLE;
+		beamIndex = 0;
+		printf("================= Stochastic Tune Ensemble Complete ==========\n");
+		physics->setDoStochastics(FORCE_OFF,0);
+	}
 
 	// now track center particle
 	printf("================== Begin Reference Particle(s) ===============\n");
@@ -655,7 +673,7 @@ void BLManager::EndOfRunAction(const G4Run *run)
 	for(unsigned int i=0; i<runActionVector.size(); ++i)
 		runActionVector[i]->EndOfRunAction(run);
 
-	if(state == TUNE || state == REFERENCE)
+	if(state == TUNE || state == REFERENCE || state == STOCHASTIC_TUNE)
 		++eventsProcessed;
 
 	if(state != VISUAL)
@@ -802,7 +820,7 @@ void BLManager::PreUserTrackingAction(const G4Track *track)
 	}
 
 	// set currentZStep
-	if(state == TUNE)
+	if(state == TUNE || state == STOCHASTIC_TUNE)
 		currentZStep = &tuneZStep;
 	else if(state == REFERENCE)
 		currentZStep = &referenceZStep;
@@ -1014,7 +1032,7 @@ noZstep:
 	}
 
 	// call Tune Particle stepping actions
-	if(state == TUNE) {
+	if(state == TUNE || state == STOCHASTIC_TUNE) {
 		std::vector<BLManager::SteppingAction*>::iterator i;
 		for(i=tpStepVector.begin(); i!=tpStepVector.end(); ++i) {
 			(*i)->UserSteppingAction(step);
@@ -1116,6 +1134,18 @@ void BLManager::GeneratePrimaries(G4Event *event)
 			if(referenceVector[beamIndex++]->
 					generateReferenceParticle(event))
 			   	return;
+		}
+		goto end_run;
+	case STOCHASTIC_TUNE:
+		// Each stochasticTuneVector entry manages its own ensemble
+		// counter and sets a unique event ID per particle.
+		setEventID(-3);
+		event->SetEventID(-3);
+		while(beamIndex < stochasticTuneVector.size()) {
+			if(stochasticTuneVector[beamIndex]->
+					generateReferenceParticle(event))
+				return;
+			++beamIndex;
 		}
 		goto end_run;
 	case VISUAL:

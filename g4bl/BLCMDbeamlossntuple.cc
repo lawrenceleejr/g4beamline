@@ -170,8 +170,8 @@ void BLCMDbeamlossntuple::PostUserTrackingAction(const G4Track *track)
 	BLManagerState state = BLManager::getObject()->getState();
 	if(coordinateType == BLCOORD_REFERENCE && state != BEAM) return;
 
-	// omit Tune particle(s)
-	if(state == TUNE) return;
+	// omit Tune particle(s) and stochastic-tune ensemble particles
+	if(state == TUNE || state == STOCHASTIC_TUNE) return;
 
 	ntuple->appendTrack(track);
 }

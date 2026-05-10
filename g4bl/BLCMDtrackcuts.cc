@@ -216,9 +216,10 @@ G4ClassificationOfNewTrack BLCMDtrackcuts::ClassifyNewTrack(
 	// shortcut while stepping, avoid unnecessary tests
 	if(stepping) return fUrgent;
 
-	// kill secondaries, unless in tune particle mode (the tune particle
-	// is frequently re-tracked as a "secondary")
-	if(BLManager::getObject()->getState() != TUNE &&
+	// kill secondaries, unless in tune particle mode or stochastic-tune
+	// mode (the tune particle is frequently re-tracked as a "secondary")
+	BLManagerState mgrState = BLManager::getObject()->getState();
+	if(mgrState != TUNE && mgrState != STOCHASTIC_TUNE &&
 			killSecondaries != 0 && track->GetParentID() != 0) {
 		if(steppingVerbose != 0) printf("Secondary Track killed\n");
 		return fKill;

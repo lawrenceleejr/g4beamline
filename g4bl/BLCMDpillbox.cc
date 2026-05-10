@@ -59,8 +59,10 @@ class BLCMDpillbox; // forward reference
  *	frequency=0.0 is accepted and yields a pillbox with a constant
  *	Ez = maxGradient (useful to verify units are correct).
  **/
-class PillboxField : public BLElementField, public BLManager::SteppingAction {
-	enum State {TIMING_UNKNOWN, SETTING_TIMING, TIMING_COMPLETE};
+class PillboxField : public BLElementField, public BLManager::SteppingAction,
+		     public BLManager::RunAction {
+	enum State {TIMING_UNKNOWN, SETTING_TIMING, TIMING_COMPLETE,
+		    ENSEMBLE_ACCUMULATING};
 	G4String name;
 	BLCMDpillbox *pillbox;
 	G4VPhysicalVolume *timingPV;
@@ -72,6 +74,9 @@ class PillboxField : public BLElementField, public BLManager::SteppingAction {
 	G4bool validSaveTrack;
 	State state;
 	BLFieldMap *fieldMap;
+	// ensemble accumulation (used in STOCHASTIC_TUNE phase)
+	std::vector<G4double> ensembleOffsets;
+	G4double ensembleBaseOffset;
 	friend class BLCMDpillbox;
 public:
 	/// constructor. _zmin/max are global coordinates.
@@ -87,6 +92,12 @@ public:
 
 	/// doStep() handles a step of the tune particle. 
 	void UserSteppingAction(const G4Step *step);
+
+	/// BeginOfRunAction: reset state for a stochastic-tune ensemble run.
+	void BeginOfRunAction(const G4Run *run);
+
+	/// EndOfRunAction: average ensemble offsets at end of stochastic-tune run.
+	void EndOfRunAction(const G4Run *run);
 };
 
 /**	BLCMDpillbox implements a pillbox.
@@ -575,6 +586,7 @@ void BLCMDpillbox::construct(G4RotationMatrix *relativeRotation,
 	BLGlobalField::getObject()->addElementField(pf);
 	pillboxField.push_back(pf);
 	BLManager::getObject()->registerTuneParticleStep(timingPV,pf);
+	BLManager::getObject()->registerRunAction(pf,false);
 
 	printf("BLCMDpillbox::construct %s parent=%s relZ=%.1f globZ=%.1f\n"
 			"\tzmin=%.1f zmax=%.1f\n",
@@ -603,7 +615,8 @@ G4bool BLCMDpillbox::isOK()
 PillboxField::PillboxField(G4String& _name, BLCoordinateTransform& _global2local,
 			BLCMDpillbox *_pillbox,
 			G4VPhysicalVolume *_timingPV) :
-			BLElementField(), BLManager::SteppingAction()
+			BLElementField(), BLManager::SteppingAction(),
+			BLManager::RunAction()
 {
 	name = _name;
 	pillbox = _pillbox;
@@ -615,6 +628,7 @@ PillboxField::PillboxField(G4String& _name, BLCoordinateTransform& _global2local
 	validSaveTrack = false;
 	state = TIMING_UNKNOWN;
 	fieldMap = pillbox->fieldMap;
+	ensembleBaseOffset = 0.0;
 
 	if(global2local.isRotated()) {
 		rotation = new G4RotationMatrix(global2local.getRotation());
@@ -745,13 +759,21 @@ void PillboxField::addFieldValue(const G4double point[4], G4double field[6]) con
 	}
 }
 
-// called ONLY in tune particle mode, for this pillbox's timingVol
+// called ONLY in tune/stochastic-tune particle mode, for this pillbox's timingVol
 void  PillboxField::UserSteppingAction(const G4Step *step)
 {
+    BLManagerState mgrState = BLManager::getObject()->getState();
+    bool isEnsemble = (mgrState == STOCHASTIC_TUNE);
+
     // do nothing if d.c. or no field or timing is complete
-    if(pillbox->frequency <= 0.0 || pillbox->maxGradient == 0.0) 
-    	state = TIMING_COMPLETE;
+    if(pillbox->frequency <= 0.0 || pillbox->maxGradient == 0.0) {
+    	if(state != ENSEMBLE_ACCUMULATING)
+		state = TIMING_COMPLETE;
+    }
     if(state == TIMING_COMPLETE) return;
+
+    // Ensemble state without ensemble run -- ignore.
+    if(state == ENSEMBLE_ACCUMULATING && !isEnsemble) return;
 
     G4Track *track = step->GetTrack();
     G4StepPoint *prePoint = step->GetPreStepPoint();
@@ -766,7 +788,8 @@ void  PillboxField::UserSteppingAction(const G4Step *step)
     if(prePV == postPV) return;     // neither entering nor leaving
 
     if(postPV == timingPV) {	    // entering timingPV
-        // save track for setting timeOffset
+        // save track for setting timeOffset (works for both normal and
+        // ensemble modes).
         saveTrack.CopyTrackInfo(*step->GetTrack());
 	saveTrack.SetUserInformation(0);
         validSaveTrack = true;
@@ -787,7 +810,18 @@ void  PillboxField::UserSteppingAction(const G4Step *step)
         double dt = (phase-pillbox->phaseAcc)/pillbox->omega;
         timeOffset = timeOffset + dt;
         if(fabs(dt) <= pillbox->timingTolerance) {
-            // Success!
+            if(isEnsemble) {
+                // Store this ensemble particle's result and reset for next.
+                G4double finalOffset = timeOffset + pillbox->timeIncrement;
+                ensembleOffsets.push_back(finalOffset);
+                printf("pillbox %s: Ensemble sample %zu  timeOffset=%.4f ns\n",
+                    getName().c_str(), ensembleOffsets.size(), finalOffset/ns);
+                timeOffset = ensembleBaseOffset;
+                timeCount = 0;
+                state = ENSEMBLE_ACCUMULATING;
+                return;
+            }
+            // Normal single-particle TUNE path.
             printf("pillbox %s: Time OK  timeOffset=%.4f ns, incremented to "
 	    	"%.4f ns\n",getName().c_str(),timeOffset,
 					timeOffset+pillbox->timeIncrement);
@@ -795,13 +829,51 @@ void  PillboxField::UserSteppingAction(const G4Step *step)
             state = TIMING_COMPLETE;
             return;
         }
-        // restore saved data (i.e. jump back to when the track 
-        // enteered TimingVol)
+        // restore saved data (i.e. jump back to when the track
+        // entered TimingVol)
         if(!validSaveTrack)
 		G4Exception("pillbox","Invalid Step",FatalException,"");
         steppingMgr->GetfSecondary()->push_back(new G4Track(saveTrack));
         track->SetTrackStatus(fStopAndKill);
     }
+}
+
+void PillboxField::BeginOfRunAction(const G4Run * /*run*/)
+{
+    if(BLManager::getObject()->getState() != STOCHASTIC_TUNE) return;
+    if(state != TIMING_COMPLETE) return;
+    if(pillbox->frequency <= 0.0 || pillbox->maxGradient == 0.0) return;
+
+    // Save the baseline timeOffset from the TUNE pass (subtract timeIncrement
+    // since it was added when timing completed).
+    ensembleBaseOffset = timeOffset - pillbox->timeIncrement;
+    ensembleOffsets.clear();
+    timeCount = 0;
+    state = ENSEMBLE_ACCUMULATING;
+    printf("pillbox %s: Starting stochastic ensemble "
+           "(baseline timeOffset=%.4f ns)\n",
+           getName().c_str(), ensembleBaseOffset/ns);
+}
+
+void PillboxField::EndOfRunAction(const G4Run * /*run*/)
+{
+    if(BLManager::getObject()->getState() != STOCHASTIC_TUNE) return;
+
+    if(ensembleOffsets.empty()) {
+        state = TIMING_COMPLETE;
+        printf("pillbox %s: No ensemble data; keeping timeOffset=%.4f ns\n",
+               getName().c_str(), timeOffset/ns);
+        return;
+    }
+
+    G4double sum = 0.0;
+    for(size_t i = 0; i < ensembleOffsets.size(); ++i)
+        sum += ensembleOffsets[i];
+    G4double mean = sum / (G4double)ensembleOffsets.size();
+    timeOffset = mean;
+    state = TIMING_COMPLETE;
+    printf("pillbox %s: Ensemble average timeOffset=%.4f ns (%zu samples)\n",
+           getName().c_str(), mean/ns, ensembleOffsets.size());
 }
 
 void BLCMDpillbox::generatePoints(int npoints, std::vector<G4ThreeVector> &v)

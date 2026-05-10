@@ -196,6 +196,8 @@ void BLCMDtune::defineNamedArgs()
 void BLCMDtune::UserZSteppingAction(const G4Track *track)
 {
 	if(state == FIXED) return;
+	// During the stochastic-tune ensemble phase, tuning is already done.
+	if(state == DONE) return;
 
 	BLCoordinates *coord =  
 			(BLCoordinates *)track->GetUserInformation();
@@ -263,6 +265,9 @@ quit:	;
 
 void BLCMDtune::EndOfRunAction(const G4Run* run)
 {
+	// After the stochastic-tune ensemble pass, state is still DONE from
+	// the original tune; there is nothing to check.
+	if(BLManager::getObject()->getState() == STOCHASTIC_TUNE) return;
 	if(state != DONE && state != FIXED) {
 		G4Exception("tune","Failed to Converge",FatalException,
 							name.c_str());

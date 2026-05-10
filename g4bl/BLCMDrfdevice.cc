@@ -450,7 +450,8 @@ class BLCMDrfdevice; // forward reference
  *	frequency=0.0 is accepted and yields an rfdevice with a constant
  *	Ez = maxGradient (useful to verify units are correct).
  **/
-class RFdeviceField : public BLElementField, public BLManager::SteppingAction {
+class RFdeviceField : public BLElementField, public BLManager::SteppingAction,
+		      public BLManager::RunAction {
 	G4String name;
 	BLCMDrfdevice *rfdevice;
 	G4VPhysicalVolume *timingPV;        //KBB:* typically either 1/2 or full volume depending on method
@@ -485,7 +486,11 @@ private:
         double drift;                      //drift time
         AutoTimingSnapshot entrance,exit;  //misc. info taken at a point in time & space
         AutoTimingSnapshot base,estimate;  //misc. info FYI
-  
+
+        // Ensemble accumulation (STOCHASTIC_TUNE phase)
+        G4bool inEnsemble;
+        std::vector<G4double> ensembleTimeOffsets;
+        std::vector<G4double> ensembleGradients;
 
 public:
 	/// constructor. _zmin/max are global coordinates.
@@ -507,6 +512,12 @@ public:
 
         /// reset() resets various internal used by autoTime to initial settings
         void reset();
+
+	/// BeginOfRunAction: prepare for a stochastic-tune ensemble run.
+	void BeginOfRunAction(const G4Run *run);
+
+	/// EndOfRunAction: finalize ensemble averages after the run.
+	void EndOfRunAction(const G4Run *run);
 };
 
 
@@ -1371,6 +1382,7 @@ void BLCMDrfdevice::construct(G4RotationMatrix *relativeRotation,
 	BLGlobalField::getObject()->addElementField(pf);
 	rfdeviceField.push_back(pf);
 	BLManager::getObject()->registerTuneParticleStep(timingPV,pf);
+	BLManager::getObject()->registerRunAction(pf,false);
 
 	printf("BLCMDrfdevice::construct %s parent=%s relZ=%.1f globZ=%.1f\n"
 			"\tzmin=%.1f zmax=%.1f\n",
@@ -1415,7 +1427,8 @@ G4bool BLCMDrfdevice::trackOfInterest()
 RFdeviceField::RFdeviceField(G4String& _name, BLCoordinateTransform& _global2local,
 			BLCMDrfdevice *_rfdevice,
 			G4VPhysicalVolume *_timingPV) :
-			BLElementField(), BLManager::SteppingAction()
+			BLElementField(), BLManager::SteppingAction(),
+			BLManager::RunAction()
 {
 	name = _name;
 	stateOfPlacement= ATWORKING_UNKNOWN;
@@ -1433,6 +1446,7 @@ RFdeviceField::RFdeviceField(G4String& _name, BLCoordinateTransform& _global2loc
 	timeCount = 0;
 	validSaveTrack = false;
 	fieldMap = rfdevice->fieldMap;
+	inEnsemble = false;
 
 	if(global2local.isRotated()) {
 		rotation = new G4RotationMatrix(global2local.getRotation());
@@ -2885,6 +2899,15 @@ void  RFdeviceField::UserSteppingAction(const G4Step *step)
 	maxGradient= rfdevice->maxGradient;
 	timeOffset= rfdevice->timeOffset;
 	stateOfPlacement= rfdevice->state= ATWORKING_DONE;
+	// Capture per-particle result for ensemble averaging.
+	if(inEnsemble) {
+	    ensembleTimeOffsets.push_back(timeOffset);
+	    ensembleGradients.push_back(maxGradient);
+	    printf("rfdevice %s: Ensemble sample %zu  timeOffset=%.4f ns  "
+	           "maxGradient=%.4f MV/m\n",
+	           getName().c_str(), ensembleTimeOffsets.size(),
+	           timeOffset/ns, maxGradient/(megavolt/meter));
+	}
 	break;
       }
 
@@ -2925,6 +2948,58 @@ void  RFdeviceField::UserSteppingAction(const G4Step *step)
     if(verbose>0)  fflush(stdout);
 
     return;
+}
+
+void RFdeviceField::BeginOfRunAction(const G4Run * /*run*/)
+{
+    if(BLManager::getObject()->getState() != STOCHASTIC_TUNE) return;
+
+    // Reset so that the early-return check (stateOfPlacement==DONE) does not
+    // prevent ensemble particles from triggering fresh auto-timing.
+    // The ROI_ENTERING handler will call argChanged()+reset() on the first
+    // ensemble particle, so we only need to clear stateOfPlacement here.
+    stateOfPlacement = ATWORKING_UNKNOWN;
+    maxGradient = BLCommand::undefined();
+    timeOffset  = BLCommand::undefined();
+
+    inEnsemble = true;
+    ensembleTimeOffsets.clear();
+    ensembleGradients.clear();
+
+    printf("rfdevice %s: Starting stochastic ensemble\n", getName().c_str());
+}
+
+void RFdeviceField::EndOfRunAction(const G4Run * /*run*/)
+{
+    if(BLManager::getObject()->getState() != STOCHASTIC_TUNE) return;
+    if(!inEnsemble) return;
+
+    inEnsemble = false;
+
+    if(ensembleTimeOffsets.empty()) {
+        stateOfPlacement = ATWORKING_DONE;
+        printf("rfdevice %s: No ensemble data; keeping existing timing\n",
+               getName().c_str());
+        return;
+    }
+
+    // Average the ensemble results.
+    G4double sumTO = 0.0, sumGrad = 0.0;
+    for(size_t i = 0; i < ensembleTimeOffsets.size(); ++i) {
+        sumTO   += ensembleTimeOffsets[i];
+        sumGrad += ensembleGradients[i];
+    }
+    G4double meanTO   = sumTO   / (G4double)ensembleTimeOffsets.size();
+    G4double meanGrad = sumGrad / (G4double)ensembleGradients.size();
+
+    timeOffset   = rfdevice->timeOffset   = meanTO;
+    maxGradient  = rfdevice->maxGradient  = meanGrad;
+    stateOfPlacement = rfdevice->state    = ATWORKING_DONE;
+
+    printf("rfdevice %s: Ensemble average timeOffset=%.4f ns  "
+           "maxGradient=%.4f MV/m (%zu samples)\n",
+           getName().c_str(), meanTO/ns, meanGrad/(megavolt/meter),
+           ensembleTimeOffsets.size());
 }
 
 #else // G4BL_GSL

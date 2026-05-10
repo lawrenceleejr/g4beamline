@@ -289,6 +289,8 @@ void BLCMDmovie::UserSteppingAction(const G4Step *step)
 		break;
 	case TUNE:
 		break;
+	case STOCHASTIC_TUNE:
+		break;
 	case REFERENCE:
 		if(coordinateType == BLCOORD_REFERENCE)
 			referenceStep(step->GetTrack());

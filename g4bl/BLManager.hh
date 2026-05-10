@@ -48,10 +48,15 @@ class BLBeam;
 #undef BEAM
 #undef SPECIAL
 #undef SOURCE
+#undef STOCHASTIC_TUNE
 
 // State SPECIAL is used for pre-tracking in collective mode -- all
 // entries into NTuples should be omitted in SPECIAL mode.
-enum BLManagerState { IDLE, VISUAL, TUNE, REFERENCE, BEAM, SPECIAL, SOURCE };
+// State STOCHASTIC_TUNE is used for the ensemble stochastic tune phase:
+// N copies of a tune particle are tracked with stochastics enabled so
+// that each RF cavity can average the timing results across the ensemble.
+enum BLManagerState { IDLE, VISUAL, TUNE, REFERENCE, BEAM, SPECIAL, SOURCE,
+		      STOCHASTIC_TUNE };
 enum VerboseFormat { TAG,NSTEP,GLOBAL,CL,CLX,KE,STEP,VOL,PROCESS,B,E,MAT,
 		     P, ID, PART, SEG, WT, POLAR, NEWLINE, EXT };
 enum PRNGSeedMethod { EVENT_NUMBER, NO_SEED, TIME_US };
@@ -143,6 +148,7 @@ private:
 	G4TrackingManager *fpTrackingManager;
 	std::vector<BLBeam*> beamVector;
 	std::vector<BLBeam*> referenceVector;
+	std::vector<BLBeam*> stochasticTuneVector;
 	std::vector<RunAction*> runActionVector;
 	std::vector<RunAction*> beamRunActionVector;
 	std::vector<EventAction*> eventActionVector;
@@ -407,6 +413,16 @@ public:
 
 	/// nReference() returns the number of reference particles registered.
 	int nReference() { return referenceVector.size(); }
+
+	/// registerStochasticTuneParticle() registers a BLBeam for the
+	/// stochastic tune ensemble phase.  Each registered beam is fired
+	/// nEnsemble times (with stochastics on) and the resulting RF
+	/// cavity timing values are averaged.
+	void registerStochasticTuneParticle(BLBeam *_beam)
+		{ stochasticTuneVector.push_back(_beam); }
+
+	/// nStochasticTune() returns the number of stochastic-tune beams.
+	int nStochasticTune() { return stochasticTuneVector.size(); }
 
 	/// registerRunAction() registers a UserRunAction.
 	/// If beamOnly is true (the default), the callback is made only

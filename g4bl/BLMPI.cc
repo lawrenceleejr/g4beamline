@@ -1594,7 +1594,8 @@ void MPINTuple::appendRow(double data[], int n)
 	static BLManager *manager=BLManager::getObject();
 
 	if(handle == 0 || BLMPI::isRank0() || manager->getState() == TUNE || 
-					manager->getState() == REFERENCE) 
+				manager->getState() == STOCHASTIC_TUNE ||
+				manager->getState() == REFERENCE) 
 		return;
 	BLAssert(iBuffer < nBuffer);
 	int j = iBuffer*nfields;
