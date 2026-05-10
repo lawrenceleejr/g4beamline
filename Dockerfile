@@ -5,7 +5,17 @@ RUN apt-get update && apt-get install -y \
     qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools \
     libgsl-dev \
     fftw3-dev \
+    binutils \
     && rm -rf /var/lib/apt/lists/*
+
+# Strip the ABI version tag from Qt5 shared libraries so the dynamic linker
+# can load them under kernels older than the tag's minimum (3.17).
+RUN for f in /lib/x86_64-linux-gnu/libQt5*.so*; do \
+        [ -L "$f" ] && continue; \
+        readelf -n "$f" 2>/dev/null | grep -q "ABI: 3.17" && \
+            echo "Stripping ABI tag from $f" && \
+            strip --remove-section=.note.ABI-tag "$f"; \
+    done
 
 # Set GSL and FFTW dirs
 ENV GSL_DIR=/usr
