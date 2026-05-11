@@ -24,9 +24,10 @@ RUN set -eux; \
 # can load them under kernels older than the tag's minimum (3.17).
 RUN for f in /lib/x86_64-linux-gnu/libQt5*.so*; do \
         [ -L "$f" ] && continue; \
-        readelf -n "$f" 2>/dev/null | grep -q "ABI: 3.17" && \
-            echo "Stripping ABI tag from $f" && \
+        if readelf -n "$f" 2>/dev/null | grep -q "ABI: 3.17"; then \
+            echo "Stripping ABI tag from $f"; \
             strip --remove-section=.note.ABI-tag "$f"; \
+        fi; \
     done
 
 ENV GSL_DIR=/usr
