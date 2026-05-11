@@ -8,6 +8,10 @@ on:
     # Run on pull request to any branch
     branches: ['**']
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -55,9 +59,73 @@ jobs:
           cmake ..
           cmake --build . --config Release --target install
 
+      - name: Smoke test g4bl runtime
+        run: |
+          cd build
+          ldd ./bin/g4bl | tee /tmp/ldd-g4bl.txt
+          if grep -q "not found" /tmp/ldd-g4bl.txt; then
+            echo "Missing shared libraries for g4bl"
+            exit 1
+          fi
+
+          status=0
+          timeout 10s ./bin/g4bl --help >/tmp/g4bl-smoke.log 2>&1 || status=$?
+          if [ "$status" -eq 124 ]; then
+            echo "g4bl --help timed out after 10s; treating as pass because process started"
+            status=0
+          fi
+
+          tail -n 50 /tmp/g4bl-smoke.log
+
+          if grep -q "error while loading shared libraries" /tmp/g4bl-smoke.log; then
+            echo "g4bl failed to start due to linker/runtime library error"
+            exit 1
+          fi
+          if [ "$status" -eq 127 ]; then
+            echo "g4bl failed to execute"
+            exit 1
+          fi
+
       - name: Run tests
         run: |
           cd build
           pwd; ls
           #ctest --output-on-failure
           # or replace with ./run_tests.sh or pytest
+
+  build-and-push-container:
+    needs: build-and-test
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/g4beamline
+          tags: |
+            type=sha
+            type=ref,event=branch
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

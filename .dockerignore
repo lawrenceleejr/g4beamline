@@ -1,0 +1,14 @@
+# Build artifacts
+build/
+*.o
+*.a
+
+# Version control
+.git/
+
+# CI-generated files
+Dockerfile.ci
+
+# Editor / OS noise
+.DS_Store
+*.swp
