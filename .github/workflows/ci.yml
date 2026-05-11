@@ -78,6 +78,15 @@ jobs:
           name: g4beamline-ubuntu22
           path: .
 
+      - name: Inspect downloaded artifact
+        run: |
+          echo "=== Files in working directory ==="
+          ls -la .
+          echo "=== Archive size ==="
+          du -sh G4beamline-*.tgz
+          echo "=== Archive top-level structure (first 30 entries) ==="
+          tar -tzf G4beamline-*.tgz | head -30
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -114,6 +123,11 @@ jobs:
         run: |
           TAG="ghcr.io/${{ github.repository }}:sha-$(echo "${{ github.sha }}" | cut -c1-7)"
           docker pull "${TAG}"
+          echo "=== Top-level /g4beamline contents ==="
           docker run --rm "${TAG}" ls -la /g4beamline/
+          echo "=== Find g4bl anywhere in image ==="
+          docker run --rm "${TAG}" find / -name g4bl 2>/dev/null || true
+          echo "=== Full /g4beamline tree (depth 3) ==="
+          docker run --rm "${TAG}" find /g4beamline -maxdepth 3 -ls 2>/dev/null | head -30
           docker run --rm "${TAG}" test -x /g4beamline/bin/g4bl
           echo "Verified: /g4beamline/bin/g4bl exists and is executable"

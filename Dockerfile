@@ -30,8 +30,16 @@ ENV Geant4_DIR=/usr/local/share/geant4/install/4.11.0.2/lib/Geant4-11.0.2/
 # only file sent in the build context.
 RUN mkdir -p /g4beamline
 COPY G4beamline-*.tgz /tmp/
-RUN tar -xf /tmp/G4beamline-*.tgz --strip-components=1 -C /g4beamline \
+RUN echo "=== Archive in /tmp ===" \
+    && ls -lh /tmp/G4beamline-*.tgz \
+    && echo "=== First 30 entries in archive ===" \
+    && tar -tzf /tmp/G4beamline-*.tgz | head -30 \
+    && echo "=== Extracting ===" \
+    && tar -xvf /tmp/G4beamline-*.tgz --strip-components=1 -C /g4beamline 2>&1 | head -30 \
+    && echo "=== /g4beamline contents after extraction ===" \
+    && ls -la /g4beamline/ \
     && rm /tmp/G4beamline-*.tgz \
-    && test -x /g4beamline/bin/g4bl
+    && test -x /g4beamline/bin/g4bl \
+    && echo "SUCCESS: g4bl is executable"
 
 WORKDIR /g4beamline
