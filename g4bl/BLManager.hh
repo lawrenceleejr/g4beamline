@@ -342,8 +342,8 @@ public:
 	/// registerZStep() will force a step to occur near the given z
 	/// position, and will call the ZSteppingAction for it, interpolating
 	/// to the desired z value (Centerline coords).
-	/// when is a bitwise OR of 1=tune, 2=reference, 4=beam.
-	void registerZStep(G4double z, ZSteppingAction *sa, G4int when=7);
+	/// when is a bitwise OR of 1=tune, 2=reference, 4=beam, 8 = realisticutne 16=realisticreference.
+	void registerZStep(G4double z, ZSteppingAction *sa, G4int when=31);
 
 	/// registerStackingAction() registers a StackingAction to be called
 	/// by the Geant4 stacking manager.
