@@ -424,8 +424,8 @@ void BLManager::registerZStep(G4double z, ZSteppingAction *sa, G4int when)
 {
 	if(when & 1) insertZStep(tuneZStep,z,sa);
 	if(when & 2) insertZStep(referenceZStep,z,sa);
-	if(when & 8) insertZStep(realtuneZStep,z,sa);
-        if(when & 16) insertZStep(realreferenceZStep,z,sa);
+	//	if(when & 8) insertZStep(realtuneZStep,z,sa);
+	// if(when & 16) insertZStep(realreferenceZStep,z,sa);
 	if(when & 4) insertZStep(beamZStep,z,sa);
 }
 
@@ -443,6 +443,25 @@ void BLManager::trackTuneAndReferenceParticles()
 	bool collectiveMode = runManager->getCollectiveMode();
 	runManager->setCollectiveMode(false);
 
+	printf("================= Prepare Realistic Tune Particle(s) with Stochastics turned ON===========\n");
+        physics->setDoStochastics(FORCE_ON,0);
+        runManager->Initialize();
+
+        printf("================= Begin Realistic Tune Particle(s) =============\n");
+        state = REALISTICTUNE;
+        setEventID(-4);
+        beamIndex = 0;
+        runManager->BeamOn(referenceVector.size());
+        state = IDLE;
+                                                                                                                
+        printf("================== Begin Realistic Reference Particle(s) ===============\n");
+        state = REALISTICREFERENCE;
+        setEventID(-3);
+        beamIndex = 0;
+        runManager->BeamOn(referenceVector.size());
+        state = IDLE;
+       
+	
 	printf("================= Prepare Tune Particle(s) ===========\n");
 	physics->setDoStochastics(FORCE_OFF,0);
 	runManager->Initialize();
@@ -462,28 +481,7 @@ void BLManager::trackTuneAndReferenceParticles()
 	runManager->BeamOn(referenceVector.size());
 	state = IDLE;
 	beamIndex = 0;
-
-	printf("================= Prepare Realistic Tune Particle(s) with Stochastics turned ON===========\n");
-        physics->setDoStochastics(FORCE_ON,0);
-        runManager->Initialize();
-
-
-	printf("================= Begin Realistic Tune Particle(s) =============\n");
-        state = REALISTICTUNE;
-        setEventID(-4);
-        beamIndex = 0;
-        runManager->BeamOn(referenceVector.size());
-        state = IDLE;
-
-        // now track center particle                                                                                                                                                                           
-        printf("================== Begin Realistic Reference Particle(s) ===============\n");
-        state = REALISTICREFERENCE;
-        setEventID(-3);
-	beamIndex = 0;
-        runManager->BeamOn(referenceVector.size());
-        state = IDLE;
-        beamIndex = 0;
-
+    
 	physics->setDoStochastics(NORMAL,0);
 	runManager->setCollectiveMode(collectiveMode);
 }

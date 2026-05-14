@@ -210,7 +210,7 @@ int BLCMDreference::command(BLArgumentVector& argv, BLArgumentMap& namedArgs)
 	// setup for tuning
 	if(b->tuneZ != UNDEFINED && b->tuneMomentum != UNDEFINED) {
 		BLManager::getObject()->registerZStep(b->tuneZ,b,1);
-		BLManager::getObject()->registerZStep(b->tuneZ,b,8);
+		//BLManager::getObject()->registerZStep(b->tuneZ,b,8);
 		BLManager::getObject()->registerRunAction(b,false);
 	}
 
