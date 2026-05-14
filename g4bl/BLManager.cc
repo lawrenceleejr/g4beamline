@@ -834,9 +834,9 @@ void BLManager::PreUserTrackingAction(const G4Track *track)
 	else if(state == REFERENCE)
 		currentZStep = &referenceZStep;
 	else if(state == REALISTICTUNE)
-	        currentZStep = &realtuneZStep;
+	        currentZStep = &tuneZStep;
 	else if(state == REALISTICREFERENCE)
-	        currentZStep = &realreferenceZStep;
+	        currentZStep = &referenceZStep;
 	else
 		currentZStep = &beamZStep;
 	indexZStep = 1;
