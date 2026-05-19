@@ -87,15 +87,15 @@ void g4bl_exit(int value)
 	static bool first=true;
 	if(!first) {
 	    fprintf(stderr,"g4beamline: g4bl_exit re-entered, exiting fast\n");
-	    exit(90);
+	    _exit(90);
 	}
 	first = false;
 
 	if(BLMPI::isMPI())
 		BLMPI::closeupAndExit(value);
 
-	// Instead of deleting things, just open the geometry to avoid 
-	// warnings when exit() is called.
+	// Instead of deleting things, just open the geometry to avoid
+	// warnings during process shutdown.
 	G4GeometryManager::GetInstance()->OpenGeometry();
 
 	BLWriteAsciiFile::closeAll();
@@ -107,7 +107,7 @@ void g4bl_exit(int value)
 	fflush(stdout);
 
 	BLSignal::writeStackTrace(2); // does nothing if no stack trace
-	exit(value);
+	_exit(value);
 }
 
 #ifdef STUB
@@ -340,4 +340,3 @@ int main(int _argc, char *_argv[])
 
 	g4bl_exit(0);
 }
-
