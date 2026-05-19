@@ -680,8 +680,10 @@ void BLManager::EndOfRunAction(const G4Run *run)
 	for(unsigned int i=0; i<runActionVector.size(); ++i)
 		runActionVector[i]->EndOfRunAction(run);
 
-	if(state == TUNE || state == REFERENCE || state == REALISTICTUNE || state == REALISTICREFERENCE)
+	if(state == TUNE || state == REFERENCE) //|| state == REALISTICTUNE || state == REALISTICREFERENCE)
 		++eventsProcessed;
+	if(state == REALISTICTUNE || state == REALISTICREFERENCE)
+	        ++eventsProcessed;
 
 	if(state != VISUAL)
 		printf("Run complete  %d Events  %ld seconds\n",
