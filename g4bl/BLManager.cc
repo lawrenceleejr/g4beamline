@@ -441,7 +441,7 @@ void BLManager::trackTuneAndReferenceParticles()
 
 	// Tune and Reference particles cannot use collective mode
 	bool collectiveMode = runManager->getCollectiveMode();
-	runManager->setCollectiveMode(false);
+	runManager->setCollectiveMode(collectiveMode);
 
 	printf("================= Prepare Realistic Tune Particle(s) with Stochastics turned ON===========\n");
         physics->setDoStochastics(FORCE_ON,0);
@@ -461,7 +461,8 @@ void BLManager::trackTuneAndReferenceParticles()
         runManager->BeamOn(referenceVector.size());
         state = IDLE;
        
-	
+	runManager->setCollectiveMode(false);
+
 	printf("================= Prepare Tune Particle(s) ===========\n");
 	physics->setDoStochastics(FORCE_OFF,0);
 	runManager->Initialize();
