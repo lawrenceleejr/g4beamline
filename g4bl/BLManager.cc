@@ -1,4 +1,4 @@
-//	BLManager.cc
+//	BLManager.ccA
 /*
 This source file is part of G4beamline, http://g4beamline.muonsinc.com
 Copyright (C) 2002-2013 by Tom Roberts, all rights reserved.
@@ -217,7 +217,7 @@ BLManager::BLManager() : G4VUserDetectorConstruction(),
 		postReferenceCallbackVector(), postTrackingCallbackVector(),
 		replaceMainLoopCallbackVector(), visualizationCallbackVector(),
 		physicsCallbackVector(),
-		allStepVector(), allStepMap(), tpStepMap(), rpStepMap(),
+		allStepVector(), allStepMap(), tpStepMap(), rpStepMap(),rtpStepMap(), rrpStepMap(),
 	        tpStepVector(), rpStepVector(),rtpStepVector(), rrpStepVector(),
 		beamStepMap(), beamStepVector(), verboseFormat(),
                 tuneZStep(), referenceZStep(),realtuneZStep(), realreferenceZStep(), beamZStep(), 
@@ -424,8 +424,8 @@ void BLManager::registerZStep(G4double z, ZSteppingAction *sa, G4int when)
 {
 	if(when & 1) insertZStep(tuneZStep,z,sa);
 	if(when & 2) insertZStep(referenceZStep,z,sa);
-	//	if(when & 8) insertZStep(realtuneZStep,z,sa);
-	// if(when & 16) insertZStep(realreferenceZStep,z,sa);
+      	if(when & 8) insertZStep(realtuneZStep,z,sa);
+        if(when & 16) insertZStep(realreferenceZStep,z,sa);
 	if(when & 4) insertZStep(beamZStep,z,sa);
 }
 
@@ -835,9 +835,9 @@ void BLManager::PreUserTrackingAction(const G4Track *track)
 	else if(state == REFERENCE)
 		currentZStep = &referenceZStep;
 	else if(state == REALISTICTUNE)
-	        currentZStep = &tuneZStep;
+	        currentZStep = &realtuneZStep;
 	else if(state == REALISTICREFERENCE)
-	        currentZStep = &referenceZStep;
+	        currentZStep = &realreferenceZStep;
 	else
 		currentZStep = &beamZStep;
 	indexZStep = 1;
