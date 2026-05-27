@@ -1044,7 +1044,7 @@ void BLCMDtracker::UserZSteppingAction(const G4Track *track)
 		}
 	}
 
-	if(BLManager::getObject()->getState() != REFERENCE || BLManager::getObject()->getState() != REALISTICREFERENCE) return;
+	if(BLManager::getObject()->getState() != REFERENCE && BLManager::getObject()->getState() != REALISTICREFERENCE) return;
 	if(for009_fit == 0 || reportTime == UNDEFINED) return;
 
 	// here to append the reference to for009_fit

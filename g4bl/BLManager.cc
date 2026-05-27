@@ -442,9 +442,10 @@ void BLManager::trackTuneAndReferenceParticles()
 	// Tune and Reference particles cannot use collective mode
 	bool collectiveMode = runManager->getCollectiveMode();
 	runManager->setCollectiveMode(collectiveMode);
+        physics->setDoStochastics(NORMAL,0);
 
 	printf("================= Prepare Realistic Tune Particle(s) with Stochastics turned ON===========\n");
-        physics->setDoStochastics(FORCE_ON,0);
+	//        physics->setDoStochastics(FORCE_ON,0);
         runManager->Initialize();
 
         printf("================= Begin Realistic Tune Particle(s) =============\n");
