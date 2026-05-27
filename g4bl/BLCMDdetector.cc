@@ -460,6 +460,7 @@ void BLCMDdetector::construct(G4RotationMatrix *relativeRotation,
 	BLManager::getObject()->registerBeamStep(pv,nt);
 	if(referenceParticle != 0 || nt->needsReference())
 		BLManager::getObject()->registerReferenceParticleStep(pv,nt);
+	        BLManager::getObject()->registerrealReferenceParticleStep(pv,nt);
 	if(!perTrack)
 		BLManager::getObject()->registerEventAction(nt,false);
 

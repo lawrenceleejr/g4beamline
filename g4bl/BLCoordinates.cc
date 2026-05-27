@@ -486,6 +486,7 @@ BLCoordinates::ReferenceCoordinates::ReferenceCoordinates() :
 	prevZ = 0.0;
 
 	manager->registerReferenceParticleStep(0,this);
+	manager->registerrealReferenceParticleStep(0,this);
 	manager->registerTrackingAction(this);
 }
 
@@ -507,7 +508,7 @@ void BLCoordinates::ReferenceCoordinates::PreUserTrackingAction(const G4Track *t
 		return;
 	}
 
-	if(BLManager::getObject()->getState() != REFERENCE) return;
+	if(BLManager::getObject()->getState() != REFERENCE or BLManager::getObject()->getState() != REALISTICREFERENCE) return;
 
 	// @@@ need to handle multiple reference particles !!!!
 
@@ -529,7 +530,7 @@ void BLCoordinates::ReferenceCoordinates::PreUserTrackingAction(const G4Track *t
 
 void BLCoordinates::ReferenceCoordinates::PostUserTrackingAction(const G4Track *track)
 {
-	if(BLManager::getObject()->getState() != REFERENCE) return;
+	if(BLManager::getObject()->getState() != REFERENCE or BLManager::getObject()->getState() != REALISTICREFERENCE) return;
 
 	// add 1 mm to final step
 	// (ensures sanity if reference bends in final step)
@@ -562,7 +563,7 @@ void BLCoordinates::ReferenceCoordinates::PostUserTrackingAction(const G4Track *
 void BLCoordinates::ReferenceCoordinates::UserSteppingAction(const G4Step *step)
 {
 	// handle all states
-	if(BLManager::getObject()->getState() != REFERENCE) return;
+	if(BLManager::getObject()->getState() != REFERENCE or BLManager::getObject()->getState() != REALISTICREFERENCE) return;
 
 	G4Track *track = step->GetTrack();
 	G4ThreeVector dir = track->GetMomentumDirection();

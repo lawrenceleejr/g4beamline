@@ -348,7 +348,7 @@ void BLCMDsample::construct(G4RotationMatrix *relativeRotation,
 	BLManager::getObject()->registerBeamStep(0,nt);
 	if(referenceParticle != 0 || nt->needsReference())
 		BLManager::getObject()->registerReferenceParticleStep(0,nt);
-
+                BLManager::getObject()->registerrealReferenceParticleStep(0,nt);
 	printf("BLCMDsample::Construct %s parent=%s relZ=%.1f globZ=%.1f\n",
 		thisname.c_str(),parentName.c_str(),relativePosition[2],
 		globalPosition[2]);

@@ -392,7 +392,7 @@ void BLCMDvirtualdetector::construct(G4RotationMatrix *relativeRotation,
 	BLManager::getObject()->registerBeamStep(pv,nt);
 	if(referenceParticle != 0 || nt->needsReference())
 		BLManager::getObject()->registerReferenceParticleStep(pv,nt);
-
+                BLManager::getObject()->registerrealReferenceParticleStep(pv,nt);
 	// special case: if kill!=0 and viewer != "none", then register a
 	// BLKillTrack. (in viewer mode we don't accumulate NTuples.)
 	if(kill != 0 && Param.getString("viewer") != "none") {

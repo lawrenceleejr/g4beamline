@@ -970,7 +970,7 @@ void BLCMDtracker::UserZSteppingAction(const G4Track *track)
 		momentum = coord->getRotation() * momentum;
 	}
 
-	if(BLManager::getObject()->getState() == REFERENCE) {
+	if(BLManager::getObject()->getState() == REFERENCE  || BLManager::getObject()->getState() == REALISTICREFERENCE) {
 		if(fabs(pos[2]-trackerZ) > 0.010*mm &&
 		   fabs(pos[2]-reportZ) > 0.010*mm) {
 			if(verbose >= 3) printf("tracker %s ZStep ignored\n",
@@ -1044,7 +1044,7 @@ void BLCMDtracker::UserZSteppingAction(const G4Track *track)
 		}
 	}
 
-	if(BLManager::getObject()->getState() != REFERENCE) return;
+	if(BLManager::getObject()->getState() != REFERENCE || BLManager::getObject()->getState() != REALISTICREFERENCE) return;
 	if(for009_fit == 0 || reportTime == UNDEFINED) return;
 
 	// here to append the reference to for009_fit
@@ -1491,7 +1491,7 @@ void BLCMDtrackerplane::construct(G4RotationMatrix *relativeRotation,
 	BLManager::getObject()->registerBeamStep(pv,tpi);
 	// I'm not sure if this needs reference step any more...
 	BLManager::getObject()->registerReferenceParticleStep(pv,tpi);
-
+        BLManager::getObject()->registerrealReferenceParticleStep(pv,tpi);
 	printf("BLCMDtrackerplane::Construct %s parent=%s relZ=%.1f globZ=%.1f\n",
 		thisname.c_str(),parentName.c_str(),relativePosition[2],
 		globalPosition[2]);

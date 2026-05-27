@@ -145,6 +145,7 @@ int BLCMDparticlecolor::command(BLArgumentVector& argv,BLArgumentMap& namedArgs)
 
 	if(referenceTrajectory != 0) {
 		BLManager::getObject()->registerReferenceParticleStep(0,this);
+                BLManager::getObject()->registerrealReferenceParticleStep(0,this);
 		BLManager::getObject()->registerTrackingAction(this);
 	}
 	BLManager::getObject()->registerCallback(this,4);

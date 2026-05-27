@@ -192,7 +192,7 @@ int BLCMDtimentuple::command(BLArgumentVector& argv, BLArgumentMap& namedArgs)
 	BLManager::getObject()->registerBeamStep(0,tn);
 	if(t->referenceParticle != 0)
 		BLManager::getObject()->registerReferenceParticleStep(0,tn);
-
+	        BLManager::getObject()->registerrealReferenceParticleStep(0,tn);
 	return retval;
 }
 

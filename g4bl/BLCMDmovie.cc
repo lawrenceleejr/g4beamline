@@ -132,6 +132,7 @@ int BLCMDmovie::command(BLArgumentVector& argv, BLArgumentMap& namedArgs)
 
 	manager->registerTrackingAction(this);
 	manager->registerReferenceParticleStep(0,this);
+	manager->registerrealReferenceParticleStep(0,this);
 	manager->registerBeamStep(0,this);
 	manager->registerCallback(this,0);
 	manager->registerCallback(this,1);

@@ -568,7 +568,7 @@ void BLCMDspacecharge::PreUserTrackingAction(const G4Track *track)
 {
 	tracking = true;
 	currentBunch = 0;
-	if(manager->getState() == REFERENCE && 
+	if((manager->getState() == REFERENCE || manager->getState() == REALISTICREFERENCE) && 
 	   track->GetDefinition()->GetPDGCharge() != 0.0) {
 	      bunch.push_back(Bunch(track->GetDefinition(),nx,ny,nz,dx,dy,dz,
   				charge,maxBeta,fixedGrid,percentile,
