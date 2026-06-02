@@ -441,25 +441,28 @@ void BLManager::trackTuneAndReferenceParticles()
 
 	// Tune and Reference particles cannot use collective mode
 	bool collectiveMode = runManager->getCollectiveMode();
-	runManager->setCollectiveMode(collectiveMode);
+	runManager->setCollectiveMode(false);
         physics->setDoStochastics(NORMAL,0);
 
 	printf("================= Prepare Realistic Tune Particle(s) with Stochastics turned ON===========\n");
-	//        physics->setDoStochastics(FORCE_ON,0);
         runManager->Initialize();
 
         printf("================= Begin Realistic Tune Particle(s) =============\n");
         state = REALISTICTUNE;
-        setEventID(-4);
         beamIndex = 0;
-        runManager->BeamOn(referenceVector.size());
+        for(int i=0; i<referenceVector.size(); ++i) {
+            setEventID(-(4000+i));  // Unique negative IDs for each particle
+            runManager->BeamOn(1);
+        }
         state = IDLE;
                                                                                                                 
         printf("================== Begin Realistic Reference Particle(s) ===============\n");
         state = REALISTICREFERENCE;
-        setEventID(-3);
         beamIndex = 0;
-        runManager->BeamOn(referenceVector.size());
+        for(int i=0; i<referenceVector.size(); ++i) {
+            setEventID(-(3000+i));  // Unique negative IDs for each particle
+            runManager->BeamOn(1);
+        }
         state = IDLE;
        
 	runManager->setCollectiveMode(false);
@@ -1193,18 +1196,18 @@ void BLManager::GeneratePrimaries(G4Event *event)
 		}
 		goto end_run;
 	case REALISTICTUNE:
-	        setEventID(-4);
-	        event->SetEventID(-4);
 		while(beamIndex < referenceVector.size()) {
+		  // Event ID is already set by trackTuneAndReferenceParticles()
+		  event->SetEventID(eventID);
 		  if(referenceVector[beamIndex++]->
 		     generateReferenceParticle(event))
 		    return;
 		}
 		goto end_run;
         case REALISTICREFERENCE:
-	         setEventID(-3);
-	         event->SetEventID(-3);
 		 while(beamIndex < referenceVector.size()) {
+		   // Event ID is already set by trackTuneAndReferenceParticles()
+		   event->SetEventID(eventID);
 		   if(referenceVector[beamIndex++]->
 		      generateReferenceParticle(event))
 		     return;
