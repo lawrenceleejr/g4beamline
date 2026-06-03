@@ -444,7 +444,7 @@ void BLManager::trackTuneAndReferenceParticles()
 	runManager->setCollectiveMode(false);
 
 	printf("================= Prepare Tune Particle(s) ===========\n");
-	physics->setDoStochastics(NORMAL,0);
+	physics->setDoStochastics(FORCE_OFF,0);
 	runManager->Initialize();
 
 	printf("================= Begin Tune Particle(s) =============\n");
