@@ -90,7 +90,9 @@ class BLCMDtrace : public BLCommand, public BLManager::EventAction,
 	BLRunManager *runManager;
 	static TraceNTuple *allTrace;
 	static TraceNTuple *tuneTrace;
-	static TraceNTuple *referenceTrace;
+        static TraceNTuple *referenceTrace;
+        static TraceNTuple *realistictuneTrace;
+        static TraceNTuple *realisticreferenceTrace;
 	friend class TraceNTuple;
 public:
 	/// Constructor
@@ -134,6 +136,8 @@ public:
 TraceNTuple *BLCMDtrace::allTrace = 0;
 TraceNTuple *BLCMDtrace::tuneTrace = 0;
 TraceNTuple *BLCMDtrace::referenceTrace = 0;
+TraceNTuple *BLCMDtrace::realistictuneTrace = 0;
+TraceNTuple *BLCMDtrace::realisticreferenceTrace = 0;
 BLCMDtrace defaultTrace;
 
 BLCMDtrace::BLCMDtrace() : BLCommand(), BLManager::SteppingAction(), 
@@ -286,7 +290,13 @@ void BLCMDtrace::newTrace(const G4Track *firstTrack)
 	} else if(evNum == -1) {
 		if(!referenceTrace) referenceTrace = new TraceNTuple(format,
 			"ReferenceParticle","ReferenceParticle",coordinateType);
-	} else {
+	} else if(evNum == -4) {
+                if(!realistictuneTrace) realistictuneTrace = new TraceNTuple(format,
+                        "RealisticTuneParticle","RealisticTuneParticle",coordinateType);
+        } else if(evNum == -3) {
+                if(!realisticreferenceTrace) realisticreferenceTrace = new TraceNTuple(format,
+                        "RealisticReferenceParticle","RealisticReferenceParticle",coordinateType);
+        }else {
 		if(trace) trace->close();
 	}
 	trace = 0;
@@ -310,7 +320,11 @@ void BLCMDtrace::newTrace(const G4Track *firstTrack)
 		trace = tuneTrace;
 	} else if(evNum == -1) {
 		trace = referenceTrace;
-	} else if(evNum >= 0) {
+	} else if(evNum == -4) {
+                trace = realistictuneTrace;
+        } else if(evNum == -3) {
+                trace = realisticreferenceTrace;
+        } else if(evNum >= 0) {
 		char tmp[128];
 		snprintf(tmp,128,filename.c_str(),evNum,trkId);
 		trace = new TraceNTuple(format,tmp,tmp,coordinateType);
@@ -350,7 +364,7 @@ void BLCMDtrace::PreUserTrackingAction(const G4Track *track)
 
 	doTrace = false;
 
-	if(evNum == -2) {
+	if(evNum == -2 || evNum == -4) {
 		doTrace = (traceTune && coordinateType != BLCOORD_REFERENCE);
 		if(doTrace) newTrace(track);
 	} else if(evNum < 0) {
