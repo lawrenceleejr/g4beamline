@@ -442,30 +442,6 @@ void BLManager::trackTuneAndReferenceParticles()
 	// Tune and Reference particles cannot use collective mode
 	bool collectiveMode = runManager->getCollectiveMode();
 	runManager->setCollectiveMode(false);
-        physics->setDoStochastics(NORMAL,0);
-
-	printf("================= Prepare Realistic Tune Particle(s) with Stochastics turned ON===========\n");
-        runManager->Initialize();
-
-        printf("================= Begin Realistic Tune Particle(s) =============\n");
-        state = REALISTICTUNE;
-        beamIndex = 0;
-        for(int i=0; i<referenceVector.size(); ++i) {
-            setEventID(-(4000+i));  // Unique negative IDs for each particle
-            runManager->BeamOn(1);
-        }
-        state = IDLE;
-                                                                                                                
-        printf("================== Begin Realistic Reference Particle(s) ===============\n");
-        state = REALISTICREFERENCE;
-        beamIndex = 0;
-        for(int i=0; i<referenceVector.size(); ++i) {
-            setEventID(-(3000+i));  // Unique negative IDs for each particle
-            runManager->BeamOn(1);
-        }
-        state = IDLE;
-       
-	runManager->setCollectiveMode(false);
 
 	printf("================= Prepare Tune Particle(s) ===========\n");
 	physics->setDoStochastics(FORCE_OFF,0);
@@ -486,7 +462,27 @@ void BLManager::trackTuneAndReferenceParticles()
 	runManager->BeamOn(referenceVector.size());
 	state = IDLE;
 	beamIndex = 0;
-    
+
+	printf("================= Prepare Realistic Tune Particle(s) with Stochastics turned ON===========\n");
+	runManager->setCollectiveMode(false);
+        physics->setDoStochastics(FORCE_ON,0);
+	runManager->Initialize();
+	
+        printf("================= Begin Realistic Tune Particle(s) =============\n");
+        state = REALISTICTUNE;
+	setEventID(-4);
+        beamIndex = 0;
+        runManager->BeamOn(referenceVector.size());
+        state = IDLE;
+
+        printf("================== Begin Realistic Reference Particle(s) ===============\n");
+        state = REALISTICREFERENCE;
+        setEventID(-3);
+        beamIndex = 0;
+        runManager->BeamOn(referenceVector.size());
+        state = IDLE;
+	
+        
 	physics->setDoStochastics(NORMAL,0);
 	runManager->setCollectiveMode(collectiveMode);
 }
