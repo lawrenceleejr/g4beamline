@@ -241,6 +241,8 @@ BLManager::BLManager() : G4VUserDetectorConstruction(),
 				"Tolerance for Z steps (mm)");
 	BLSetParam unused_8("wallClockLimit","-1",
 			"Limit on wall clock time in seconds; -1 is infinite");
+	BLSetParam unused_9("realisticSamples","1",
+			"Number of stochastic realizations to run for realistic tune/reference particles; samples use different random seeds and are summarized together.");
 
 	if(blManager)
 		G4Exception("BLManager","Object Already Exists",FatalException,
@@ -463,28 +465,39 @@ void BLManager::trackTuneAndReferenceParticles()
 	state = IDLE;
 	beamIndex = 0;
 
-	printf("================= Prepare Realistic Tune Particle(s) with Stochastics turned ON===========\n");
-	runManager->setCollectiveMode(false);
-        physics->setDoStochastics(FORCE_ON,0);
-	runManager->Initialize();
-	
-        printf("================= Begin Realistic Tune Particle(s) =============\n");
-        state = REALISTICTUNE;
-	setEventID(-4);
-        beamIndex = 0;
-        runManager->BeamOn(referenceVector.size());
-        state = IDLE;
+	int realisticSamples = Param.getInt("realisticSamples");
+	if(realisticSamples < 1)
+		realisticSamples = 1;
 
-        printf("================== Begin Realistic Reference Particle(s) ===============\n");
-        state = REALISTICREFERENCE;
-        setEventID(-3);
-        beamIndex = 0;
-        runManager->BeamOn(referenceVector.size());
-        state = IDLE;
+	printf("================= Prepare Realistic Tune/Reference Particle(s) with Stochastics turned ON (%d samples) ===========\n", realisticSamples);
+	for(int sample=0; sample<realisticSamples; ++sample) {
+		unsigned long seed = 0x1234567UL + (unsigned long)sample;
+		CLHEP::HepRandom::setTheSeed((long)seed);
+		printf("=== Realistic sample %d/%d  seed=%lu ===\n", sample+1, realisticSamples, seed);
+
+		runManager->setCollectiveMode(false);
+		physics->setDoStochastics(FORCE_ON,0);
+		runManager->Initialize();
+		
+		printf("================= Begin Realistic Tune Particle(s) =============\n");
+		state = REALISTICTUNE;
+		setEventID(-4);
+		beamIndex = 0;
+		runManager->BeamOn(referenceVector.size());
+		state = IDLE;
+
+		printf("================== Begin Realistic Reference Particle(s) ===============\n");
+		state = REALISTICREFERENCE;
+		setEventID(-3);
+		beamIndex = 0;
+		runManager->BeamOn(referenceVector.size());
+		state = IDLE;
+	}
 	
-        
 	physics->setDoStochastics(NORMAL,0);
 	runManager->setCollectiveMode(collectiveMode);
+	printf("================= Realistic Tune/Reference summary: %d stochastic samples completed ==============\n", realisticSamples);
+	printf("Average physical output should be computed from the accumulated ntuple/trace data across these %d samples.\n", realisticSamples);
 }
 
 void BLManager::handleSourceRun()
