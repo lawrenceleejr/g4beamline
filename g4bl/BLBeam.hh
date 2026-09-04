@@ -93,6 +93,12 @@ public:
 
 	/// summary() will print a summary, if necessary.
 	virtual void summary() { }
+
+	/// getReferenceMomentum() returns the current reference momentum for averaging.
+	virtual G4double getReferenceMomentum() const { return 0.0; }
+
+	/// getTuneMomentum() returns the current tune momentum for averaging.
+	virtual G4double getTuneMomentum() const { return 0.0; }
 };
 
 #endif// BLBEAM_HH

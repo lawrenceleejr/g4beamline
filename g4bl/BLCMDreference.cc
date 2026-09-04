@@ -95,6 +95,12 @@ public:
 	/// summary() will print a summary, if necessary.
 	virtual void summary() { }
 
+	/// getReferenceMomentum() returns the current reference momentum.
+	virtual G4double getReferenceMomentum() const { return referenceMomentum; }
+
+	/// getTuneMomentum() returns the current tune momentum.
+	virtual G4double getTuneMomentum() const { return tuneMomentum; }
+
 	// from TrackingAction, ZSteppingAction, and RunAction
 	void PreUserTrackingAction(const G4Track *track);
 	void PostUserTrackingAction(const G4Track *track);

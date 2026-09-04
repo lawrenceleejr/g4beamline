@@ -469,6 +469,11 @@ void BLManager::trackTuneAndReferenceParticles()
 	if(realisticSamples < 1)
 		realisticSamples = 1;
 
+	G4double realisticTuneSum = 0.0;
+	G4double realisticReferenceSum = 0.0;
+	int realisticTuneCount = 0;
+	int realisticReferenceCount = 0;
+
 	printf("================= Prepare Realistic Tune/Reference Particle(s) with Stochastics turned ON (%d samples) ===========\n", realisticSamples);
 	for(int sample=0; sample<realisticSamples; ++sample) {
 		unsigned long seed = 0x1234567UL + (unsigned long)sample;
@@ -485,6 +490,10 @@ void BLManager::trackTuneAndReferenceParticles()
 		beamIndex = 0;
 		runManager->BeamOn(referenceVector.size());
 		state = IDLE;
+		for(unsigned i=0; i<referenceVector.size(); ++i) {
+			realisticTuneSum += referenceVector[i]->getTuneMomentum();
+			++realisticTuneCount;
+		}
 
 		printf("================== Begin Realistic Reference Particle(s) ===============\n");
 		state = REALISTICREFERENCE;
@@ -492,12 +501,22 @@ void BLManager::trackTuneAndReferenceParticles()
 		beamIndex = 0;
 		runManager->BeamOn(referenceVector.size());
 		state = IDLE;
+		for(unsigned i=0; i<referenceVector.size(); ++i) {
+			realisticReferenceSum += referenceVector[i]->getReferenceMomentum();
+			++realisticReferenceCount;
+		}
 	}
 	
 	physics->setDoStochastics(NORMAL,0);
 	runManager->setCollectiveMode(collectiveMode);
-	printf("================= Realistic Tune/Reference summary: %d stochastic samples completed ==============\n", realisticSamples);
-	printf("Average physical output should be computed from the accumulated ntuple/trace data across these %d samples.\n", realisticSamples);
+
+	printf("================= Realistic Tune/Reference averaged summary ==============\n");
+	if(realisticTuneCount > 0)
+		printf("Average Realistic Tune momentum = %.6f MeV/c over %d samples\n",
+			realisticTuneSum / realisticTuneCount, realisticSamples);
+	if(realisticReferenceCount > 0)
+		printf("Average Realistic Reference momentum = %.6f MeV/c over %d samples\n",
+			realisticReferenceSum / realisticReferenceCount, realisticSamples);
 }
 
 void BLManager::handleSourceRun()
