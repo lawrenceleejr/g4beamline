@@ -40,7 +40,7 @@ BLSetParam deltaChord("deltaChord","3.0","Geant4 tracking parameter");
 BLSetParam deltaOneStep("deltaOneStep","0.01","Geant4 tracking parameter");
 BLSetParam deltaIntersection("deltaIntersection","0.1","Geant4 tracking parameter");
 BLSetParam epsMin("epsMin","2.5e-7","Geant4 tracking parameter");
-BLSetParam epsMax("epsMax","0.05","Geant4 tracking parameter");
+BLSetParam epsMax("epsMax","0.01","Geant4 tracking parameter");
 BLSetParam fieldVoxels("fieldVoxels","200,200,200","Size of voxels for field computation (mm)");
 
 bool BLGlobalField::spinTracking = false;
@@ -130,6 +130,18 @@ BLGlobalField::BLGlobalField() : G4ElectroMagneticField(), fields()
 	fieldMgr->SetDeltaIntersection(delta_intersection); 
 	G4double eps_min = Param.getDouble("epsMin");
 	G4double eps_max = Param.getDouble("epsMax");
+	// Geant4 (11.2 and later) fatally rejects an epsilon larger than
+	// the value it accepts for robust integration, which is smaller
+	// than the epsMax G4beamline used to default to. Clamp the values
+	// so an older input file runs instead of aborting.
+	G4double eps_limit = G4FieldManager::GetMaxAcceptedEpsilon();
+	if(eps_max > eps_limit) {
+		G4cout << "BLGlobalField: epsMax=" << eps_max <<
+			" is larger than the maximum Geant4 accepts (" <<
+			eps_limit << "); using " << eps_limit << G4endl;
+		eps_max = eps_limit;
+	}
+	if(eps_min > eps_max) eps_min = eps_max;
 	pFieldPropagator->SetMinimumEpsilonStep(eps_min);
 	pFieldPropagator->SetMaximumEpsilonStep(eps_max);
 //	G4cout << "Accuracy Parameters:" <<
