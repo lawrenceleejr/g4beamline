@@ -44,15 +44,37 @@ public:
 	/// Utility: setRandomSeedToGenerate() sets the random seed for
 	/// the generation of an event.
 	static void setRandomSeedToGenerate(int evid) // reference has evid<0
-		{ switch(BLManager::getObject()->getPRNGSeedMethod()) {
+		{ 
+		  BLManager *mgr = BLManager::getObject();
+		  BLManagerState state = mgr->getState();
+		  if(evid < 0 && state != REALISTICTUNE && state != REALISTICREFERENCE) {
+			switch(mgr->getPRNGSeedMethod()) {
+			  case EVENT_NUMBER:
+				CLHEP::HepRandom::setTheSeed(0x7FFFFFFE);
+				break;
+			  case TIME_US:
+				CLHEP::HepRandom::setTheSeed(
+					(BLTime::timems()&0x7FFFFFFF) | 1);
+				// do it only once, to avoid duplication
+				mgr->setPRNGSeedMethod(NO_SEED);
+				break;
+			  case NO_SEED:
+			  	return;
+			}
+			CLHEP::RandGauss::setFlag(false);
+			G4UniformRand(); // eat one for luck (don't get seed back)
+			return;
+		  }
+		  if(evid < 0) return; // keep the sample-specific seed for realistic runs
+		  switch(mgr->getPRNGSeedMethod()) {
 		  case EVENT_NUMBER:
-			CLHEP::HepRandom::setTheSeed(evid>0?evid:0x7FFFFFFE);
+			CLHEP::HepRandom::setTheSeed(evid);
 			break;
 		  case TIME_US:
 			CLHEP::HepRandom::setTheSeed(
 				(BLTime::timems()&0x7FFFFFFF) | 1);
 			// do it only once, to avoid duplication
-			BLManager::getObject()->setPRNGSeedMethod(NO_SEED);
+			mgr->setPRNGSeedMethod(NO_SEED);
 			break;
 		  case NO_SEED:
 		  	return;
