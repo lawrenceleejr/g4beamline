@@ -18,10 +18,10 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
 	apt-get install -y --no-install-recommends \
 		build-essential cmake wget ca-certificates \
-		qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools \
+		qt6-base-dev qt6-base-dev-tools \
 		libgsl-dev libssl-dev libfftw3-dev \
 		libx11-dev libxpm-dev libxft-dev libxext-dev \
-		libtbb12 libxml2 && \
+		libtbb12 libxml2 libvdt-dev && \
 	rm -rf /var/lib/apt/lists/*
 
 #	ROOT (binary release)

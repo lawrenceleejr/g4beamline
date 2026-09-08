@@ -7,8 +7,8 @@ cmake_policy(SET CMP0100 NEW)
 #set(CMAKE_CPP_COMPILER "/usr/local/bin/g++-11")
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-#find_package(Qt5Widgets REQUIRED)
-find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Widgets REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Widgets REQUIRED)
 
 ###
 ### RPATH
@@ -45,10 +45,9 @@ add_executable(g4blgui
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	# --disable-new-dtags makes it use RPATH, not RUNPATH -- required
-	target_link_libraries(g4blgui ${LIBS} Qt5::Widgets -Wl,--disable-new-dtags)
+	target_link_libraries(g4blgui ${LIBS} Qt${QT_VERSION_MAJOR}::Widgets -Wl,--disable-new-dtags)
 else()
-	target_link_libraries(g4blgui ${LIBS} Qt5::Widgets)
+	target_link_libraries(g4blgui ${LIBS} Qt${QT_VERSION_MAJOR}::Widgets)
 endif()
-#qt5_use_modules(g4blgui Widgets)
 
 install(TARGETS g4blgui RUNTIME DESTINATION bin)

@@ -4,10 +4,10 @@ cmake_policy(SET CMP0020 NEW)
 cmake_policy(SET CMP0100 NEW)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-#find_package(Qt5Widgets REQUIRED)
-#find_package(Qt5Network REQUIRED)
-find_package(Qt5 COMPONENTS Core Widgets Network REQUIRED)
-get_property(loc TARGET Qt5::Core PROPERTY IMPORTED_LOCATION_RELEASE)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Widgets Network REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Widgets Network REQUIRED)
+get_property(loc TARGET Qt${QT_VERSION_MAJOR}::Core
+	PROPERTY IMPORTED_LOCATION_RELEASE)
 message(STATUS "${loc}")
 
 ###
@@ -41,11 +41,12 @@ add_executable(g4bldata
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	# --disable-new-dtags makes it use RPATH, not RUNPATH -- required
-	target_link_libraries(g4bldata ${LIBS} Qt5::Widgets Qt5::Network -Wl,--disable-new-dtags)
+	target_link_libraries(g4bldata ${LIBS} Qt${QT_VERSION_MAJOR}::Widgets
+		Qt${QT_VERSION_MAJOR}::Network -Wl,--disable-new-dtags)
 else()
-	target_link_libraries(g4bldata ${LIBS} Qt5::Widgets Qt5::Network)
+	target_link_libraries(g4bldata ${LIBS} Qt${QT_VERSION_MAJOR}::Widgets
+		Qt${QT_VERSION_MAJOR}::Network)
 endif()
-#qt5_use_modules(g4bldata Widgets Network)
 install(TARGETS g4bldata RUNTIME DESTINATION bin)
 
 ###

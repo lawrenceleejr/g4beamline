@@ -15,7 +15,7 @@
 #include <QUrl>
 #include <QDesktopServices>
 #include <QMessageBox>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QList>
 
 #include "G4blGuiWindow.h"
@@ -140,45 +140,38 @@ QStringList G4blGuiWindow::getArgs()
 {
 	QStringList ret;
 
+	//	Each pattern is anchored at the start of what is left of the
+	//	line, so a match is always removed from the front. name*
+	//	capture name and value, pos* capture a positional argument.
+	static const QRegularExpression ws("^\\s*");
+	static const QRegularExpression nameq1("^([A-Za-z0-9_]+)=\"([^\"]*)\"");
+	static const QRegularExpression nameq2("^([A-Za-z0-9_]+)='([^']*)'");
+	static const QRegularExpression name1("^([A-Za-z0-9_]+)=([^\\s]*)\\s");
+	static const QRegularExpression name2("^([A-Za-z0-9_]+)=([^\\s]*)$");
+	static const QRegularExpression posq1("^\"([^\"]+)\"");
+	static const QRegularExpression posq2("^'([^']+)'");
+	static const QRegularExpression pos1("^([^\\s]+)\\s");
+	static const QRegularExpression pos2("^([^\\s]+)$");
+
 	ret << inputFile->text();
 	QString line = parameters->text();
+	QRegularExpressionMatch match;
+	//	match the pattern and remove what it matched from line
+	auto take = [&line,&match](const QRegularExpression &re) {
+		match = re.match(line);
+		if(!match.hasMatch()) return false;
+		line.remove(0,match.capturedLength());
+		return true;
+	};
 	while(line.length() > 0) {
-		static QRegExp ws("^\\s*");
-		static QRegExp nameq1("^([A-Za-z0-9_]+)=\"([^\"]*)\"");
-		static QRegExp nameq2("^([A-Za-z0-9_]+)='([^']*)'");
-		static QRegExp name1("^([A-Za-z0-9_]+)=([^\\s]*)\\s");
-		static QRegExp name2("^([A-Za-z0-9_]+)=([^\\s]*)$");
-		static QRegExp posq1("^\"([^\"]+)\"");
-		static QRegExp posq2("^'([^']+)'");
-		static QRegExp pos1("^([^\\s]+)\\s");
-		static QRegExp pos2("^([^\\s]+)$");
-		line = line.replace(ws,"");
+		line.replace(ws,"");
 		if(line.length() == 0) break;
 		// remove quotes just like the shell, as g4bl expects
-		if(line.contains(nameq1)) {
-			line.replace(0,nameq1.matchedLength(),"");
-			ret << nameq1.cap(1) + "=" + nameq1.cap(2);
-		} else if(line.contains(nameq2)) {
-			line.replace(0,nameq2.matchedLength(),"");
-			ret << nameq2.cap(1) + "=" + nameq2.cap(2);
-		} else if(line.contains(name1)) {
-			line.replace(0,name1.matchedLength(),"");
-			ret << name1.cap(1) + "=" + name1.cap(2);
-		} else if(line.contains(name2)) {
-			line.replace(0,name2.matchedLength(),"");
-			ret << name2.cap(1) + "=" + name2.cap(2);
-		} else if(line.contains(posq1)) {
-			line.replace(0,posq1.matchedLength(),"");
-			ret << posq1.cap(1);
-		} else if(line.contains(posq2)) {
-			line.replace(0,posq2.matchedLength(),"");
-			ret << posq2.cap(1);
-		} else if(line.contains(pos1)) {
-			line.replace(0,pos1.matchedLength(),"");
-			ret << pos1.cap(1);
-		} else if(line.contains(pos2)) {
-			line.replace(0,pos2.matchedLength(),"");
-			ret << pos2.cap(1);
+		if(take(nameq1) || take(nameq2) || take(name1) || take(name2)) {
+			ret << match.captured(1) + "=" + match.captured(2);
+		} else if(take(posq1) || take(posq2) || take(pos1) ||
+								take(pos2)) {
+			ret << match.captured(1);
 		} else {
 			QMessageBox::warning(this,"G4beamline Error",
 				"Syntax error in Parameters");
@@ -265,16 +258,16 @@ void G4blGuiWindow::removeBenignErrorMessages(QString &text)
 		"^input_line_[^\\n]* fatal error:[^\\n]*\\n",
 		"^#include[^\\n]*\\n",
 		"^In file included from[^\\n]*\\n",
-		"^C:\\Program Files[^\\n]*\\n",
+		"^C:\\\\Program Files[^\\n]*\\n",
 		"^ *struct _CrtEnableIf[^\\n]*\\n",
 		"^ *typedef struct[^\\n]*\\n",
 		"^ *included multiple times[^\\n]*\\n",
 		"^Warning in <TClassTable[^\\n]*\\n",
 	};
-	static QList<QRegExp> regexp;
+	static QList<QRegularExpression> regexp;
 	if(regexp.isEmpty()) {
 		for(unsigned i=0; i<sizeof(list)/sizeof(list[0]); ++i) {
-			regexp.append(QRegExp(list[i]));
+			regexp.append(QRegularExpression(list[i]));
 		}
 	}
 

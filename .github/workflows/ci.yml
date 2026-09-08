@@ -35,10 +35,12 @@ jobs:
           #conda install -y cmake make gxx # Add other dependencies here
           #conda clean -a
           apt-get update
-          apt-get install -y qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
+          # Geant4 11.4 is built against Qt6, so G4beamline must use Qt6 too
+          apt-get install -y qt6-base-dev qt6-base-dev-tools
           apt-get install -y libgsl-dev libssl-dev
           export GSL_DIR=/usr
-          apt-get install -y libfftw3-dev libtbb12 libxml2
+          # libvdt-dev: ROOT's ROOTConfig.cmake requires the system vdt
+          apt-get install -y libfftw3-dev libtbb12 libxml2 libvdt-dev
           export FFTW_DIR=/usr
 
           echo "GSL_DIR=$GSL_DIR" >> $GITHUB_ENV
@@ -131,4 +133,5 @@ jobs:
         if: github.event_name != 'pull_request'
         run: |
           IMAGE=$(echo "${{ steps.meta.outputs.tags }}" | head -n1)
-          docker run --rm "$IMAGE" sh -c 'command -v g4bl && g4bl --version'
+          # g4bl has no --version flag; run a real example instead.
+          docker run --rm "$IMAGE" g4bl /usr/src/g4beamline/examples/Example1.g4bl

@@ -9,7 +9,9 @@ cmake_policy(SET CMP0100 NEW)
 ### Qt5 plugins 
 ###
 if(G4BL_GUI)
-	execute_process(COMMAND qmake -query QT_INSTALL_PLUGINS 
+	# qmake is qmake6 for a Qt6 build, and may be the only one installed
+	find_program(QMAKE_EXECUTABLE NAMES qmake6 qmake-qt5 qmake REQUIRED)
+	execute_process(COMMAND ${QMAKE_EXECUTABLE} -query QT_INSTALL_PLUGINS 
 		OUTPUT_VARIABLE plugins OUTPUT_STRIP_TRAILING_WHITESPACE)
 	install(DIRECTORY ${plugins} 
 		DESTINATION . USE_SOURCE_PERMISSIONS)

@@ -33,7 +33,9 @@ set(LIBS ${LIBS} ${Geant4_LIBRARIES})
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DG4BLVERSION=${G4BLVERSION}")
 
 ###
-### Qt5
+### Qt -- Qt6 or Qt5, whichever the Geant4 build used. QT_VERSION_MAJOR
+###       is set by the version-less find_package() and is used everywhere
+###       a Qt target or module is named.
 ###
 if(G4BL_GUI)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DG4BL_GUI")
@@ -41,9 +43,16 @@ if(G4BL_GUI)
 	set(CMAKE_INCLUDE_CURRENT_DIR ON)
 	cmake_policy(SET CMP0020 NEW)
 	cmake_policy(SET CMP0043 NEW)
-	#find_package(Qt5Widgets REQUIRED)
-	#find_package(Qt5OpenGL REQUIRED)
-	find_package(Qt5 COMPONENTS Core Widgets OpenGL REQUIRED)
+	find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Widgets OpenGL REQUIRED)
+	find_package(Qt${QT_VERSION_MAJOR}
+		COMPONENTS Core Widgets OpenGL REQUIRED)
+	set(QT_LIBS Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::OpenGL)
+	if(QT_VERSION_MAJOR GREATER_EQUAL 6)
+		# Qt6 split QOpenGLWidget out of the OpenGL module
+		find_package(Qt6 COMPONENTS OpenGLWidgets REQUIRED)
+		set(QT_LIBS ${QT_LIBS} Qt6::OpenGLWidgets)
+	endif()
+	message(STATUS "Qt version: ${QT_VERSION_MAJOR}")
 endif()
 
 ###
@@ -146,8 +155,7 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/*.hh ${PROJECT_SOURCE_DIR}/*.h)
 include_directories(${PROJECT_SOURCE_DIR})
 add_executable(g4bl ${sources} ${headers})
 if(G4BL_GUI)
-	#qt5_use_modules(g4bl Widgets OpenGL)
-	set(LIBS ${LIBS} Qt5::Widgets Qt5::OpenGL)
+	set(LIBS ${LIBS} ${QT_LIBS})
 endif()
 target_link_libraries(g4bl ${LIBS})
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
