@@ -99,6 +99,7 @@ void g4bl_exit(int value)
 	G4GeometryManager::GetInstance()->OpenGeometry();
 
 	BLWriteAsciiFile::closeAll();
+	BLNTuple::closeAll();	// idempotent; nothing to do if already closed
 
 	if(value == 0)
 		printf("g4beamline: simulation complete\n");
@@ -107,7 +108,17 @@ void g4bl_exit(int value)
 	fflush(stdout);
 
 	BLSignal::writeStackTrace(2); // does nothing if no stack trace
+	fflush(stdout);
+	fflush(stderr);
+	//	Exit without running static destructors: Root's own library
+	//	teardown (RConcurrentHashColl in libRIO, via __cxa_finalize)
+	//	double-frees and aborts the process, long after every file
+	//	has been written and closed above.
+#ifdef WIN32
 	exit(value);
+#else
+	::_exit(value);
+#endif
 }
 
 #ifdef STUB

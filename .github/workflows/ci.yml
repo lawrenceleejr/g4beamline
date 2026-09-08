@@ -8,6 +8,11 @@ on:
     # Run on pull request to any branch
     branches: ['**']
 
+# A newer push to the same ref supersedes a run in progress
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
