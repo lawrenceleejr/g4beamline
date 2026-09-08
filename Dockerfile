@@ -12,6 +12,13 @@ FROM ${GEANT4_IMAGE}
 ARG ROOT_TARBALL=root_v6.40.04.Linux-ubuntu24.04-x86_64-gcc13.3.tar.gz
 ARG G4BL_PREFIX=/opt/G4beamline
 
+#	The Geant4 base image sets
+#	  SHELL ["/bin/bash","-c","source .../geant4.sh"]
+#	which makes every RUN in a derived image run that source command and
+#	silently discard the actual command (exit 0, nothing built). Take the
+#	shell back; geant4.sh only sets variables the image already has in ENV.
+SHELL ["/bin/bash", "-c"]
+
 ENV DEBIAN_FRONTEND=noninteractive
 
 #	Build/runtime dependencies
