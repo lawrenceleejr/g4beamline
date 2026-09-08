@@ -510,13 +510,8 @@ void BLManager::trackTuneAndReferenceParticles()
 	physics->setDoStochastics(NORMAL,0);
 	runManager->setCollectiveMode(collectiveMode);
 
-	printf("================= Realistic Tune/Reference averaged summary ==============\n");
-	if(realisticTuneCount > 0)
-		printf("Average Realistic Tune momentum = %.6f MeV/c over %d samples\n",
-			realisticTuneSum / realisticTuneCount, realisticSamples);
-	if(realisticReferenceCount > 0)
-		printf("Average Realistic Reference momentum = %.6f MeV/c over %d samples\n",
-			realisticReferenceSum / realisticReferenceCount, realisticSamples);
+	
+	
 }
 
 void BLManager::handleSourceRun()
