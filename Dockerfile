@@ -45,7 +45,8 @@ RUN set -e; \
 	mkdir -p ${G4BL_PREFIX}; cd ${G4BL_PREFIX}; \
 	cmake /usr/src/g4beamline; \
 	cmake --build . --config Release --target install -- -j"$(nproc)"; \
-	rm -f ${G4BL_PREFIX}/*.tgz
+	rm -f ${G4BL_PREFIX}/*.tgz; \
+	test -x ${G4BL_PREFIX}/bin/g4bl	# never ship an image without it
 
 ENV G4BL_DIR=${G4BL_PREFIX} \
 	PATH=${G4BL_PREFIX}/bin:/opt/root/bin:${PATH} \

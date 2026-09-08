@@ -131,8 +131,9 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          # No registry/gha layer cache: a stale entry with a missing blob
+          # made BuildKit "complete" the build steps without running them,
+          # and push an image with no G4beamline in it.
 
       - name: Smoke test the image
         if: github.event_name != 'pull_request'
