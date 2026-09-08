@@ -17,7 +17,6 @@
 #include <QSizePolicy>
 #include <QAction>
 #include <QMainWindow>
-#include <QGLWidget>
 #include <QList>
 #include <QLayout>
 #include <QDockWidget>
