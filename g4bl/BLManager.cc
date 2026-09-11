@@ -476,6 +476,13 @@ void BLManager::trackTuneAndReferenceParticles()
 
 	printf("================= Prepare Realistic Tune/Reference Particle(s) with Stochastics turned ON (%d samples) ===========\n", realisticSamples);
 	for(int sample=0; sample<realisticSamples; ++sample) {
+		// Reset the external track bookkeeping for each stochastic realization.
+		// Otherwise secondary track IDs continue to grow across samples and the
+		// output mixes distinct sample histories into one raw trace stream.
+		clearTrackIDMap();
+		setPrimaryTrackID(-1,-1);
+		setNextSecondaryTrackID(1000);
+
 		unsigned long seed = 0x1234567UL + (unsigned long)sample;
 		CLHEP::HepRandom::setTheSeed((long)seed);
 		printf("=== Realistic sample %d/%d  seed=%lu ===\n", sample+1, realisticSamples, seed);
