@@ -17,24 +17,26 @@
 
 // baseURL ends with '/'
 // download URL is baseURL+defs[i].name+".tar.gz"
-std::string Geant4Data::baseURL = "http://muonsinc.com/Geant4Data-3.08/";
+std::string Geant4Data::baseURL = "https://cern.ch/geant4-data/datasets/";
 
-/// These are the datasets for Geant4-v11.0.2
+/// These are the datasets for Geant4-v11.4.2
 static Geant4Data defs[] = {
  // env, name, dir, dl_size disk_size, required
- {"G4ABLADATA",       "G4ABLA.3.1",              "G4ABLA3.1",                107286,    "1.1M", false},
- {"G4LEDATA",         "G4EMLOW.8.0",             "G4EMLOW8.0",               326834565, "633M", true},
- {"G4ENSDFSTATEDATA", "G4ENSDFSTATE.2.3",        "G4ENSDFSTATE2.3",          290745,    "1.7M", true},
- {"G4INCLDATA",       "G4INCL.1.0",              "G4INCL1.0",                95840,     "0.2M", false},
- {"G4NEUTRONHPDATA",  "G4NDL.4.6",               "G4NDL4.6",                 599862135, "626M", false},
- {"G4PARTICLEXSDATA", "G4PARTICLEXS.4.0",        "G4PARTICLEXS4.0",          12242648,  "36M",  true},
+ {"G4ABLADATA",       "G4ABLA.3.3",              "G4ABLA3.3",                107286,    "1.1M", false},
+ {"G4LEDATA",         "G4EMLOW.8.8",             "G4EMLOW8.8",               326834565, "633M", true},
+ {"G4ENSDFSTATEDATA", "G4ENSDFSTATE.3.0",        "G4ENSDFSTATE3.0",          290745,    "1.7M", true},
+ {"G4INCLDATA",       "G4INCL.1.3",              "G4INCL1.3",                95840,     "0.2M", false},
+ {"G4NEUTRONHPDATA",  "G4NDL.4.7.1",             "G4NDL4.7.1",               599862135, "626M", false},
+ {"G4PARTICLEXSDATA", "G4PARTICLEXS.4.2",        "G4PARTICLEXS4.2",          12242648,  "36M",  true},
  {"G4PIIDATA",        "G4PII.1.3",               "G4PII1.3",                 4293607,   "24M",  false},
- {"G4LEVELGAMMADATA", "G4PhotonEvaporation.5.7", "PhotonEvaporation5.7",     10089240,  "44M",  true},
- {"G4RADIOACTIVEDATA","G4RadioactiveDecay.5.6",  "RadioactiveDecay5.6",      1059792,   "14M",  true},
+ {"G4LEVELGAMMADATA", "G4PhotonEvaporation.6.1.2", "PhotonEvaporation6.1.2", 10089240,  "44M",  true},
+ {"G4RADIOACTIVEDATA","G4RadioactiveDecay.6.1.2", "RadioactiveDecay6.1.2",   1059792,   "14M",  true},
  {"G4REALSURFACEDATA","G4RealSurface.2.2",       "RealSurface2.2",           132506346, "127M", false},
  {"G4SAIDXSDATA",     "G4SAIDDATA.2.0",          "G4SAIDDATA2.0",            38502,     "0.2M", false},
- {"G4TENDLDATA",      "G4TENDL.1.4",             "G4TENDL1.4",               912261874, "888M", false},
- {"G4LENDDATA",       "LEND_GND1.3_ENDF.BVII.1", "LEND_GND1.3_ENDF.BVII.1",  900925783, "2.6G", false},
+ {"G4CHANNELINGDATA", "G4CHANNELING.2.0",        "G4CHANNELING2.0",          2616216,   "7.5M", false},
+ {"G4PARTICLEHPDATA", "G4TENDL.1.4",             "G4TENDL1.4",               912261874, "888M", false},
+ {"G4NUDEXLIBDATA",   "G4NUDEXLIB.1.0",          "G4NUDEXLIB1.0",            922470353, "2.5G", false},
+ {"G4URRPTDATA",      "G4URRPT.1.1",             "G4URRPT1.1",               418783345, "1.0G", false},
  {"", "", "", 0, "", false}
 };
 
@@ -142,4 +144,3 @@ void Geant4Data::runG4bldata()
 	// now that the data are probably there, try to find them again
 	setup();
 }
-

@@ -35,7 +35,7 @@ RUN wget -q https://geant4.web.cern.ch/sites/default/files/geant4/geant4.${GEANT
 	cmake -S "${GEANT4_SRC_DIR}" -B /tmp/geant4-build \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_INSTALL_PREFIX=/opt/geant4-v${GEANT4_VERSION} \
-		-DGEANT4_INSTALL_DATA=OFF \
+		-DGEANT4_INSTALL_DATA=ON \
 		-DGEANT4_INSTALL_EXAMPLES=OFF \
 		-DGEANT4_USE_QT=ON \
 		-DGEANT4_USE_OPENGL_X11=ON && \
@@ -59,6 +59,9 @@ RUN mkdir -p ${G4BL_DIR} && cd ${G4BL_DIR} && \
 		cmake /usr/src/g4beamline && \
 	LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:${ROOTSYS}/lib:${LD_LIBRARY_PATH} \
 		cmake --build . --config Release --target install -- -j"$(nproc)" && \
+	GEANT4_DATA_DIR="$(find /opt/geant4-v${GEANT4_VERSION}/share -maxdepth 2 -type d -name data | head -n1)" && \
+	test -n "${GEANT4_DATA_DIR}" && \
+	printf '%s\n' "${GEANT4_DATA_DIR}" > ${G4BL_DIR}/.data && \
 	rm -f ${G4BL_DIR}/*.tgz
 
 ENV G4BL_DIR=${G4BL_DIR} \
