@@ -4,7 +4,7 @@
 #	steps used by .github/workflows/ci.yml. The resulting image has
 #	g4bl (and friends) on PATH.
 #
-FROM artemisbeta/geant4:11.3.2
+FROM artemisbeta/geant4:11.4.2
 
 ARG ROOT_TARBALL=root_v6.26.14.Linux-ubuntu22-x86_64-gcc11.4.tar.gz
 ARG G4BL_DIR=/opt/G4beamline
@@ -29,7 +29,7 @@ ENV ROOTSYS=/opt/root \
 	ROOT_DIR=/opt/root \
 	GSL_DIR=/usr \
 	FFTW_DIR=/usr \
-	Geant4_DIR=/usr/local/share/geant4/install/4.11.3/lib/cmake/Geant4
+	Geant4_DIR=/usr/local/share/geant4/install/4.11.4/lib/cmake/Geant4
 
 #	G4beamline. NOTE: CMakeLists.txt forces CMAKE_INSTALL_PREFIX to equal
 #	CMAKE_BINARY_DIR, so the build directory *is* the install directory.
