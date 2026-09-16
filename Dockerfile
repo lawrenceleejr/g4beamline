@@ -40,6 +40,8 @@ RUN wget -q https://geant4.web.cern.ch/sites/default/files/geant4/geant4.${GEANT
 		-DGEANT4_USE_QT=ON \
 		-DGEANT4_USE_OPENGL_X11=ON && \
 	cmake --build /tmp/geant4-build --config Release --target install -- -j"$(nproc)" && \
+	if [ -d /opt/geant4-v${GEANT4_VERSION}/lib64 ] && [ ! -e /opt/geant4-v${GEANT4_VERSION}/lib ]; then ln -s lib64 /opt/geant4-v${GEANT4_VERSION}/lib; fi && \
+	if [ -d /opt/geant4-v${GEANT4_VERSION}/lib ] && [ ! -e /opt/geant4-v${GEANT4_VERSION}/lib64 ]; then ln -s lib /opt/geant4-v${GEANT4_VERSION}/lib64; fi && \
 	rm -rf /tmp/geant4.tgz "${GEANT4_SRC_DIR}" /tmp/geant4-build
 
 ENV ROOTSYS=/opt/root \
@@ -47,7 +49,7 @@ ENV ROOTSYS=/opt/root \
 	GSL_DIR=/usr \
 	FFTW_DIR=/usr \
 	GEANT4_DIR=/opt/geant4-v11.4.2 \
-	Geant4_DIR=/opt/geant4-v11.4.2
+	Geant4_DIR=/opt/geant4-v11.4.2/lib/cmake/Geant4
 
 #	G4beamline. NOTE: CMakeLists.txt forces CMAKE_INSTALL_PREFIX to equal
 #	CMAKE_BINARY_DIR, so the build directory *is* the install directory.
@@ -61,7 +63,7 @@ RUN mkdir -p ${G4BL_DIR} && cd ${G4BL_DIR} && \
 
 ENV G4BL_DIR=${G4BL_DIR} \
 	PATH=${G4BL_DIR}/bin:/opt/geant4-v11.4.2/bin:/opt/root/bin:${PATH} \
-	LD_LIBRARY_PATH=/opt/G4beamline/lib:/opt/geant4-v11.4.2/lib:/opt/root/lib:/usr/lib/x86_64-linux-gnu
+	LD_LIBRARY_PATH=/opt/G4beamline/lib:/opt/geant4-v11.4.2/lib:/opt/geant4-v11.4.2/lib64:/opt/root/lib:/usr/lib/x86_64-linux-gnu
 
 WORKDIR /work
 CMD ["g4bl"]

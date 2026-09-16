@@ -1,5 +1,8 @@
 name: CI
 
+permissions:
+  contents: read
+
 on:
   push:
     # Run on push to any branch
@@ -64,13 +67,15 @@ jobs:
             -DGEANT4_USE_OPENGL_X11=ON
           cmake --build geant4.11.4.2-build --config Release --target install -- -j"$(nproc)"
           export GEANT4_DIR=$HOME/geant4-v11.4.2
+          if [ -d "$GEANT4_DIR/lib64" ] && [ ! -e "$GEANT4_DIR/lib" ]; then ln -s lib64 "$GEANT4_DIR/lib"; fi
+          if [ -d "$GEANT4_DIR/lib" ] && [ ! -e "$GEANT4_DIR/lib64" ]; then ln -s lib "$GEANT4_DIR/lib64"; fi
           echo "GEANT4_DIR=$GEANT4_DIR" >> $GITHUB_ENV
-          echo "Geant4_DIR=$GEANT4_DIR" >> $GITHUB_ENV
+          echo "Geant4_DIR=$GEANT4_DIR/lib/cmake/Geant4" >> $GITHUB_ENV
 
 
       - name: Build project
         run: |
-          export LD_LIBRARY_PATH=$HOME/geant4-v11.4.2/lib:$PWD/root/lib:/usr/lib/x86_64-linux-gnu/:$LD_LIBRARY_PATH
+          export LD_LIBRARY_PATH=$HOME/geant4-v11.4.2/lib:$HOME/geant4-v11.4.2/lib64:$PWD/root/lib:/usr/lib/x86_64-linux-gnu/:$LD_LIBRARY_PATH
           mkdir -p build
           cd build
           cmake ..
