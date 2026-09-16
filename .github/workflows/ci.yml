@@ -80,6 +80,9 @@ jobs:
           cd build
           cmake ..
           cmake --build . --config Release --target install
+          export GEANT4_DATA_DIR=$(find "$HOME/geant4-v11.4.2/share" -maxdepth 2 -type d -name data | head -n1)
+          test -n "$GEANT4_DATA_DIR"
+          printf '%s\n' "$GEANT4_DATA_DIR" > .data
 
       - name: Run tests
         run: |
