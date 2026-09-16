@@ -1,6 +1,6 @@
 #	Dockerfile for G4beamline
 #
-#	Builds G4beamline on top of a prebuilt Geant4 image, mirroring the
+#	Builds Geant4 11.4.2 and G4beamline in one image, mirroring the
 #	steps used by .github/workflows/ci.yml. The resulting image has
 #	g4bl (and friends) on PATH.
 #
@@ -31,6 +31,7 @@ RUN wget -q https://root.cern/download/${ROOT_TARBALL} -O /tmp/root.tgz && \
 RUN wget -q https://geant4.web.cern.ch/sites/default/files/geant4/geant4.${GEANT4_VERSION}.tar.gz -O /tmp/geant4.tgz && \
 	tar xzf /tmp/geant4.tgz -C /tmp && \
 	GEANT4_SRC_DIR="$(find /tmp -maxdepth 1 -mindepth 1 -type d -name "geant4*${GEANT4_VERSION}*" | head -n1)" && \
+	test -n "${GEANT4_SRC_DIR}" && \
 	cmake -S "${GEANT4_SRC_DIR}" -B /tmp/geant4-build \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_INSTALL_PREFIX=/opt/geant4-v${GEANT4_VERSION} \
@@ -45,7 +46,8 @@ ENV ROOTSYS=/opt/root \
 	ROOT_DIR=/opt/root \
 	GSL_DIR=/usr \
 	FFTW_DIR=/usr \
-	GEANT4_DIR=/opt/geant4-v11.4.2
+	GEANT4_DIR=/opt/geant4-v11.4.2 \
+	Geant4_DIR=/opt/geant4-v11.4.2
 
 #	G4beamline. NOTE: CMakeLists.txt forces CMAKE_INSTALL_PREFIX to equal
 #	CMAKE_BINARY_DIR, so the build directory *is* the install directory.

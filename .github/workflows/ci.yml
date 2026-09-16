@@ -54,6 +54,7 @@ jobs:
           wget https://geant4.web.cern.ch/sites/default/files/geant4/geant4.11.4.2.tar.gz
           tar xzf geant4.11.4.2.tar.gz
           export GEANT4_SRC=$(find "$PWD" -maxdepth 1 -mindepth 1 -type d -name 'geant4*11.4.2*' | head -n1)
+          test -n "$GEANT4_SRC"
           cmake -S "$GEANT4_SRC" -B geant4.11.4.2-build \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_INSTALL_PREFIX="$HOME/geant4-v11.4.2" \
@@ -62,8 +63,9 @@ jobs:
             -DGEANT4_USE_QT=ON \
             -DGEANT4_USE_OPENGL_X11=ON
           cmake --build geant4.11.4.2-build --config Release --target install -- -j"$(nproc)"
-          export Geant4_DIR=$HOME/geant4-v11.4.2
-          echo "Geant4_DIR=$Geant4_DIR" >> $GITHUB_ENV
+          export GEANT4_DIR=$HOME/geant4-v11.4.2
+          echo "GEANT4_DIR=$GEANT4_DIR" >> $GITHUB_ENV
+          echo "Geant4_DIR=$GEANT4_DIR" >> $GITHUB_ENV
 
 
       - name: Build project
