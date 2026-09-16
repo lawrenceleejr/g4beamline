@@ -10,10 +10,7 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
-
-    container:
-      image: artemisbeta/geant4:11.4.2
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout repository
@@ -32,13 +29,15 @@ jobs:
 
       - name: Install dependencies (if needed)
         run: |
-          #conda install -y cmake make gxx # Add other dependencies here
-          #conda clean -a
-          apt-get install -y qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
-          apt-get install -y libgsl-dev libssl-dev
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake wget ca-certificates
+          sudo apt-get install -y qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
+          sudo apt-get install -y libgsl-dev libssl-dev
           export GSL_DIR=/usr
-          apt-get install -y libfftw3-dev
+          sudo apt-get install -y libfftw3-dev
           export FFTW_DIR=/usr
+          sudo apt-get install -y libx11-dev libxpm-dev libxft-dev libxext-dev
+          sudo apt-get install -y libgl1-mesa-dev libglu1-mesa-dev
 
           echo "GSL_DIR=$GSL_DIR" >> $GITHUB_ENV
           echo "FFTW_DIR=$FFTW_DIR" >> $GITHUB_ENV
@@ -52,13 +51,24 @@ jobs:
           echo "ROOTSYS=$ROOTSYS" >> $GITHUB_ENV
           echo "ROOT_DIR=$ROOT_DIR" >> $GITHUB_ENV
           
-          export Geant4_DIR=/usr/local/share/geant4/install/4.11.4/lib/cmake/Geant4
+          wget https://geant4.web.cern.ch/sites/default/files/geant4/geant4.11.4.2.tar.gz
+          tar xzf geant4.11.4.2.tar.gz
+          export GEANT4_SRC=$(find "$PWD" -maxdepth 1 -mindepth 1 -type d -name 'geant4*11.4.2*' | head -n1)
+          cmake -S "$GEANT4_SRC" -B geant4.11.4.2-build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX="$HOME/geant4-v11.4.2" \
+            -DGEANT4_INSTALL_DATA=OFF \
+            -DGEANT4_INSTALL_EXAMPLES=OFF \
+            -DGEANT4_USE_QT=ON \
+            -DGEANT4_USE_OPENGL_X11=ON
+          cmake --build geant4.11.4.2-build --config Release --target install -- -j"$(nproc)"
+          export Geant4_DIR=$HOME/geant4-v11.4.2
           echo "Geant4_DIR=$Geant4_DIR" >> $GITHUB_ENV
 
 
       - name: Build project
         run: |
-          export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/:$LD_LIBRARY_PATH
+          export LD_LIBRARY_PATH=$HOME/geant4-v11.4.2/lib:$PWD/root/lib:/usr/lib/x86_64-linux-gnu/:$LD_LIBRARY_PATH
           mkdir -p build
           cd build
           cmake ..
@@ -73,7 +83,7 @@ jobs:
 
   docker-image:
     # Runs on the host runner (not in a container) so that Docker is available.
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     permissions:
       contents: read
