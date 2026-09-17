@@ -93,6 +93,7 @@ class BLCMDtrace : public BLCommand, public BLManager::EventAction,
         static TraceNTuple *referenceTrace;
         static TraceNTuple *realistictuneTrace;
         static TraceNTuple *realisticreferenceTrace;
+        static TraceNTuple *meanreferenceTrace;
 	friend class TraceNTuple;
 public:
 	/// Constructor
@@ -138,6 +139,7 @@ TraceNTuple *BLCMDtrace::tuneTrace = 0;
 TraceNTuple *BLCMDtrace::referenceTrace = 0;
 TraceNTuple *BLCMDtrace::realistictuneTrace = 0;
 TraceNTuple *BLCMDtrace::realisticreferenceTrace = 0;
+TraceNTuple *BLCMDtrace::meanreferenceTrace = 0;
 BLCMDtrace defaultTrace;
 
 BLCMDtrace::BLCMDtrace() : BLCommand(), BLManager::SteppingAction(), 
@@ -296,7 +298,10 @@ void BLCMDtrace::newTrace(const G4Track *firstTrack)
         } else if(evNum == -3) {
                 if(!realisticreferenceTrace) realisticreferenceTrace = new TraceNTuple(format,
                         "RealisticReferenceParticle","RealisticReferenceParticle",coordinateType);
-        }else {
+        } else if(evNum == -5) {
+                if(!meanreferenceTrace) meanreferenceTrace = new TraceNTuple(format,
+                        "MeanReferenceParticle","MeanReferenceParticle",coordinateType);
+        } else {
 		if(trace) trace->close();
 	}
 	trace = 0;
@@ -324,6 +329,8 @@ void BLCMDtrace::newTrace(const G4Track *firstTrack)
                 trace = realistictuneTrace;
         } else if(evNum == -3) {
                 trace = realisticreferenceTrace;
+        } else if(evNum == -5) {
+                trace = meanreferenceTrace;
         } else if(evNum >= 0) {
 		char tmp[128];
 		snprintf(tmp,128,filename.c_str(),evNum,trkId);

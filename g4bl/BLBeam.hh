@@ -119,6 +119,21 @@ public:
 	/// getReferenceMomentum() returns the current reference momentum for averaging.
 	virtual G4double getReferenceMomentum() const { return 0.0; }
 
+	/// getReferenceX() returns the current X position for averaging.
+	virtual G4double getReferenceX() const { return 0.0; }
+
+	/// getReferenceY() returns the current Y position for averaging.
+	virtual G4double getReferenceY() const { return 0.0; }
+
+	/// getReferenceT() returns the current time for averaging.
+	virtual G4double getReferenceT() const { return 0.0; }
+
+	/// getReferenceXp() returns the current Xp for averaging.
+	virtual G4double getReferenceXp() const { return 0.0; }
+
+	/// getReferenceYp() returns the current Yp for averaging.
+	virtual G4double getReferenceYp() const { return 0.0; }
+
 	/// getTuneMomentum() returns the current tune momentum for averaging.
 	virtual G4double getTuneMomentum() const { return 0.0; }
 };

@@ -473,6 +473,18 @@ void BLManager::trackTuneAndReferenceParticles()
 	G4double realisticReferenceSum = 0.0;
 	int realisticTuneCount = 0;
 	int realisticReferenceCount = 0;
+	std::vector<G4double> realisticTuneMomentumSum(referenceVector.size(), 0.0);
+	std::vector<G4double> realisticTuneXSum(referenceVector.size(), 0.0);
+	std::vector<G4double> realisticTuneYSum(referenceVector.size(), 0.0);
+	std::vector<G4double> realisticTuneTSum(referenceVector.size(), 0.0);
+	std::vector<G4double> realisticTuneXpSum(referenceVector.size(), 0.0);
+	std::vector<G4double> realisticTuneYpSum(referenceVector.size(), 0.0);
+	std::vector<G4double> realisticReferenceMomentumSum(referenceVector.size(), 0.0);
+	std::vector<G4double> realisticReferenceXSum(referenceVector.size(), 0.0);
+	std::vector<G4double> realisticReferenceYSum(referenceVector.size(), 0.0);
+	std::vector<G4double> realisticReferenceTSum(referenceVector.size(), 0.0);
+	std::vector<G4double> realisticReferenceXpSum(referenceVector.size(), 0.0);
+	std::vector<G4double> realisticReferenceYpSum(referenceVector.size(), 0.0);
 
 	printf("================= Prepare Realistic Tune/Reference Particle(s) with Stochastics turned ON (%d samples) ===========\n", realisticSamples);
 	for(int sample=0; sample<realisticSamples; ++sample) {
@@ -498,6 +510,12 @@ void BLManager::trackTuneAndReferenceParticles()
 		runManager->BeamOn(referenceVector.size());
 		state = IDLE;
 		for(unsigned i=0; i<referenceVector.size(); ++i) {
+			realisticTuneMomentumSum[i] += referenceVector[i]->getTuneMomentum();
+			realisticTuneXSum[i] += referenceVector[i]->getReferenceX();
+			realisticTuneYSum[i] += referenceVector[i]->getReferenceY();
+			realisticTuneTSum[i] += referenceVector[i]->getReferenceT();
+			realisticTuneXpSum[i] += referenceVector[i]->getReferenceXp();
+			realisticTuneYpSum[i] += referenceVector[i]->getReferenceYp();
 			realisticTuneSum += referenceVector[i]->getTuneMomentum();
 			++realisticTuneCount;
 		}
@@ -509,6 +527,12 @@ void BLManager::trackTuneAndReferenceParticles()
 		runManager->BeamOn(referenceVector.size());
 		state = IDLE;
 		for(unsigned i=0; i<referenceVector.size(); ++i) {
+			realisticReferenceMomentumSum[i] += referenceVector[i]->getReferenceMomentum();
+			realisticReferenceXSum[i] += referenceVector[i]->getReferenceX();
+			realisticReferenceYSum[i] += referenceVector[i]->getReferenceY();
+			realisticReferenceTSum[i] += referenceVector[i]->getReferenceT();
+			realisticReferenceXpSum[i] += referenceVector[i]->getReferenceXp();
+			realisticReferenceYpSum[i] += referenceVector[i]->getReferenceYp();
 			realisticReferenceSum += referenceVector[i]->getReferenceMomentum();
 			++realisticReferenceCount;
 		}
@@ -517,8 +541,55 @@ void BLManager::trackTuneAndReferenceParticles()
 	physics->setDoStochastics(NORMAL,0);
 	runManager->setCollectiveMode(collectiveMode);
 
-	
-	
+	for(unsigned i=0; i<referenceVector.size(); ++i) {
+		if(realisticTuneCount > 0) {
+			G4double meanTuneMomentum = realisticTuneMomentumSum[i] / realisticSamples;
+			G4double meanTuneX = realisticTuneXSum[i] / realisticSamples;
+			G4double meanTuneY = realisticTuneYSum[i] / realisticSamples;
+			G4double meanTuneT = realisticTuneTSum[i] / realisticSamples;
+			G4double meanTuneXp = realisticTuneXpSum[i] / realisticSamples;
+			G4double meanTuneYp = realisticTuneYpSum[i] / realisticSamples;
+			referenceVector[i]->setMeanReferenceState(meanTuneMomentum, meanTuneX, meanTuneY, meanTuneT, meanTuneXp, meanTuneYp);
+		}
+		if(realisticReferenceCount > 0) {
+			G4double meanReferenceMomentum = realisticReferenceMomentumSum[i] / realisticSamples;
+			G4double meanReferenceX = realisticReferenceXSum[i] / realisticSamples;
+			G4double meanReferenceY = realisticReferenceYSum[i] / realisticSamples;
+			G4double meanReferenceT = realisticReferenceTSum[i] / realisticSamples;
+			G4double meanReferenceXp = realisticReferenceXpSum[i] / realisticSamples;
+			G4double meanReferenceYp = realisticReferenceYpSum[i] / realisticSamples;
+			referenceVector[i]->setMeanReferenceState(meanReferenceMomentum, meanReferenceX, meanReferenceY, meanReferenceT, meanReferenceXp, meanReferenceYp);
+		}
+	}
+
+	printf("================= Mean Reference State for final tuning ==============\n");
+	for(unsigned i=0; i<referenceVector.size(); ++i) {
+		if(realisticReferenceCount > 0) {
+			printf("mean reference %u: p=%.6f MeV/c, x=%.6f mm, y=%.6f mm, t=%.6f ns, xp=%.6f, yp=%.6f\n",
+				i,
+				referenceVector[i]->getReferenceMomentum(),
+				referenceVector[i]->getReferenceX(),
+				referenceVector[i]->getReferenceY(),
+				referenceVector[i]->getReferenceT(),
+				referenceVector[i]->getReferenceXp(),
+				referenceVector[i]->getReferenceYp());
+		}
+	}
+
+	printf("================= Generate dedicated Mean Reference block (EventID -5) ==============\n");
+	state = MEANREFERENCE;
+	setEventID(-5);
+	beamIndex = 0;
+	runManager->BeamOn(referenceVector.size());
+	state = IDLE;
+
+	printf("================= Realistic Tune/Reference averaged summary ==============\n");
+	if(realisticTuneCount > 0)
+		printf("Average Realistic Tune momentum = %.6f MeV/c over %d samples\n",
+			realisticTuneSum / realisticTuneCount, realisticSamples);
+	if(realisticReferenceCount > 0)
+		printf("Average Realistic Reference momentum = %.6f MeV/c over %d samples\n",
+			realisticReferenceSum / realisticReferenceCount, realisticSamples);
 }
 
 void BLManager::handleSourceRun()

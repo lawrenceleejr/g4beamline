@@ -47,13 +47,14 @@ class BLBeam;
 #undef REFERENCE
 #undef REALISTICTUNE
 #undef REALISTICREFERENCE
+#undef MEANREFERENCE
 #undef BEAM
 #undef SPECIAL
 #undef SOURCE
 
 // State SPECIAL is used for pre-tracking in collective mode -- all
 // entries into NTuples should be omitted in SPECIAL mode.
-enum BLManagerState { IDLE, VISUAL, TUNE, REFERENCE, REALISTICTUNE, REALISTICREFERENCE, BEAM, SPECIAL, SOURCE };
+enum BLManagerState { IDLE, VISUAL, TUNE, REFERENCE, REALISTICTUNE, REALISTICREFERENCE, MEANREFERENCE, BEAM, SPECIAL, SOURCE };
 enum VerboseFormat { TAG,NSTEP,GLOBAL,CL,CLX,KE,STEP,VOL,PROCESS,B,E,MAT,
 		     P, ID, PART, SEG, WT, POLAR, NEWLINE, EXT };
 enum PRNGSeedMethod { EVENT_NUMBER, NO_SEED, TIME_US };

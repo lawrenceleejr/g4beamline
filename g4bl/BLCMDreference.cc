@@ -98,8 +98,42 @@ public:
 	/// getReferenceMomentum() returns the current reference momentum.
 	virtual G4double getReferenceMomentum() const { return referenceMomentum; }
 
+	/// getReferenceX() returns the current X position.
+	virtual G4double getReferenceX() const { return beamX; }
+
+	/// getReferenceY() returns the current Y position.
+	virtual G4double getReferenceY() const { return beamY; }
+
+	/// getReferenceT() returns the current time.
+	virtual G4double getReferenceT() const { return beamT; }
+
+	/// getReferenceXp() returns the current Xp.
+	virtual G4double getReferenceXp() const { return beamXp; }
+
+	/// getReferenceYp() returns the current Yp.
+	virtual G4double getReferenceYp() const { return beamYp; }
+
 	/// getTuneMomentum() returns the current tune momentum.
 	virtual G4double getTuneMomentum() const { return tuneMomentum; }
+
+	/// setMeanReferenceState() updates the reference particle state from the
+	/// ensemble mean computed from the stochastic realistic samples.
+	void setMeanReferenceState(G4double meanReferenceMomentum,
+				G4double meanBeamX = 0.0,
+				G4double meanBeamY = 0.0,
+				G4double meanBeamT = 0.0,
+				G4double meanBeamXp = 0.0,
+				G4double meanBeamYp = 0.0)
+	{
+		referenceMomentum = meanReferenceMomentum;
+		beamX = meanBeamX;
+		beamY = meanBeamY;
+		beamT = meanBeamT;
+		beamXp = meanBeamXp;
+		beamYp = meanBeamYp;
+		G4ThreeVector local(beamX,beamY,beamZ);
+		BLCoordinates::getCurrentGlobal(local,position);
+	}
 
 	// from TrackingAction, ZSteppingAction, and RunAction
 	void PreUserTrackingAction(const G4Track *track);
