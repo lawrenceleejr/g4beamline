@@ -1314,6 +1314,15 @@ void BLManager::GeneratePrimaries(G4Event *event)
 		     return;
 		 }
 		 goto end_run;
+	case MEANREFERENCE:
+		setEventID(-5);
+		event->SetEventID(-5);
+		while(beamIndex < referenceVector.size()) {
+			if(referenceVector[beamIndex++]->
+					generateReferenceParticle(event))
+				return;
+		}
+		goto end_run;
 
 	case VISUAL:
 	case BEAM:
@@ -1419,7 +1428,7 @@ void BLManager::setExternalTrackID(G4Track *track, int trackID, int parentID)
 	ti->setExternalParentID(parentID);
 }
 
-void BLManager::incrEventsProcessed(int eventID)
+void BLManager::incrEventsProcessed(int evId)
 {
 	// print event number, if appropriate
 	++eventsProcessed;
@@ -1428,7 +1437,7 @@ void BLManager::incrEventsProcessed(int eventID)
 		   (eventsProcessed < 100 && eventsProcessed%10 == 0) ||
 		   (eventsProcessed < 1000 && eventsProcessed%100 == 0) ||
 		   eventsProcessed%1000 == 0) {
-			printf("Event %d Completed",eventID);
+			printf("Event %d Completed",evId);
 			int t = BLTime::time() - startRun;
 			if(t <= 0) t = 1;
 			printf("  %d events  realTime=%d sec  %.1f ev/sec",
