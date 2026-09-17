@@ -120,22 +120,22 @@ int BLGroupElement::testGeometry(int npoints, G4double tolerance, bool visual,
 		ie->generatePoints(npoints,points);
 		// convert local coords of ie to local coords of this
 		bool isRotated = !i->rot.isIdentity();
-		for(k=0; k<points.size(); ++k) {
-			if(isRotated) points[k] = i->rot * points[k];
-			points[k] += i->offset;
+		for(size_t idx=0; idx<points.size(); ++idx) {
+			if(isRotated) points[idx] = i->rot * points[idx];
+			points[idx] += i->offset;
 		}
 		if(visual) {
 			BLMarkers *m = new BLMarkers("0,.8,0",6);
-			for(k=0; k<points.size(); ++k) {
-				G4ThreeVector pos = points[k];
+			for(size_t idx=0; idx<points.size(); ++idx) {
+				G4ThreeVector pos = points[idx];
 				pos = inverse * pos + offset; // local->global
 				m->addMarker(pos);
 			}
 		}
 		int errParent=0;
-		for(k=0; k<points.size(); ++k) {
-		    if(!isWithin(points[k],tolerance)) {
-			G4ThreeVector global = inverse * points[k] + offset;
+		for(size_t idx=0; idx<points.size(); ++idx) {
+		    if(!isWithin(points[idx],tolerance)) {
+			G4ThreeVector global = inverse * points[idx] + offset;
 			failureMarkers->addMarker(global);
 			++errParent;
 		    }
@@ -161,19 +161,19 @@ int BLGroupElement::testGeometry(int npoints, G4double tolerance, bool visual,
 			if(j->rename != NO_RENAME)
 				jname = j->rename;
 			// handle '#' in jname
-			G4String::size_type k = jname.find('#');
-			if(k != jname.npos) {
+			G4String::size_type jk = jname.find('#');
+			if(jk != jname.npos) {
 				char tmp[32];
 				sprintf(tmp,"%d",jcounter++);
-				jname.replace(k,1,tmp);
+				jname.replace(jk,1,tmp);
 			}
 			isRotated = !j->rot.isIdentity();
 			int errSibling=0;
-			for(k=0; k<points.size(); ++k) {
-				G4ThreeVector pt = points[k] - j->offset;
+			for(size_t idx=0; idx<points.size(); ++idx) {
+				G4ThreeVector pt = points[idx] - j->offset;
 				if(isRotated) pt = j->rot.inverse() * pt;
 				if(!je->isOutside(pt,tolerance)) {
-				    G4ThreeVector global = inverse * points[k] 
+				    G4ThreeVector global = inverse * points[idx] 
 				    				+ offset;
 				    failureMarkers->addMarker(global);
 				    ++errSibling;
