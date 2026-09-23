@@ -546,7 +546,7 @@ void BLManager::trackTuneAndReferenceParticles()
 
 void BLManager::handleSourceRun()
 {
-	for(size_t i=0; i<sourceRunVector.size(); ++i) {
+	for(int i=0; i<sourceRunVector.size(); ++i) {
 		// setting sourceRun makes all BLManager callbacks just call it
 		sourceRun = sourceRunVector[i];
 		printf("================== Source Run ==================\n");
@@ -1367,16 +1367,16 @@ int BLManager::getExternalParentID(const G4Track *track)
 	return trackIDMap[track->GetParentID()];
 }
 
-void BLManager::setExternalTrackID(G4Track *track, int nextTrackID, int parentID)
+void BLManager::setExternalTrackID(G4Track *track, int trackID, int parentID)
 {
-	if(nextTrackID < 0) nextTrackID = nextSecondaryTrackID++;
+	if(trackID < 0) trackID = nextSecondaryTrackID++;
 
 	BLTrackInfo *ti = (BLTrackInfo *)track->GetUserInformation();
 	if(!ti || !ti->isValid()) {
 		ti = new BLTrackInfo();
 		track->SetUserInformation(ti);
 	}
-	ti->setExternalTrackID(nextTrackID);
+	ti->setExternalTrackID(trackID);
 	ti->setExternalParentID(parentID);
 }
 
