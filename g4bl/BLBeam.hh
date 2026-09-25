@@ -136,6 +136,16 @@ public:
 
 	/// getTuneMomentum() returns the current tune momentum for averaging.
 	virtual G4double getTuneMomentum() const { return 0.0; }
+
+	/// setMeanReferenceState() updates the mean reference state for the final
+	/// deterministic reference/tuning pass. The default implementation is a
+	/// no-op for beam types that do not override it.
+	virtual void setMeanReferenceState(G4double /*meanReferenceMomentum*/,
+				G4double /*meanBeamX*/ = 0.0,
+				G4double /*meanBeamY*/ = 0.0,
+				G4double /*meanBeamT*/ = 0.0,
+				G4double /*meanBeamXp*/ = 0.0,
+				G4double /*meanBeamYp*/ = 0.0) { }
 };
 
 #endif// BLBEAM_HH
