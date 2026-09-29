@@ -135,6 +135,25 @@ public:
 		BLCoordinates::getCurrentGlobal(local,position);
 	}
 
+	/// setMedianReferenceState() updates the reference particle state from the
+	/// ensemble median computed from the stochastic realistic samples.
+	void setMedianReferenceState(G4double medianReferenceMomentum,
+				G4double medianBeamX = 0.0,
+				G4double medianBeamY = 0.0,
+				G4double medianBeamT = 0.0,
+				G4double medianBeamXp = 0.0,
+				G4double medianBeamYp = 0.0)
+	{
+		referenceMomentum = medianReferenceMomentum;
+		beamX = medianBeamX;
+		beamY = medianBeamY;
+		beamT = medianBeamT;
+		beamXp = medianBeamXp;
+		beamYp = medianBeamYp;
+		G4ThreeVector local(beamX,beamY,beamZ);
+		BLCoordinates::getCurrentGlobal(local,position);
+	}
+
 	// from TrackingAction, ZSteppingAction, and RunAction
 	void PreUserTrackingAction(const G4Track *track);
 	void PostUserTrackingAction(const G4Track *track);

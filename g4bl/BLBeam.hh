@@ -146,6 +146,16 @@ public:
 				G4double /*meanBeamT*/ = 0.0,
 				G4double /*meanBeamXp*/ = 0.0,
 				G4double /*meanBeamYp*/ = 0.0) { }
+
+	/// setMedianReferenceState() updates the median reference state for the
+	/// final deterministic reference/tuning pass. This provides a testing hook
+	/// for swapping the ensemble statistic used by the tuning path.
+	virtual void setMedianReferenceState(G4double /*medianReferenceMomentum*/,
+				G4double /*medianBeamX*/ = 0.0,
+				G4double /*medianBeamY*/ = 0.0,
+				G4double /*medianBeamT*/ = 0.0,
+				G4double /*medianBeamXp*/ = 0.0,
+				G4double /*medianBeamYp*/ = 0.0) { }
 };
 
 #endif// BLBEAM_HH

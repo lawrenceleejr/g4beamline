@@ -20,6 +20,8 @@ http://www.gnu.org/copyleft/gpl.html
 #include <gsl/gsl_errno.h>
 #endif
 
+#include <algorithm>
+
 #include "G4UImanager.hh"
 #include "G4VisManager.hh"
 #include "G4UIsession.hh"
@@ -66,6 +68,17 @@ http://www.gnu.org/copyleft/gpl.html
 #include "mysnprintf.hh"
 
 extern void g4bl_exit(int); // in g4beamline.cc
+
+static G4double computeMedian(const std::vector<G4double> &values)
+{
+	if(values.empty()) return 0.0;
+	std::vector<G4double> sorted(values);
+	std::sort(sorted.begin(), sorted.end());
+	std::size_t n = sorted.size();
+	if(n % 2 == 0)
+		return 0.5 * (sorted[n/2 - 1] + sorted[n/2]);
+	return sorted[n/2];
+}
 
 // Param definitions are all moved to the BLManager constructor, because
 // other initializers use BLmanager.
@@ -485,6 +498,12 @@ void BLManager::trackTuneAndReferenceParticles()
 	std::vector<G4double> realisticReferenceTSum(referenceVector.size(), 0.0);
 	std::vector<G4double> realisticReferenceXpSum(referenceVector.size(), 0.0);
 	std::vector<G4double> realisticReferenceYpSum(referenceVector.size(), 0.0);
+	std::vector<std::vector<G4double> > realisticReferenceMomentumSamples(referenceVector.size());
+	std::vector<std::vector<G4double> > realisticReferenceXSamples(referenceVector.size());
+	std::vector<std::vector<G4double> > realisticReferenceYSamples(referenceVector.size());
+	std::vector<std::vector<G4double> > realisticReferenceTSamples(referenceVector.size());
+	std::vector<std::vector<G4double> > realisticReferenceXpSamples(referenceVector.size());
+	std::vector<std::vector<G4double> > realisticReferenceYpSamples(referenceVector.size());
 
 	printf("================= Prepare Realistic Tune/Reference Particle(s) with Stochastics turned ON (%d samples) ===========\n", realisticSamples);
 	for(int sample=0; sample<realisticSamples; ++sample) {
@@ -534,6 +553,12 @@ void BLManager::trackTuneAndReferenceParticles()
 			realisticReferenceXpSum[i] += referenceVector[i]->getReferenceXp();
 			realisticReferenceYpSum[i] += referenceVector[i]->getReferenceYp();
 			realisticReferenceSum += referenceVector[i]->getReferenceMomentum();
+			realisticReferenceMomentumSamples[i].push_back(referenceVector[i]->getReferenceMomentum());
+			realisticReferenceXSamples[i].push_back(referenceVector[i]->getReferenceX());
+			realisticReferenceYSamples[i].push_back(referenceVector[i]->getReferenceY());
+			realisticReferenceTSamples[i].push_back(referenceVector[i]->getReferenceT());
+			realisticReferenceXpSamples[i].push_back(referenceVector[i]->getReferenceXp());
+			realisticReferenceYpSamples[i].push_back(referenceVector[i]->getReferenceYp());
 			++realisticReferenceCount;
 		}
 	}
@@ -541,39 +566,55 @@ void BLManager::trackTuneAndReferenceParticles()
 	physics->setDoStochastics(NORMAL,0);
 	runManager->setCollectiveMode(collectiveMode);
 
-	// Apply the ensemble mean state back into the reference particle(s).
-	// This is the state that should be used for the final deterministic
-	// reference / tuning pass (EventID = -5), and it matches the analysis
-	// convention of computing the average over the realistic sample blocks.
+	// The tuning/reference pass can use either the ensemble mean or the
+	// ensemble median. For testing, median is the default path and the mean
+	// path is intentionally disabled here.
+	G4String referenceStateMethod = Param.getString("referenceStateMethod");
+	if(referenceStateMethod == "")
+		referenceStateMethod = "median";
 	for(unsigned i=0; i<referenceVector.size(); ++i) {
 		if(realisticReferenceCount > 0) {
-			G4double meanReferenceMomentum = realisticReferenceMomentumSum[i] / realisticSamples;
-			G4double meanReferenceX = realisticReferenceXSum[i] / realisticSamples;
-			G4double meanReferenceY = realisticReferenceYSum[i] / realisticSamples;
-			G4double meanReferenceT = realisticReferenceTSum[i] / realisticSamples;
-			G4double meanReferenceXp = realisticReferenceXpSum[i] / realisticSamples;
-			G4double meanReferenceYp = realisticReferenceYpSum[i] / realisticSamples;
-			referenceVector[i]->setMeanReferenceState(meanReferenceMomentum,
-				meanReferenceX, meanReferenceY, meanReferenceT,
-				meanReferenceXp, meanReferenceYp);
+			G4double selectedReferenceMomentum = 0.0;
+			G4double selectedReferenceX = 0.0;
+			G4double selectedReferenceY = 0.0;
+			G4double selectedReferenceT = 0.0;
+			G4double selectedReferenceXp = 0.0;
+			G4double selectedReferenceYp = 0.0;
+			if(referenceStateMethod == "mean") {
+				// Mean path temporarily disabled for testing. Restore the old
+				// assignment here if you want to re-enable it.
+				selectedReferenceMomentum = realisticReferenceMomentumSum[i] / realisticSamples;
+				selectedReferenceX = realisticReferenceXSum[i] / realisticSamples;
+				selectedReferenceY = realisticReferenceYSum[i] / realisticSamples;
+				selectedReferenceT = realisticReferenceTSum[i] / realisticSamples;
+				selectedReferenceXp = realisticReferenceXpSum[i] / realisticSamples;
+				selectedReferenceYp = realisticReferenceYpSum[i] / realisticSamples;
+				referenceVector[i]->setMeanReferenceState(selectedReferenceMomentum,
+					selectedReferenceX, selectedReferenceY, selectedReferenceT,
+					selectedReferenceXp, selectedReferenceYp);
+			} else {
+				selectedReferenceMomentum = computeMedian(realisticReferenceMomentumSamples[i]);
+				selectedReferenceX = computeMedian(realisticReferenceXSamples[i]);
+				selectedReferenceY = computeMedian(realisticReferenceYSamples[i]);
+				selectedReferenceT = computeMedian(realisticReferenceTSamples[i]);
+				selectedReferenceXp = computeMedian(realisticReferenceXpSamples[i]);
+				selectedReferenceYp = computeMedian(realisticReferenceYpSamples[i]);
+				referenceVector[i]->setMedianReferenceState(selectedReferenceMomentum,
+					selectedReferenceX, selectedReferenceY, selectedReferenceT,
+					selectedReferenceXp, selectedReferenceYp);
+			}
+			printf("reference state method=%s for reference %u: p=%.6f MeV/c, x=%.6f mm, y=%.6f mm, t=%.6f ns, xp=%.6f, yp=%.6f\n",
+				referenceStateMethod.c_str(), i,
+				selectedReferenceMomentum,
+				selectedReferenceX,
+				selectedReferenceY,
+				selectedReferenceT,
+				selectedReferenceXp,
+				selectedReferenceYp);
 		}
 	}
 
-	printf("================= Mean Reference State for final tuning ==============\n");
-	for(unsigned i=0; i<referenceVector.size(); ++i) {
-		if(realisticReferenceCount > 0) {
-			printf("mean reference %u: p=%.6f MeV/c, x=%.6f mm, y=%.6f mm, t=%.6f ns, xp=%.6f, yp=%.6f\n",
-				i,
-				referenceVector[i]->getReferenceMomentum(),
-				referenceVector[i]->getReferenceX(),
-				referenceVector[i]->getReferenceY(),
-				referenceVector[i]->getReferenceT(),
-				referenceVector[i]->getReferenceXp(),
-				referenceVector[i]->getReferenceYp());
-		}
-	}
-
-	printf("================= Generate dedicated Mean Reference block (EventID -5) ==============\n");
+	printf("================= Generate dedicated Mean/Median Reference block (EventID -5) ==============\n");
 	state = MEANREFERENCE;
 	setEventID(-5);
 	beamIndex = 0;
