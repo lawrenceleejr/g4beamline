@@ -505,6 +505,8 @@ void BLManager::trackTuneAndReferenceParticles()
 	std::vector<std::vector<G4double> > realisticReferenceXpSamples(referenceVector.size());
 	std::vector<std::vector<G4double> > realisticReferenceYpSamples(referenceVector.size());
 
+	const bool keepDiagnosticRealisticSamples = false;
+
 	printf("================= Prepare Realistic Tune/Reference Particle(s) with Stochastics turned ON (%d samples) ===========\n", realisticSamples);
 	for(int sample=0; sample<realisticSamples; ++sample) {
 		// Reset the external track bookkeeping for each stochastic realization.
@@ -522,12 +524,14 @@ void BLManager::trackTuneAndReferenceParticles()
 		physics->setDoStochastics(FORCE_ON,0);
 		runManager->Initialize();
 		
-		printf("================= Begin Realistic Tune Particle(s) =============\n");
-		state = REALISTICTUNE;
-		setEventID(-4);
-		beamIndex = 0;
-		runManager->BeamOn(referenceVector.size());
-		state = IDLE;
+		if(keepDiagnosticRealisticSamples) {
+			printf("================= Begin Realistic Tune Particle(s) =============\n");
+			state = REALISTICTUNE;
+			setEventID(-4);
+			beamIndex = 0;
+			runManager->BeamOn(referenceVector.size());
+			state = IDLE;
+		}
 		for(unsigned i=0; i<referenceVector.size(); ++i) {
 			realisticTuneMomentumSum[i] += referenceVector[i]->getTuneMomentum();
 			realisticTuneXSum[i] += referenceVector[i]->getReferenceX();
@@ -539,12 +543,14 @@ void BLManager::trackTuneAndReferenceParticles()
 			++realisticTuneCount;
 		}
 
-		printf("================== Begin Realistic Reference Particle(s) ===============\n");
-		state = REALISTICREFERENCE;
-		setEventID(-3);
-		beamIndex = 0;
-		runManager->BeamOn(referenceVector.size());
-		state = IDLE;
+		if(keepDiagnosticRealisticSamples) {
+			printf("================== Begin Realistic Reference Particle(s) ===============\n");
+			state = REALISTICREFERENCE;
+			setEventID(-3);
+			beamIndex = 0;
+			runManager->BeamOn(referenceVector.size());
+			state = IDLE;
+		}
 		for(unsigned i=0; i<referenceVector.size(); ++i) {
 			realisticReferenceMomentumSum[i] += referenceVector[i]->getReferenceMomentum();
 			realisticReferenceXSum[i] += referenceVector[i]->getReferenceX();
@@ -567,11 +573,11 @@ void BLManager::trackTuneAndReferenceParticles()
 	runManager->setCollectiveMode(collectiveMode);
 
 	// The tuning/reference pass can use either the ensemble mean or the
-	// ensemble median. For testing, median is the default path and the mean
-	// path is intentionally disabled here.
+	// ensemble median. For production we use the mean state, while the median
+	// path remains available as a diagnostic alternative.
 	G4String referenceStateMethod = Param.getString("referenceStateMethod");
 	if(referenceStateMethod == "")
-		referenceStateMethod = "median";
+		referenceStateMethod = "mean";
 	for(unsigned i=0; i<referenceVector.size(); ++i) {
 		if(realisticReferenceCount > 0) {
 			G4double selectedReferenceMomentum = 0.0;
@@ -611,6 +617,20 @@ void BLManager::trackTuneAndReferenceParticles()
 				selectedReferenceT,
 				selectedReferenceXp,
 				selectedReferenceYp);
+			printf("=== FINAL PRE-TUNE STATE (reference %u) ===\n", i);
+			printf("  selected method     = %s\n", referenceStateMethod.c_str());
+			printf("  selected momentum  = %.12f MeV/c\n", selectedReferenceMomentum);
+			printf("  selected x         = %.12f mm\n", selectedReferenceX);
+			printf("  selected y         = %.12f mm\n", selectedReferenceY);
+			printf("  selected t         = %.12f ns\n", selectedReferenceT);
+			printf("  selected xp        = %.12f\n", selectedReferenceXp);
+			printf("  selected yp        = %.12f\n", selectedReferenceYp);
+			printf("  raw sample mean p  = %.12f MeV/c\n", realisticReferenceMomentumSum[i] / realisticSamples);
+			printf("  raw sample mean x  = %.12f mm\n", realisticReferenceXSum[i] / realisticSamples);
+			printf("  raw sample mean y  = %.12f mm\n", realisticReferenceYSum[i] / realisticSamples);
+			printf("  raw sample mean t  = %.12f ns\n", realisticReferenceTSum[i] / realisticSamples);
+			printf("  raw sample mean xp = %.12f\n", realisticReferenceXpSum[i] / realisticSamples);
+			printf("  raw sample mean yp = %.12f\n", realisticReferenceYpSum[i] / realisticSamples);
 		}
 	}
 
@@ -618,6 +638,15 @@ void BLManager::trackTuneAndReferenceParticles()
 	state = MEANREFERENCE;
 	setEventID(-5);
 	beamIndex = 0;
+	for(unsigned i=0; i<referenceVector.size(); ++i) {
+		printf("=== EventID=-5 reference particle %u state before BeamOn ===\n", i);
+		printf("  p  = %.12f MeV/c\n", referenceVector[i]->getReferenceMomentum());
+		printf("  x  = %.12f mm\n", referenceVector[i]->getReferenceX());
+		printf("  y  = %.12f mm\n", referenceVector[i]->getReferenceY());
+		printf("  t  = %.12f ns\n", referenceVector[i]->getReferenceT());
+		printf("  xp = %.12f\n", referenceVector[i]->getReferenceXp());
+		printf("  yp = %.12f\n", referenceVector[i]->getReferenceYp());
+	}
 	runManager->BeamOn(referenceVector.size());
 	state = IDLE;
 
