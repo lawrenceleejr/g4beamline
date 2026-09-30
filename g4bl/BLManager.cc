@@ -69,6 +69,22 @@ http://www.gnu.org/copyleft/gpl.html
 
 extern void g4bl_exit(int); // in g4beamline.cc
 
+static G4double computeMean(const std::vector<G4double> &values)
+{
+	if(values.empty()) return 0.0;
+	G4double sum = 0.0;
+	for(std::vector<G4double>::const_iterator it = values.begin();
+		it != values.end(); ++it) {
+		sum += *it;
+	}
+	return sum / values.size();
+}
+
+static G4double computeZMean(const std::vector<G4double> &values)
+{
+	return computeMean(values);
+}
+
 static G4double computeMedian(const std::vector<G4double> &values)
 {
 	if(values.empty()) return 0.0;
@@ -586,19 +602,26 @@ void BLManager::trackTuneAndReferenceParticles()
 			G4double selectedReferenceT = 0.0;
 			G4double selectedReferenceXp = 0.0;
 			G4double selectedReferenceYp = 0.0;
-			if(referenceStateMethod == "mean") {
-				// Mean path temporarily disabled for testing. Restore the old
-				// assignment here if you want to re-enable it.
-				selectedReferenceMomentum = realisticReferenceMomentumSum[i] / realisticSamples;
-				selectedReferenceX = realisticReferenceXSum[i] / realisticSamples;
-				selectedReferenceY = realisticReferenceYSum[i] / realisticSamples;
-				selectedReferenceT = realisticReferenceTSum[i] / realisticSamples;
-				selectedReferenceXp = realisticReferenceXpSum[i] / realisticSamples;
-				selectedReferenceYp = realisticReferenceYpSum[i] / realisticSamples;
+			if(referenceStateMethod == "mean" || referenceStateMethod == "zmean") {
+				if(referenceStateMethod == "zmean") {
+					selectedReferenceMomentum = computeZMean(realisticReferenceMomentumSamples[i]);
+					selectedReferenceX = computeZMean(realisticReferenceXSamples[i]);
+					selectedReferenceY = computeZMean(realisticReferenceYSamples[i]);
+					selectedReferenceT = computeZMean(realisticReferenceTSamples[i]);
+					selectedReferenceXp = computeZMean(realisticReferenceXpSamples[i]);
+					selectedReferenceYp = computeZMean(realisticReferenceYpSamples[i]);
+				} else {
+					selectedReferenceMomentum = realisticReferenceMomentumSum[i] / realisticSamples;
+					selectedReferenceX = realisticReferenceXSum[i] / realisticSamples;
+					selectedReferenceY = realisticReferenceYSum[i] / realisticSamples;
+					selectedReferenceT = realisticReferenceTSum[i] / realisticSamples;
+					selectedReferenceXp = realisticReferenceXpSum[i] / realisticSamples;
+					selectedReferenceYp = realisticReferenceYpSum[i] / realisticSamples;
+				}
 				referenceVector[i]->setMeanReferenceState(selectedReferenceMomentum,
 					selectedReferenceX, selectedReferenceY, selectedReferenceT,
 					selectedReferenceXp, selectedReferenceYp);
-			} else {
+			} else if(referenceStateMethod == "median") {
 				selectedReferenceMomentum = computeMedian(realisticReferenceMomentumSamples[i]);
 				selectedReferenceX = computeMedian(realisticReferenceXSamples[i]);
 				selectedReferenceY = computeMedian(realisticReferenceYSamples[i]);
@@ -606,6 +629,18 @@ void BLManager::trackTuneAndReferenceParticles()
 				selectedReferenceXp = computeMedian(realisticReferenceXpSamples[i]);
 				selectedReferenceYp = computeMedian(realisticReferenceYpSamples[i]);
 				referenceVector[i]->setMedianReferenceState(selectedReferenceMomentum,
+					selectedReferenceX, selectedReferenceY, selectedReferenceT,
+					selectedReferenceXp, selectedReferenceYp);
+			} else {
+				printf("warning: unknown referenceStateMethod='%s'; defaulting to mean\n",
+					referenceStateMethod.c_str());
+				selectedReferenceMomentum = realisticReferenceMomentumSum[i] / realisticSamples;
+				selectedReferenceX = realisticReferenceXSum[i] / realisticSamples;
+				selectedReferenceY = realisticReferenceYSum[i] / realisticSamples;
+				selectedReferenceT = realisticReferenceTSum[i] / realisticSamples;
+				selectedReferenceXp = realisticReferenceXpSum[i] / realisticSamples;
+				selectedReferenceYp = realisticReferenceYpSum[i] / realisticSamples;
+				referenceVector[i]->setMeanReferenceState(selectedReferenceMomentum,
 					selectedReferenceX, selectedReferenceY, selectedReferenceT,
 					selectedReferenceXp, selectedReferenceYp);
 			}
