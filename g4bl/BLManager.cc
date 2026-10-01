@@ -96,6 +96,47 @@ static G4double computeMedian(const std::vector<G4double> &values)
 	return sorted[n/2];
 }
 
+static G4double stdDev(const std::vector<G4double> &v)
+{
+	if(v.size() < 2) return 0.0;
+	G4double m = computeMean(v), s = 0.0;
+	for(size_t i=0; i<v.size(); ++i) s += (v[i]-m)*(v[i]-m);
+	return std::sqrt(s/(v.size()-1));
+}
+
+// Index of the sample minimising the normalised distance to the ensemble
+// median, summed over the supplied channels.  Each channel is divided by its
+// own standard deviation so that mm, MeV/c and ns are commensurate --
+// without this, momentum (O(200)) swamps position (O(10)).
+static int selectMedoid(const std::vector<std::vector<G4double> > &channels)
+{
+	if(channels.empty() || channels[0].empty()) return -1;
+	size_t n = channels[0].size();
+
+	std::vector<G4double> med(channels.size()), sig(channels.size());
+	for(size_t k=0; k<channels.size(); ++k) {
+		med[k] = computeMedian(channels[k]);
+		sig[k] = stdDev(channels[k]);
+		if(sig[k] <= 0.0) sig[k] = 1.0;
+	}
+
+	int best = 0;
+	G4double bestScore = DBL_MAX;
+	for(size_t i=0; i<n; ++i) {
+		G4double s = 0.0;
+		for(size_t k=0; k<channels.size(); ++k) {
+			G4double d = (channels[k][i] - med[k]) / sig[k];
+			s += d*d;
+		}
+		s = std::sqrt(s);
+		printf("    sample %zu  medoid score = %.6f\n", i+1, s);
+		if(s < bestScore) { bestScore = s; best = (int)i; }
+	}
+	printf("  -> medoid is sample %d (score %.6f)\n", best+1, bestScore);
+	return best;
+}
+
+
 // Param definitions are all moved to the BLManager constructor, because
 // other initializers use BLmanager.
 
@@ -494,6 +535,22 @@ void BLManager::trackTuneAndReferenceParticles()
 	state = IDLE;
 	beamIndex = 0;
 
+	//check to capture nominal state
+	std::vector<G4double> nominalP(referenceVector.size(), 0.0);
+	std::vector<G4double> nominalX(referenceVector.size(), 0.0);
+	std::vector<G4double> nominalY(referenceVector.size(), 0.0);
+	std::vector<G4double> nominalT(referenceVector.size(), 0.0);
+
+	for(unsigned i=0; i<referenceVector.size(); ++i) {
+	  nominalP[i] = referenceVector[i]->getReferenceMomentum();
+	  nominalX[i] = referenceVector[i]->getReferenceX();
+	  nominalY[i] = referenceVector[i]->getReferenceY();
+	  nominalT[i] = referenceVector[i]->getReferenceT();
+	  printf("nominal reference %u: p=%.12f x=%.12f y=%.12f t=%.12f\n",
+		 i, nominalP[i], nominalX[i], nominalY[i], nominalT[i]);
+	}
+	
+	
 	int realisticSamples = Param.getInt("realisticSamples");
 	if(realisticSamples < 1)
 		realisticSamples = 1;
@@ -521,7 +578,8 @@ void BLManager::trackTuneAndReferenceParticles()
 	std::vector<std::vector<G4double> > realisticReferenceXpSamples(referenceVector.size());
 	std::vector<std::vector<G4double> > realisticReferenceYpSamples(referenceVector.size());
 
-	const bool keepDiagnosticRealisticSamples = false;
+	const bool keepDiagnosticRealisticSamples = true;
+	std::vector<unsigned long> sampleSeeds;
 
 	printf("================= Prepare Realistic Tune/Reference Particle(s) with Stochastics turned ON (%d samples) ===========\n", realisticSamples);
 	for(int sample=0; sample<realisticSamples; ++sample) {
@@ -532,8 +590,10 @@ void BLManager::trackTuneAndReferenceParticles()
 		setPrimaryTrackID(-1,-1);
 		setNextSecondaryTrackID(1000);
 
-		unsigned long seed = 0x1234567UL + (unsigned long)sample;
+		unsigned long seed = 0x1234567UL + 104729UL * (unsigned long)sample;
 		CLHEP::HepRandom::setTheSeed((long)seed);
+		sampleSeeds.push_back(seed);
+
 		printf("=== Realistic sample %d/%d  seed=%lu ===\n", sample+1, realisticSamples, seed);
 
 		runManager->setCollectiveMode(false);
@@ -547,7 +607,7 @@ void BLManager::trackTuneAndReferenceParticles()
 			beamIndex = 0;
 			runManager->BeamOn(referenceVector.size());
 			state = IDLE;
-		}
+		
 		for(unsigned i=0; i<referenceVector.size(); ++i) {
 			realisticTuneMomentumSum[i] += referenceVector[i]->getTuneMomentum();
 			realisticTuneXSum[i] += referenceVector[i]->getReferenceX();
@@ -558,7 +618,7 @@ void BLManager::trackTuneAndReferenceParticles()
 			realisticTuneSum += referenceVector[i]->getTuneMomentum();
 			++realisticTuneCount;
 		}
-
+		}
 		if(keepDiagnosticRealisticSamples) {
 			printf("================== Begin Realistic Reference Particle(s) ===============\n");
 			state = REALISTICREFERENCE;
@@ -566,7 +626,7 @@ void BLManager::trackTuneAndReferenceParticles()
 			beamIndex = 0;
 			runManager->BeamOn(referenceVector.size());
 			state = IDLE;
-		}
+		
 		for(unsigned i=0; i<referenceVector.size(); ++i) {
 			realisticReferenceMomentumSum[i] += referenceVector[i]->getReferenceMomentum();
 			realisticReferenceXSum[i] += referenceVector[i]->getReferenceX();
@@ -582,18 +642,43 @@ void BLManager::trackTuneAndReferenceParticles()
 			realisticReferenceXpSamples[i].push_back(referenceVector[i]->getReferenceXp());
 			realisticReferenceYpSamples[i].push_back(referenceVector[i]->getReferenceYp());
 			++realisticReferenceCount;
-		}
+		}}
 	}
 	
-	physics->setDoStochastics(NORMAL,0);
-	runManager->setCollectiveMode(collectiveMode);
+	physics->setDoStochastics(FORCE_OFF,0);
+	runManager->Initialize(); //setCollectiveMode(collectiveMode);
 
 	// The tuning/reference pass can use either the ensemble mean or the
 	// ensemble median. For production we use the mean state, while the median
 	// path remains available as a diagnostic alternative.
+	int medoidSample = -1;
 	G4String referenceStateMethod = Param.getString("referenceStateMethod");
 	if(referenceStateMethod == "")
-		referenceStateMethod = "mean";
+		referenceStateMethod = "medoid";
+
+	if(realisticReferenceCount > 0 && referenceVector.size() > 0) {
+	  std::vector<std::vector<G4double> > chans;
+	  if(sel == "medoid_phase") {
+	    // RF timing only: the reference particle's job there is to
+	    // define the synchronous phase, so transverse position must
+	    // not drive the choice.
+	    chans.push_back(realisticReferenceTSamples[0]);
+	  } else {
+	    chans.push_back(realisticReferenceXSamples[0]);
+	    chans.push_back(realisticReferenceYSamples[0]);
+	    chans.push_back(realisticReferenceMomentumSamples[0]);
+	    chans.push_back(realisticReferenceTSamples[0]);
+	  }
+	  medoidSample = selectMedoid(chans);
+	}
+	
+	if(medoidSample < 0 || medoidSample >= (int)sampleSeeds.size()) {
+	  printf("*** medoid selection failed; skipping EventID -5 pass\n");
+	  physics->setDoStochastics(NORMAL,0);
+	  runManager->setCollectiveMode(collectiveMode);
+	  return;
+	}
+	
 	for(unsigned i=0; i<referenceVector.size(); ++i) {
 		if(realisticReferenceCount > 0) {
 			G4double selectedReferenceMomentum = 0.0;
@@ -644,6 +729,25 @@ void BLManager::trackTuneAndReferenceParticles()
 					selectedReferenceX, selectedReferenceY, selectedReferenceT,
 					selectedReferenceXp, selectedReferenceYp);
 			}
+
+
+			G4double d = fabs(selectedReferenceMomentum - nominalP[i])
+			           + fabs(selectedReferenceX - nominalX[i])
+			           + fabs(selectedReferenceY - nominalY[i])
+			           + fabs(selectedReferenceT - nominalT[i]);
+			printf("  |selected - nominal| (p+x+y+t) = %.6e\n", d);
+			if(d < 1e-12) {
+				printf("***************************************************************\n");
+				printf("*** WARNING: selected state is IDENTICAL to the nominal state.\n");
+				printf("***   Either the realistic samples were never tracked\n");
+				printf("***   (keepDiagnosticRealisticSamples==false), or all samples\n");
+				printf("***   share the same initial condition and averaging it is a\n");
+				printf("***   no-op.  EventID -5 will simply reproduce EventID -1.\n");
+				printf("***   Use per-cavity mean arrival times.\n");
+				printf("***************************************************************\n");
+			}
+
+
 			printf("reference state method=%s for reference %u: p=%.6f MeV/c, x=%.6f mm, y=%.6f mm, t=%.6f ns, xp=%.6f, yp=%.6f\n",
 				referenceStateMethod.c_str(), i,
 				selectedReferenceMomentum,
@@ -669,29 +773,64 @@ void BLManager::trackTuneAndReferenceParticles()
 		}
 	}
 
+	//For medoid only
+
+	// ---------------- REPLAY THE MEDOID ----------------
+	// Stochastics ON with the medoid's seed reproduces that realization
+	// exactly.  Do NOT use FORCE_OFF here -- that would give a
+	// deterministic particle, not the medoid.
+	printf("================= Replay medoid (sample %d, seed=%lu) as "
+	       "EventID -5 =================\n",
+	       medoidSample+1, sampleSeeds[medoidSample]);
+
+	clearTrackIDMap();
+	setPrimaryTrackID(-1,-1);
+	setNextSecondaryTrackID(1000);
+
+	CLHEP::HepRandom::setTheSeed((long)sampleSeeds[medoidSample]);
+	runManager->setCollectiveMode(false);
+	physics->setDoStochastics(FORCE_ON,0);
+	runManager->Initialize();
+	
+	state = MEANREFERENCE;
+	setEventID(-5);
+	beamIndex = 0;
+	runManager->BeamOn(referenceVector.size());
+	state = IDLE;
+
+	/*
 	printf("================= Generate dedicated Mean/Median Reference block (EventID -5) ==============\n");
 	state = MEANREFERENCE;
 	setEventID(-5);
+	
 	beamIndex = 0;
 	for(unsigned i=0; i<referenceVector.size(); ++i) {
 		printf("=== EventID=-5 reference particle %u state before BeamOn ===\n", i);
 		printf("  p  = %.12f MeV/c\n", referenceVector[i]->getReferenceMomentum());
 		printf("  x  = %.12f mm\n", referenceVector[i]->getReferenceX());
 		printf("  y  = %.12f mm\n", referenceVector[i]->getReferenceY());
+		printf("  z  = %.12f mm\n", referenceVector[i]->getReferenceZ());
+		printf("  p  = %.12f MeV/c\n", referenceVector[i]->getReferenceMomentum());
 		printf("  t  = %.12f ns\n", referenceVector[i]->getReferenceT());
 		printf("  xp = %.12f\n", referenceVector[i]->getReferenceXp());
 		printf("  yp = %.12f\n", referenceVector[i]->getReferenceYp());
 	}
 	runManager->BeamOn(referenceVector.size());
 	state = IDLE;
+	physics->setDoStochastics(NORMAL,0);   // restore for the beam pass
+	*/
+	
+	//printf("================= Realistic Tune/Reference averaged summary ==============\n");
+	//if(realisticTuneCount > 0)
+	//	printf("Average Realistic Tune momentum = %.6f MeV/c over %d samples\n",
+	//		realisticTuneSum / realisticTuneCount, realisticSamples);
+	//if(realisticReferenceCount > 0)
+	//	printf("Average Realistic Reference momentum = %.6f MeV/c over %d samples\n",
+	//		realisticReferenceSum / realisticReferenceCount, realisticSamples);
 
-	printf("================= Realistic Tune/Reference averaged summary ==============\n");
-	if(realisticTuneCount > 0)
-		printf("Average Realistic Tune momentum = %.6f MeV/c over %d samples\n",
-			realisticTuneSum / realisticTuneCount, realisticSamples);
-	if(realisticReferenceCount > 0)
-		printf("Average Realistic Reference momentum = %.6f MeV/c over %d samples\n",
-			realisticReferenceSum / realisticReferenceCount, realisticSamples);
+	physics->setDoStochastics(NORMAL,0);
+	runManager->setCollectiveMode(collectiveMode);
+
 }
 
 void BLManager::handleSourceRun()
