@@ -658,7 +658,7 @@ void BLManager::trackTuneAndReferenceParticles()
 
 	if(realisticReferenceCount > 0 && referenceVector.size() > 0) {
 	  std::vector<std::vector<G4double> > chans;
-	  if(sel == "medoid_phase") {
+	  if(referenceStateMethod == "medoid_phase") {
 	    // RF timing only: the reference particle's job there is to
 	    // define the synchronous phase, so transverse position must
 	    // not drive the choice.
