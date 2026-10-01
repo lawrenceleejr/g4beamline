@@ -21,6 +21,7 @@ http://www.gnu.org/copyleft/gpl.html
 #endif
 
 #include <algorithm>
+#include <cmath>
 
 #include "G4UImanager.hh"
 #include "G4VisManager.hh"
@@ -102,6 +103,24 @@ static G4double stdDev(const std::vector<G4double> &v)
 	G4double m = computeMean(v), s = 0.0;
 	for(size_t i=0; i<v.size(); ++i) s += (v[i]-m)*(v[i]-m);
 	return std::sqrt(s/(v.size()-1));
+}
+
+static G4double circularMeanTime(const std::vector<G4double> &t, G4double fGHz)
+{
+	if(t.empty()) return 0.0;
+	if(fGHz <= 0.0) return computeMean(t);
+	G4double w = 2.0 * M_PI * fGHz;
+	G4double sc = 0.0, ss = 0.0;
+	for(size_t i=0; i<t.size(); ++i) {
+		sc += std::cos(w * t[i]);
+		ss += std::sin(w * t[i]);
+	}
+	if(sc == 0.0 && ss == 0.0) return computeMean(t);
+	G4double tbar = std::atan2(ss, sc) / w;
+	G4double T = 1.0 / fGHz;
+	G4double lin = computeMean(t);
+	tbar += T * std::floor((lin - tbar) / T + 0.5);
+	return tbar;
 }
 
 // Index of the sample minimising the normalised distance to the ensemble
@@ -499,6 +518,72 @@ void BLManager::registerZStep(G4double z, ZSteppingAction *sa, G4int when)
       	if(when & 8) insertZStep(realtuneZStep,z,sa);
         if(when & 16) insertZStep(realreferenceZStep,z,sa);
 	if(when & 4) insertZStep(beamZStep,z,sa);
+}
+
+void BLManager::recordCavityArrival(G4double z, G4double t, G4double freqGHz)
+{
+	BLManager::CavityTimes &c = cavityTimes[z];
+	c.freqGHz = freqGHz;
+	c.t.push_back(t);
+}
+
+void BLManager::reduceCavityTimes()
+{
+	std::map<G4double,CavityTimes>::iterator it;
+	for(it = cavityTimes.begin(); it != cavityTimes.end(); ++it) {
+		CavityTimes &c = it->second;
+		if(c.t.empty()) continue;
+		c.tmean = circularMeanTime(c.t, c.freqGHz);
+		c.tsigma = stdDev(c.t);
+	}
+}
+
+bool BLManager::getMeanCavityTime(G4double z, G4double &t) const
+{
+	std::map<G4double,CavityTimes>::const_iterator it;
+	for(it = cavityTimes.begin(); it != cavityTimes.end(); ++it) {
+		if(fabs(it->first - z) < 0.001 && !it->second.t.empty()) {
+			t = it->second.tmean;
+			return true;
+		}
+	}
+	return false;
+}
+
+std::map<G4double,G4double> BLManager::currentCavityMeans() const
+{
+	std::map<G4double,G4double> m;
+	std::map<G4double,CavityTimes>::const_iterator it;
+	for(it = cavityTimes.begin(); it != cavityTimes.end(); ++it)
+		if(!it->second.t.empty()) m[it->first] = it->second.tmean;
+	return m;
+}
+
+G4double BLManager::maxCavityTimeShift(const std::map<G4double,G4double> &prev) const
+{
+	G4double worst = 0.0;
+	std::map<G4double,CavityTimes>::const_iterator it;
+	for(it = cavityTimes.begin(); it != cavityTimes.end(); ++it) {
+		std::map<G4double,G4double>::const_iterator p = prev.find(it->first);
+		if(p == prev.end()) return DBL_MAX;
+		G4double d = fabs(it->second.tmean - p->second);
+		if(d > worst) worst = d;
+	}
+	return worst;
+}
+
+void BLManager::printCavityTimeSummary() const
+{
+	printf("  %-12s %6s %14s %12s %10s\n",
+		"z [mm]","N","t_mean [ns]","sigma_t [ns]","sigma_phi");
+	std::map<G4double,CavityTimes>::const_iterator it;
+	for(it = cavityTimes.begin(); it != cavityTimes.end(); ++it) {
+		const CavityTimes &c = it->second;
+		if(c.t.empty()) continue;
+		G4double sphi = 360.0 * c.freqGHz * c.tsigma;
+		printf("  %-12.3f %6zu %14.6f %12.6f %9.3f deg\n",
+			it->first, c.t.size(), c.tmean, c.tsigma, sphi);
+	}
 }
 
 void BLManager::trackTuneAndReferenceParticles()
@@ -1029,7 +1114,7 @@ void BLManager::EndOfRunAction(const G4Run *run)
 
 	if(state == TUNE || state == REFERENCE) //|| state == REALISTICTUNE || state == REALISTICREFERENCE)
 		++eventsProcessed;
-	if(state == REALISTICTUNE || state == REALISTICREFERENCE)
+	if(state == REALISTICTUNE || state == REALISTICREFERENCE || state == MEANREFERENCE)
 	        ++eventsProcessed;
 
 	if(state != VISUAL)
