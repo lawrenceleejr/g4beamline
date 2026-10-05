@@ -887,8 +887,8 @@ void BLManager::trackTuneAndReferenceParticles()
 		} //}
 	}
 	
-	physics->setDoStochastics(FORCE_OFF,0);
-	runManager->Initialize(); //setCollectiveMode(collectiveMode);
+	//physics->setDoStochastics(FORCE_OFF,0);
+	//runManager->Initialize(); //setCollectiveMode(collectiveMode);
 
 	// The tuning/reference pass can use either the ensemble mean or the
 	// ensemble median. For production we use the mean state, while the median
@@ -900,14 +900,14 @@ void BLManager::trackTuneAndReferenceParticles()
 
 	// Validate the method.
 
-if(referenceStateMethod != "mean" &&
-   referenceStateMethod != "median" &&
-   referenceStateMethod != "zmean" &&
-   referenceStateMethod != "medoid") {
+	if(referenceStateMethod != "mean" &&
+	   referenceStateMethod != "median" &&
+	   referenceStateMethod != "zmean" &&
+	   referenceStateMethod != "medoid") {
 
-        printf("WARNING: unknown referenceStateMethod='%s'; "
-               "defaulting to mean\n",
-               referenceStateMethod.c_str());
+	  printf("WARNING: unknown referenceStateMethod='%s'; "
+		 "defaulting to mean\n",
+		 referenceStateMethod.c_str());
 
         referenceStateMethod = "mean";
 }
@@ -1238,11 +1238,11 @@ if(referenceStateMethod == "medoid") {
 
         setNextSecondaryTrackID(1000);
  
- runManager->setCollectiveMode(false);
+	// runManager->setCollectiveMode(false);
 	
- physics->setDoStochastics(FORCE_OFF, 0);
+	//physics->setDoStochastics(FORCE_OFF, 0);
  
- runManager->Initialize();
+	// runManager->Initialize();
 
  }
 
@@ -1251,8 +1251,8 @@ if(referenceStateMethod == "medoid") {
  runManager->Initialize();
 
  printf("================== Assigning representative trajectory to Reference State with EventID -1 ===============\n");
- state = REFERENCE;
- setEventID(-1);
+ state = MEANREFERENCE;
+ setEventID(-5);
  beamIndex = 0;
  runManager->BeamOn(referenceVector.size());
  state = IDLE;
@@ -1275,8 +1275,8 @@ if(referenceStateMethod == "medoid") {
  
  // now track center particle                                                                                                                                                         
  printf("================== PLACEHOLDER: TO DELETE if representative one worked--> Begin Mean Reference Particle(s) ===============\n");
- state = MEANREFERENCE; //REFERENCE;
- setEventID(-5);
+ state = REFERENCE; //REFERENCE;
+ setEventID(-1);
  beamIndex = 0;
  runManager->BeamOn(referenceVector.size());
  state = IDLE;
