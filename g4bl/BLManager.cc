@@ -801,10 +801,28 @@ void BLManager::trackTuneAndReferenceParticles()
 	std::vector<std::vector<G4double> > realisticReferenceTSamples(referenceVector.size());
 	std::vector<std::vector<G4double> > realisticReferenceXpSamples(referenceVector.size());
 	std::vector<std::vector<G4double> > realisticReferenceYpSamples(referenceVector.size());
-
+	bool collectiveMode = runManager->getCollectiveMode();
+	runManager->setCollectiveMode(false);
+	
+	//check to capture nominal state
+	std::vector<G4double> nominalP(referenceVector.size(), 0.0);
+	std::vector<G4double> nominalX(referenceVector.size(), 0.0);
+	std::vector<G4double> nominalY(referenceVector.size(), 0.0);
+	std::vector<G4double> nominalT(referenceVector.size(), 0.0);
+	
+	for(unsigned i=0; i<referenceVector.size(); ++i) {
+	  nominalP[i] = referenceVector[i]->getReferenceMomentum();
+	  nominalX[i] = referenceVector[i]->getReferenceX();
+	  nominalY[i] = referenceVector[i]->getReferenceY();
+	  nominalT[i] = referenceVector[i]->getReferenceT();
+	  printf("nominal reference %u: p=%.12f x=%.12f y=%.12f t=%.12f\n",
+		 i, nominalP[i], nominalX[i], nominalY[i], nominalT[i]);
+	}
+	
 	//	const bool keepDiagnosticRealisticSamples = true;
 	std::vector<unsigned long> sampleSeeds;
 
+	
 	printf("================= Prepare Realistic Tune/Reference Particle(s) with Stochastics turned ON (%d samples) ===========\n", realisticSamples);
 	for(int sample=0; sample<realisticSamples; ++sample) {
 		// Reset the external track bookkeeping for each stochastic realization.
@@ -1241,7 +1259,7 @@ if(referenceStateMethod == "medoid") {
  
 
  // Tune and Reference particles cannot use collective mode                                                                                                                           
- bool collectiveMode = runManager->getCollectiveMode();
+ // bool collectiveMode = runManager->getCollectiveMode();
  runManager->setCollectiveMode(false);
  
  printf("================= Prepare Tune Particle(s) ===========\n");
