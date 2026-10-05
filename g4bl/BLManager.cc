@@ -100,7 +100,8 @@ static G4double computeMedian(const std::vector<G4double> &values)
 static G4double stdDev(const std::vector<G4double> &v)
 {
 	if(v.size() < 2) return 0.0;
-	G4double m = computeMean(v), s = 0.0;
+	G4double m = computeMean(v);
+	G4double s = 0.0;
 	for(size_t i=0; i<v.size(); ++i) s += (v[i]-m)*(v[i]-m);
 	return std::sqrt(s/(v.size()-1));
 }
@@ -127,6 +128,139 @@ static G4double circularMeanTime(const std::vector<G4double> &t, G4double fGHz)
 // median, summed over the supplied channels.  Each channel is divided by its
 // own standard deviation so that mm, MeV/c and ns are commensurate --
 // without this, momentum (O(200)) swamps position (O(10)).
+static int selectMedoid(
+        const std::vector<std::vector<std::vector<G4double> > > &samples)
+{
+        if(samples.empty())
+                return -1;
+
+        const size_t nReferences = samples.size();
+
+        if(nReferences == 0)
+                return -1;
+
+        // Number of channels:
+        //
+        //   0 = momentum
+        //   1 = x
+        //   2 = y
+        //   3 = t
+        //   4 = xp
+        //   5 = yp
+        //
+        const size_t nChannels = 6;
+
+        // Check that all channels/reference elements contain samples.
+        for(size_t i = 0; i < nReferences; ++i) {
+
+                if(samples[i].size() != nChannels)
+                        return -1;
+
+                for(size_t k = 0; k < nChannels; ++k) {
+
+                        if(samples[i][k].empty())
+                                return -1;
+                }
+        }
+
+        const size_t nSamples = samples[0][0].size();
+
+        if(nSamples == 0)
+                return -1;
+
+        // Make sure every reference element/channel has the same
+        // number of stochastic realizations.
+        for(size_t i = 0; i < nReferences; ++i) {
+
+                for(size_t k = 0; k < nChannels; ++k) {
+
+                        if(samples[i][k].size() != nSamples) {
+
+                                printf("*** ERROR: inconsistent number of "
+                                       "samples in selectMedoid()\n");
+
+                                return -1;
+                        }
+                }
+        }
+
+
+        // ---------------------------------------------------------------
+        // Calculate median and standard deviation for every
+        // reference-element/channel combination.
+        // ---------------------------------------------------------------
+
+        std::vector<std::vector<G4double> > med(
+                nReferences,
+                std::vector<G4double>(nChannels, 0.0));
+
+        std::vector<std::vector<G4double> > sig(
+                nReferences,
+                std::vector<G4double>(nChannels, 1.0));
+
+
+        for(size_t i = 0; i < nReferences; ++i) {
+
+                for(size_t k = 0; k < nChannels; ++k) {
+
+                        med[i][k] = computeMedian(samples[i][k]);
+
+                        sig[i][k] = stdDev(samples[i][k]);
+
+                        // Avoid division by zero for a channel with
+                        // zero spread across all stochastic samples.
+                        if(sig[i][k] <= 0.0)
+                                sig[i][k] = 1.0;
+                }
+        }
+
+
+        // ---------------------------------------------------------------
+        // Find the stochastic sample with the smallest total
+        // normalized distance from the ensemble median.
+        // ---------------------------------------------------------------
+
+        int best = 0;
+        G4double bestScore = DBL_MAX;
+
+        for(size_t sample = 0; sample < nSamples; ++sample) {
+
+                G4double scoreSquared = 0.0;
+
+                for(size_t i = 0; i < nReferences; ++i) {
+
+                        for(size_t k = 0; k < nChannels; ++k) {
+
+                                G4double d =
+                                        (samples[i][k][sample] - med[i][k])
+                                        / sig[i][k];
+
+                                scoreSquared += d * d;
+                        }
+                }
+
+                G4double score = std::sqrt(scoreSquared);
+
+                printf("    sample %zu  medoid score = %.6f\n",
+                       sample + 1, score);
+
+                if(score < bestScore) {
+
+                        bestScore = score;
+                        best = (int)sample;
+                }
+        }
+
+        printf("  -> medoid is sample %d (score %.6f)\n",
+               best + 1, bestScore);
+
+        return best;
+}
+
+
+
+/*
+  
 static int selectMedoid(const std::vector<std::vector<G4double> > &channels)
 {
 	if(channels.empty() || channels[0].empty()) return -1;
@@ -154,7 +288,7 @@ static int selectMedoid(const std::vector<std::vector<G4double> > &channels)
 	printf("  -> medoid is sample %d (score %.6f)\n", best+1, bestScore);
 	return best;
 }
-
+*/
 
 // Param definitions are all moved to the BLManager constructor, because
 // other initializers use BLmanager.
@@ -596,6 +730,8 @@ void BLManager::trackTuneAndReferenceParticles()
 									"");
 	}
 
+	
+	/*
 	// Tune and Reference particles cannot use collective mode
 	bool collectiveMode = runManager->getCollectiveMode();
 	runManager->setCollectiveMode(false);
@@ -635,6 +771,9 @@ void BLManager::trackTuneAndReferenceParticles()
 		 i, nominalP[i], nominalX[i], nominalY[i], nominalT[i]);
 	}
 	
+	*/
+
+	//Realistic case
 	
 	int realisticSamples = Param.getInt("realisticSamples");
 	if(realisticSamples < 1)
@@ -663,7 +802,7 @@ void BLManager::trackTuneAndReferenceParticles()
 	std::vector<std::vector<G4double> > realisticReferenceXpSamples(referenceVector.size());
 	std::vector<std::vector<G4double> > realisticReferenceYpSamples(referenceVector.size());
 
-	const bool keepDiagnosticRealisticSamples = true;
+	//	const bool keepDiagnosticRealisticSamples = true;
 	std::vector<unsigned long> sampleSeeds;
 
 	printf("================= Prepare Realistic Tune/Reference Particle(s) with Stochastics turned ON (%d samples) ===========\n", realisticSamples);
@@ -685,7 +824,7 @@ void BLManager::trackTuneAndReferenceParticles()
 		physics->setDoStochastics(FORCE_ON,0);
 		runManager->Initialize();
 		
-		if(keepDiagnosticRealisticSamples) {
+		//	if(keepDiagnosticRealisticSamples) {
 			printf("================= Begin Realistic Tune Particle(s) =============\n");
 			state = REALISTICTUNE;
 			setEventID(-4);
@@ -703,8 +842,8 @@ void BLManager::trackTuneAndReferenceParticles()
 			realisticTuneSum += referenceVector[i]->getTuneMomentum();
 			++realisticTuneCount;
 		}
-		}
-		if(keepDiagnosticRealisticSamples) {
+		//}
+		//if(keepDiagnosticRealisticSamples) {
 			printf("================== Begin Realistic Reference Particle(s) ===============\n");
 			state = REALISTICREFERENCE;
 			setEventID(-3);
@@ -727,7 +866,7 @@ void BLManager::trackTuneAndReferenceParticles()
 			realisticReferenceXpSamples[i].push_back(referenceVector[i]->getReferenceXp());
 			realisticReferenceYpSamples[i].push_back(referenceVector[i]->getReferenceYp());
 			++realisticReferenceCount;
-		}}
+		} //}
 	}
 	
 	physics->setDoStochastics(FORCE_OFF,0);
@@ -736,185 +875,398 @@ void BLManager::trackTuneAndReferenceParticles()
 	// The tuning/reference pass can use either the ensemble mean or the
 	// ensemble median. For production we use the mean state, while the median
 	// path remains available as a diagnostic alternative.
-	int medoidSample = -1;
+
 	G4String referenceStateMethod = Param.getString("referenceStateMethod");
 	if(referenceStateMethod == "")
-		referenceStateMethod = "medoid";
+		referenceStateMethod = "mean";
 
-	if(realisticReferenceCount > 0 && referenceVector.size() > 0) {
-	  std::vector<std::vector<G4double> > chans;
-	  if(referenceStateMethod == "medoid_phase") {
-	    // RF timing only: the reference particle's job there is to
-	    // define the synchronous phase, so transverse position must
-	    // not drive the choice.
-	    chans.push_back(realisticReferenceTSamples[0]);
-	  } else {
-	    chans.push_back(realisticReferenceXSamples[0]);
-	    chans.push_back(realisticReferenceYSamples[0]);
-	    chans.push_back(realisticReferenceMomentumSamples[0]);
-	    chans.push_back(realisticReferenceTSamples[0]);
-	  }
-	  medoidSample = selectMedoid(chans);
-	}
-	
-	if(medoidSample < 0 || medoidSample >= (int)sampleSeeds.size()) {
-	  printf("*** medoid selection failed; skipping EventID -5 pass\n");
-	  physics->setDoStochastics(NORMAL,0);
-	  runManager->setCollectiveMode(collectiveMode);
-	  return;
-	}
-	
-	for(unsigned i=0; i<referenceVector.size(); ++i) {
-		if(realisticReferenceCount > 0) {
-			G4double selectedReferenceMomentum = 0.0;
-			G4double selectedReferenceX = 0.0;
-			G4double selectedReferenceY = 0.0;
-			G4double selectedReferenceT = 0.0;
-			G4double selectedReferenceXp = 0.0;
-			G4double selectedReferenceYp = 0.0;
-			if(referenceStateMethod == "mean" || referenceStateMethod == "zmean") {
-				if(referenceStateMethod == "zmean") {
-					selectedReferenceMomentum = computeZMean(realisticReferenceMomentumSamples[i]);
-					selectedReferenceX = computeZMean(realisticReferenceXSamples[i]);
-					selectedReferenceY = computeZMean(realisticReferenceYSamples[i]);
-					selectedReferenceT = computeZMean(realisticReferenceTSamples[i]);
-					selectedReferenceXp = computeZMean(realisticReferenceXpSamples[i]);
-					selectedReferenceYp = computeZMean(realisticReferenceYpSamples[i]);
-				} else {
-					selectedReferenceMomentum = realisticReferenceMomentumSum[i] / realisticSamples;
-					selectedReferenceX = realisticReferenceXSum[i] / realisticSamples;
-					selectedReferenceY = realisticReferenceYSum[i] / realisticSamples;
-					selectedReferenceT = realisticReferenceTSum[i] / realisticSamples;
-					selectedReferenceXp = realisticReferenceXpSum[i] / realisticSamples;
-					selectedReferenceYp = realisticReferenceYpSum[i] / realisticSamples;
-				}
-				referenceVector[i]->setMeanReferenceState(selectedReferenceMomentum,
-					selectedReferenceX, selectedReferenceY, selectedReferenceT,
-					selectedReferenceXp, selectedReferenceYp);
-			} else if(referenceStateMethod == "median") {
-				selectedReferenceMomentum = computeMedian(realisticReferenceMomentumSamples[i]);
-				selectedReferenceX = computeMedian(realisticReferenceXSamples[i]);
-				selectedReferenceY = computeMedian(realisticReferenceYSamples[i]);
-				selectedReferenceT = computeMedian(realisticReferenceTSamples[i]);
-				selectedReferenceXp = computeMedian(realisticReferenceXpSamples[i]);
-				selectedReferenceYp = computeMedian(realisticReferenceYpSamples[i]);
-				referenceVector[i]->setMedianReferenceState(selectedReferenceMomentum,
-					selectedReferenceX, selectedReferenceY, selectedReferenceT,
-					selectedReferenceXp, selectedReferenceYp);
-			} else {
-				printf("warning: unknown referenceStateMethod='%s'; defaulting to mean\n",
-					referenceStateMethod.c_str());
-				selectedReferenceMomentum = realisticReferenceMomentumSum[i] / realisticSamples;
-				selectedReferenceX = realisticReferenceXSum[i] / realisticSamples;
-				selectedReferenceY = realisticReferenceYSum[i] / realisticSamples;
-				selectedReferenceT = realisticReferenceTSum[i] / realisticSamples;
-				selectedReferenceXp = realisticReferenceXpSum[i] / realisticSamples;
-				selectedReferenceYp = realisticReferenceYpSum[i] / realisticSamples;
-				referenceVector[i]->setMeanReferenceState(selectedReferenceMomentum,
-					selectedReferenceX, selectedReferenceY, selectedReferenceT,
-					selectedReferenceXp, selectedReferenceYp);
-			}
+	// Validate the method.
+
+if(referenceStateMethod != "mean" &&
+   referenceStateMethod != "median" &&
+   referenceStateMethod != "zmean" &&
+   referenceStateMethod != "medoid") {
+
+        printf("WARNING: unknown referenceStateMethod='%s'; "
+               "defaulting to mean\n",
+               referenceStateMethod.c_str());
+
+        referenceStateMethod = "mean";
+}
 
 
-			G4double d = fabs(selectedReferenceMomentum - nominalP[i])
-			           + fabs(selectedReferenceX - nominalX[i])
-			           + fabs(selectedReferenceY - nominalY[i])
-			           + fabs(selectedReferenceT - nominalT[i]);
-			printf("  |selected - nominal| (p+x+y+t) = %.6e\n", d);
-			if(d < 1e-12) {
-				printf("***************************************************************\n");
-				printf("*** WARNING: selected state is IDENTICAL to the nominal state.\n");
-				printf("***   Either the realistic samples were never tracked\n");
-				printf("***   (keepDiagnosticRealisticSamples==false), or all samples\n");
-				printf("***   share the same initial condition and averaging it is a\n");
-				printf("***   no-op.  EventID -5 will simply reproduce EventID -1.\n");
-				printf("***   Use per-cavity mean arrival times.\n");
-				printf("***************************************************************\n");
-			}
+printf("=== Reference state method: %s ===\n",
+       referenceStateMethod.c_str());
+
+int medoidSample = -1;
+
+if(realisticReferenceCount > 0 && referenceVector.size() > 0) {
+
+        for(unsigned i = 0; i < referenceVector.size(); ++i) {
+
+                G4double selectedReferenceMomentum = 0.0;
+                G4double selectedReferenceX        = 0.0;
+                G4double selectedReferenceY        = 0.0;
+                G4double selectedReferenceT        = 0.0;
+                G4double selectedReferenceXp       = 0.0;
+                G4double selectedReferenceYp       = 0.0;
+
+		// -------------------------------------------------------
+                // MEAN
+                // -------------------------------------------------------
+
+                if(referenceStateMethod == "mean") {
+
+                        selectedReferenceMomentum =
+                                computeMean(
+                                    realisticReferenceMomentumSamples[i]);
+
+                        selectedReferenceX =
+                                computeMean(
+                                    realisticReferenceXSamples[i]);
+
+                        selectedReferenceY =
+                                computeMean(
+                                    realisticReferenceYSamples[i]);
+
+                        selectedReferenceT =
+                                computeMean(
+                                    realisticReferenceTSamples[i]);
+
+                        selectedReferenceXp =
+                                computeMean(
+                                    realisticReferenceXpSamples[i]);
+
+                        selectedReferenceYp =
+                                computeMean(
+                                    realisticReferenceYpSamples[i]);
+
+                        referenceVector[i]->setMeanReferenceState(
+                                selectedReferenceMomentum,
+                                selectedReferenceX,
+                                selectedReferenceY,
+                                selectedReferenceT,
+                                selectedReferenceXp,
+                                selectedReferenceYp);
+                }
 
 
-			printf("reference state method=%s for reference %u: p=%.6f MeV/c, x=%.6f mm, y=%.6f mm, t=%.6f ns, xp=%.6f, yp=%.6f\n",
-				referenceStateMethod.c_str(), i,
-				selectedReferenceMomentum,
-				selectedReferenceX,
-				selectedReferenceY,
-				selectedReferenceT,
-				selectedReferenceXp,
-				selectedReferenceYp);
-			printf("=== FINAL PRE-TUNE STATE (reference %u) ===\n", i);
-			printf("  selected method     = %s\n", referenceStateMethod.c_str());
-			printf("  selected momentum  = %.12f MeV/c\n", selectedReferenceMomentum);
-			printf("  selected x         = %.12f mm\n", selectedReferenceX);
-			printf("  selected y         = %.12f mm\n", selectedReferenceY);
-			printf("  selected t         = %.12f ns\n", selectedReferenceT);
-			printf("  selected xp        = %.12f\n", selectedReferenceXp);
-			printf("  selected yp        = %.12f\n", selectedReferenceYp);
-			printf("  raw sample mean p  = %.12f MeV/c\n", realisticReferenceMomentumSum[i] / realisticSamples);
-			printf("  raw sample mean x  = %.12f mm\n", realisticReferenceXSum[i] / realisticSamples);
-			printf("  raw sample mean y  = %.12f mm\n", realisticReferenceYSum[i] / realisticSamples);
-			printf("  raw sample mean t  = %.12f ns\n", realisticReferenceTSum[i] / realisticSamples);
-			printf("  raw sample mean xp = %.12f\n", realisticReferenceXpSum[i] / realisticSamples);
-			printf("  raw sample mean yp = %.12f\n", realisticReferenceYpSum[i] / realisticSamples);
+                // -------------------------------------------------------
+                // MEDIAN
+                // -------------------------------------------------------
+
+                else if(referenceStateMethod == "median") {
+
+                        selectedReferenceMomentum =
+                                computeMedian(
+                                    realisticReferenceMomentumSamples[i]);
+
+                        selectedReferenceX =
+                                computeMedian(
+                                    realisticReferenceXSamples[i]);
+
+                        selectedReferenceY =
+                                computeMedian(
+                                    realisticReferenceYSamples[i]);
+
+                        selectedReferenceT =
+                                computeMedian(
+                                    realisticReferenceTSamples[i]);
+
+                        selectedReferenceXp =
+                                computeMedian(
+                                    realisticReferenceXpSamples[i]);
+
+                        selectedReferenceYp =
+                                computeMedian(
+                                    realisticReferenceYpSamples[i]);
+
+                        referenceVector[i]->setMedianReferenceState(
+                                selectedReferenceMomentum,
+                                selectedReferenceX,
+                                selectedReferenceY,
+                                selectedReferenceT,
+                                selectedReferenceXp,
+                                selectedReferenceYp);
+                }
+
+		// -------------------------------------------------------
+                // ZMEAN
+                // -------------------------------------------------------
+
+                else if(referenceStateMethod == "zmean") {
+
+                        selectedReferenceMomentum =
+                                computeZMean(
+                                    realisticReferenceMomentumSamples[i]);
+
+                        selectedReferenceX =
+                                computeZMean(
+                                    realisticReferenceXSamples[i]);
+
+                        selectedReferenceY =
+                                computeZMean(
+                                    realisticReferenceYSamples[i]);
+
+                        selectedReferenceT =
+                                computeZMean(
+                                    realisticReferenceTSamples[i]);
+
+                        selectedReferenceXp =
+                                computeZMean(
+                                    realisticReferenceXpSamples[i]);
+
+                        selectedReferenceYp =
+                                computeZMean(
+                                    realisticReferenceYpSamples[i]);
+
+                        referenceVector[i]->setMeanReferenceState(
+                                selectedReferenceMomentum,
+                                selectedReferenceX,
+                                selectedReferenceY,
+                                selectedReferenceT,
+                                selectedReferenceXp,
+                                selectedReferenceYp);
+                }
+
+		else if(referenceStateMethod == "medoid") {
+		  
+		  // Nothing to do here.
+		  // The medoid sample is selected below.
+                }
+
+
+		if(referenceStateMethod != "medoid") {
+
+                        G4double d =
+                                fabs(selectedReferenceMomentum -
+                                     nominalP[i])
+                              + fabs(selectedReferenceX -
+                                     nominalX[i])
+                              + fabs(selectedReferenceY -
+                                     nominalY[i])
+                              + fabs(selectedReferenceT -
+                                     nominalT[i]);
+
+
+                        printf("  |selected - nominal| "
+                               "(p+x+y+t) = %.6e\n",
+                               d);
+
+ if(d < 1e-12) {
+
+                                printf("***************************************************************\n");
+                                printf("*** WARNING: selected state is IDENTICAL to the nominal state.\n");
+                                printf("***   This may occur if the ensemble average coincides with\n");
+                                printf("***   the nominal initial state.\n");
+                                printf("***************************************************************\n");
+                        }
+printf("reference state method=%s "
+                               "for reference %u: "
+                               "p=%.6f MeV/c, "
+                               "x=%.6f mm, "
+                               "y=%.6f mm, "
+                               "t=%.6f ns, "
+                               "xp=%.6f, "
+                               "yp=%.6f\n",
+                               referenceStateMethod.c_str(),
+                               i,
+                               selectedReferenceMomentum,
+                               selectedReferenceX,
+                               selectedReferenceY,
+                               selectedReferenceT,
+                               selectedReferenceXp,
+                               selectedReferenceYp);
+
+printf("=== FINAL PRE-TUNE STATE "
+                               "(reference %u) ===\n",
+                               i);
+  printf("  selected method    = %s\n",
+                               referenceStateMethod.c_str());
+
+                        printf("  selected momentum  = %.12f MeV/c\n",
+                               selectedReferenceMomentum);
+
+                        printf("  selected x         = %.12f mm\n",
+                               selectedReferenceX);
+
+                        printf("  selected y         = %.12f mm\n",
+                               selectedReferenceY);
+
+                        printf("  selected t         = %.12f ns\n",
+                               selectedReferenceT);
+
+                        printf("  selected xp        = %.12f\n",
+                               selectedReferenceXp);
+
+                        printf("  selected yp        = %.12f\n",
+                               selectedReferenceYp);
+
+ printf("  raw sample mean p  = %.12f MeV/c\n",
+	computeMean(
+		    realisticReferenceMomentumSamples[i]));
+
+ printf("  raw sample mean x  = %.12f mm\n",
+	computeMean(
+		    realisticReferenceXSamples[i]));
+
+ printf("  raw sample mean y  = %.12f mm\n",
+	computeMean(
+		    realisticReferenceYSamples[i]));
+
+ printf("  raw sample mean t  = %.12f ns\n",
+	computeMean(
+		    realisticReferenceTSamples[i]));
+
+ printf("  raw sample mean xp = %.12f\n",
+	computeMean(
+		    realisticReferenceXpSamples[i]));
+
+ printf("  raw sample mean yp = %.12f\n",
+	computeMean(
+		    realisticReferenceYpSamples[i]));
 		}
 	}
+ }
+ 
+// ===================================================================
+// MEDOID SELECTION
+//
+// Select ONE stochastic realization globally across all reference
+// elements and all six phase-space/time channels.
+//
+// The selected sample can then be replayed exactly using its RNG seed.
+// ===================================================================
 
-	//For medoid only
+if(referenceStateMethod == "medoid") {
 
-	// ---------------- REPLAY THE MEDOID ----------------
-	// Stochastics ON with the medoid's seed reproduces that realization
-	// exactly.  Do NOT use FORCE_OFF here -- that would give a
-	// deterministic particle, not the medoid.
-	printf("================= Replay medoid (sample %d, seed=%lu) as "
-	       "EventID -5 =================\n",
-	       medoidSample+1, sampleSeeds[medoidSample]);
+        std::vector<
+                std::vector<
+                        std::vector<G4double>
+                >
+        > medoidSamples;
 
-	clearTrackIDMap();
-	setPrimaryTrackID(-1,-1);
-	setNextSecondaryTrackID(1000);
+        medoidSamples.resize(referenceVector.size());
+ for(unsigned i = 0;
+             i < referenceVector.size();
+             ++i) {
 
-	CLHEP::HepRandom::setTheSeed((long)sampleSeeds[medoidSample]);
-	runManager->setCollectiveMode(false);
-	physics->setDoStochastics(FORCE_ON,0);
-	runManager->Initialize();
+                medoidSamples[i].resize(6);
+
+                medoidSamples[i][0] =
+                        realisticReferenceMomentumSamples[i];
+
+                medoidSamples[i][1] =
+                        realisticReferenceXSamples[i];
+
+                medoidSamples[i][2] =
+                        realisticReferenceYSamples[i];
+
+                medoidSamples[i][3] =
+                        realisticReferenceTSamples[i];
+
+                medoidSamples[i][4] =
+                        realisticReferenceXpSamples[i];
+
+                medoidSamples[i][5] =
+                        realisticReferenceYpSamples[i];
+        }
+
+
+        medoidSample = selectMedoid(medoidSamples);
+	  if(medoidSample < 0 ||
+           medoidSample >= (int)sampleSeeds.size()) {
+
+                printf("*** ERROR: medoid selection failed; "
+                       "skipping EventID -5 pass\n");
+
+                physics->setDoStochastics(NORMAL, 0);
+
+                runManager->setCollectiveMode(collectiveMode);
+
+                return;
+        }
+
+
+        printf("=== Selected medoid sample %d/%d, seed=%lu ===\n",
+               medoidSample + 1,
+               realisticSamples,
+               sampleSeeds[medoidSample]);
+}
+
+// ===================================================================
+// REPLAY THE MEDOID
+//
+// Stochastics remain ON.  Resetting the RNG to the selected sample's
+// seed reproduces that stochastic realization.
+// ===================================================================
+
+if(referenceStateMethod == "medoid") {
+
+        printf("================= Replay medoid "
+               "(sample %d, seed=%lu) as EventID -5 "
+               "=================\n",
+               medoidSample + 1,
+               sampleSeeds[medoidSample]);
+
+
+        CLHEP::HepRandom::setTheSeed(
+                (long)sampleSeeds[medoidSample]);
+
+
+        clearTrackIDMap();
+
+        setPrimaryTrackID(-1, -1);
+
+        setNextSecondaryTrackID(1000);
+ 
+ runManager->setCollectiveMode(false);
 	
-	state = MEANREFERENCE;
-	setEventID(-5);
-	beamIndex = 0;
-	runManager->BeamOn(referenceVector.size());
-	state = IDLE;
+ physics->setDoStochastics(FORCE_OFF, 0);
+ 
+ runManager->Initialize();
 
-	/*
-	printf("================= Generate dedicated Mean/Median Reference block (EventID -5) ==============\n");
-	state = MEANREFERENCE;
-	setEventID(-5);
-	
-	beamIndex = 0;
-	for(unsigned i=0; i<referenceVector.size(); ++i) {
-		printf("=== EventID=-5 reference particle %u state before BeamOn ===\n", i);
-		printf("  p  = %.12f MeV/c\n", referenceVector[i]->getReferenceMomentum());
-		printf("  x  = %.12f mm\n", referenceVector[i]->getReferenceX());
-		printf("  y  = %.12f mm\n", referenceVector[i]->getReferenceY());
-		printf("  z  = %.12f mm\n", referenceVector[i]->getReferenceZ());
-		printf("  p  = %.12f MeV/c\n", referenceVector[i]->getReferenceMomentum());
-		printf("  t  = %.12f ns\n", referenceVector[i]->getReferenceT());
-		printf("  xp = %.12f\n", referenceVector[i]->getReferenceXp());
-		printf("  yp = %.12f\n", referenceVector[i]->getReferenceYp());
-	}
-	runManager->BeamOn(referenceVector.size());
-	state = IDLE;
-	physics->setDoStochastics(NORMAL,0);   // restore for the beam pass
-	*/
-	
-	//printf("================= Realistic Tune/Reference averaged summary ==============\n");
-	//if(realisticTuneCount > 0)
-	//	printf("Average Realistic Tune momentum = %.6f MeV/c over %d samples\n",
-	//		realisticTuneSum / realisticTuneCount, realisticSamples);
-	//if(realisticReferenceCount > 0)
-	//	printf("Average Realistic Reference momentum = %.6f MeV/c over %d samples\n",
-	//		realisticReferenceSum / realisticReferenceCount, realisticSamples);
+ }
 
-	physics->setDoStochastics(NORMAL,0);
-	runManager->setCollectiveMode(collectiveMode);
+ runManager->setCollectiveMode(false);
+ physics->setDoStochastics(FORCE_OFF,0);
+ runManager->Initialize();
+
+ printf("================== Assigning representative trajectory to Reference State with EventID -1 ===============\n");
+ state = REFERENCE;
+ setEventID(-1);
+ beamIndex = 0;
+ runManager->BeamOn(referenceVector.size());
+ state = IDLE;
+ 
+
+ // Tune and Reference particles cannot use collective mode                                                                                                                           
+ bool collectiveMode = runManager->getCollectiveMode();
+ runManager->setCollectiveMode(false);
+ 
+ printf("================= Prepare Tune Particle(s) ===========\n");
+ physics->setDoStochastics(FORCE_OFF,0);
+ runManager->Initialize();
+ 
+ printf("================= Begin Tune Particle(s) =============\n");
+ state = TUNE;
+ setEventID(-2);
+ beamIndex = 0;
+ runManager->BeamOn(referenceVector.size());
+ state = IDLE;
+ 
+ // now track center particle                                                                                                                                                         
+ printf("================== PLACEHOLDER: TO DELETE if representative one worked--> Begin Mean Reference Particle(s) ===============\n");
+ state = MEANREFERENCE; //REFERENCE;
+ setEventID(-5);
+ beamIndex = 0;
+ runManager->BeamOn(referenceVector.size());
+ state = IDLE;
+ beamIndex = 0;
+
+ 
+ physics->setDoStochastics(NORMAL,0);
+ runManager->setCollectiveMode(collectiveMode);
 
 }
 
