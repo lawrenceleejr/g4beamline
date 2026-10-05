@@ -731,7 +731,7 @@ void BLManager::trackTuneAndReferenceParticles()
 	}
 
 	
-	/*
+	
 	// Tune and Reference particles cannot use collective mode
 	bool collectiveMode = runManager->getCollectiveMode();
 	runManager->setCollectiveMode(false);
@@ -771,7 +771,7 @@ void BLManager::trackTuneAndReferenceParticles()
 		 i, nominalP[i], nominalX[i], nominalY[i], nominalT[i]);
 	}
 	
-	*/
+	
 
 	//Realistic case
 	
@@ -804,25 +804,11 @@ void BLManager::trackTuneAndReferenceParticles()
 	bool collectiveMode = runManager->getCollectiveMode();
 	runManager->setCollectiveMode(false);
 	
-	//check to capture nominal state
-	std::vector<G4double> nominalP(referenceVector.size(), 0.0);
-	std::vector<G4double> nominalX(referenceVector.size(), 0.0);
-	std::vector<G4double> nominalY(referenceVector.size(), 0.0);
-	std::vector<G4double> nominalT(referenceVector.size(), 0.0);
-	
-	for(unsigned i=0; i<referenceVector.size(); ++i) {
-	  nominalP[i] = referenceVector[i]->getReferenceMomentum();
-	  nominalX[i] = referenceVector[i]->getReferenceX();
-	  nominalY[i] = referenceVector[i]->getReferenceY();
-	  nominalT[i] = referenceVector[i]->getReferenceT();
-	  printf("nominal reference %u: p=%.12f x=%.12f y=%.12f t=%.12f\n",
-		 i, nominalP[i], nominalX[i], nominalY[i], nominalT[i]);
-	}
 	
 	//	const bool keepDiagnosticRealisticSamples = true;
 	std::vector<unsigned long> sampleSeeds;
 
-	
+       
 	printf("================= Prepare Realistic Tune/Reference Particle(s) with Stochastics turned ON (%d samples) ===========\n", realisticSamples);
 	for(int sample=0; sample<realisticSamples; ++sample) {
 		// Reset the external track bookkeeping for each stochastic realization.
@@ -832,7 +818,7 @@ void BLManager::trackTuneAndReferenceParticles()
 		setPrimaryTrackID(-1,-1);
 		setNextSecondaryTrackID(1000);
 
-		unsigned long seed = 0x1234567UL + 104729UL * (unsigned long)sample;
+		unsigned long seed = 0x1234567UL + (unsigned long)sample;
 		CLHEP::HepRandom::setTheSeed((long)seed);
 		sampleSeeds.push_back(seed);
 
@@ -887,8 +873,8 @@ void BLManager::trackTuneAndReferenceParticles()
 		} //}
 	}
 	
-	//physics->setDoStochastics(FORCE_OFF,0);
-	//runManager->Initialize(); //setCollectiveMode(collectiveMode);
+	physics->setDoStochastics(FORCE_OFF,0);
+	runManager->Initialize(); //setCollectiveMode(collectiveMode);
 
 	// The tuning/reference pass can use either the ensemble mean or the
 	// ensemble median. For production we use the mean state, while the median
@@ -1256,33 +1242,7 @@ if(referenceStateMethod == "medoid") {
  beamIndex = 0;
  runManager->BeamOn(referenceVector.size());
  state = IDLE;
- 
-
- // Tune and Reference particles cannot use collective mode                                                                                                                           
- // bool collectiveMode = runManager->getCollectiveMode();
- runManager->setCollectiveMode(false);
- 
- printf("================= Prepare Tune Particle(s) ===========\n");
- physics->setDoStochastics(FORCE_OFF,0);
- runManager->Initialize();
- 
- printf("================= Begin Tune Particle(s) =============\n");
- state = TUNE;
- setEventID(-2);
- beamIndex = 0;
- runManager->BeamOn(referenceVector.size());
- state = IDLE;
- 
- // now track center particle                                                                                                                                                         
- printf("================== PLACEHOLDER: TO DELETE if representative one worked--> Begin Mean Reference Particle(s) ===============\n");
- state = REFERENCE; //REFERENCE;
- setEventID(-1);
- beamIndex = 0;
- runManager->BeamOn(referenceVector.size());
- state = IDLE;
- beamIndex = 0;
-
- 
+  
  physics->setDoStochastics(NORMAL,0);
  runManager->setCollectiveMode(collectiveMode);
 
