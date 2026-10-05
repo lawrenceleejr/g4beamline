@@ -801,7 +801,7 @@ void BLManager::trackTuneAndReferenceParticles()
 	std::vector<std::vector<G4double> > realisticReferenceTSamples(referenceVector.size());
 	std::vector<std::vector<G4double> > realisticReferenceXpSamples(referenceVector.size());
 	std::vector<std::vector<G4double> > realisticReferenceYpSamples(referenceVector.size());
-	bool collectiveMode = runManager->getCollectiveMode();
+	//bool collectiveMode = runManager->getCollectiveMode();
 	runManager->setCollectiveMode(false);
 	
 	
