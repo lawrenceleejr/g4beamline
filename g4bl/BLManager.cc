@@ -874,8 +874,8 @@ void BLManager::trackTuneAndReferenceParticles()
 		} //}
 	}
 	
-	physics->setDoStochastics(FORCE_OFF,0);
-	runManager->Initialize(); //setCollectiveMode(collectiveMode);
+	//	physics->setDoStochastics(FORCE_OFF,0);
+	//runManager->Initialize(); //setCollectiveMode(collectiveMode);
 
 	// The tuning/reference pass can use either the ensemble mean or the
 	// ensemble median. For production we use the mean state, while the median
@@ -1233,9 +1233,9 @@ if(referenceStateMethod == "medoid") {
 
  }
 
- runManager->setCollectiveMode(false);
- physics->setDoStochastics(FORCE_OFF,0);
- runManager->Initialize();
+//runManager->setCollectiveMode(false);
+// physics->setDoStochastics(FORCE_OFF,0);
+// runManager->Initialize();
 
  printf("================== Assigning representative trajectory to Reference State with EventID -1 ===============\n");
  state = MEANREFERENCE;
@@ -1243,6 +1243,9 @@ if(referenceStateMethod == "medoid") {
  beamIndex = 0;
  runManager->BeamOn(referenceVector.size());
  state = IDLE;
+
+ //physics->setDoStochastics(FORCE_OFF,0);                                                                                                                                                              
+        //runManager->Initialize(); //setCollectiveMode(collectiveMode);
   
  physics->setDoStochastics(NORMAL,0);
  runManager->setCollectiveMode(collectiveMode);
