@@ -76,15 +76,17 @@ enum PRNGSeedMethod { EVENT_NUMBER, NO_SEED, TIME_US };
  **/
 class BLManager : public G4VUserDetectorConstruction, 
 			G4VExceptionHandler {
-public:
-	struct CavityTimes {
+  
+  /*public:
+  	struct CavityTimes {
 		G4double freqGHz;
 		std::vector<G4double> t;
 		G4double tmean;
 		G4double tsigma;
 		CavityTimes() : freqGHz(0.0), t(), tmean(0.0), tsigma(0.0) { }
 	};
-
+  */
+  
 public:	// user Action classes
 	class RunAction {
 	public:	virtual void BeginOfRunAction(const G4Run *run) = 0;
@@ -180,7 +182,7 @@ private:
 	std::vector<SteppingAction*> beamStepVector;
 	std::vector<BLSourceRun*> sourceRunVector;
 	std::vector<int> verboseFormat;
-	std::map<G4double,CavityTimes> cavityTimes;
+  //	std::map<G4double,CavityTimes> cavityTimes;
 	G4double zTolerance;
 	std::vector<ZStep> tuneZStep;
 	std::vector<ZStep> referenceZStep;
@@ -227,14 +229,14 @@ public:
 	int getSteppingVerbose() { return steppingVerbose; }
 
 	/// Per-cavity arrival-time reduction for realistic reference samples.
-	void recordCavityArrival(G4double z, G4double t, G4double freqGHz);
+  /*	void recordCavityArrival(G4double z, G4double t, G4double freqGHz);
 	bool getMeanCavityTime(G4double z, G4double &t) const;
 	void reduceCavityTimes();
 	void clearCavityTimes() { cavityTimes.clear(); }
 	void printCavityTimeSummary() const;
 	G4double maxCavityTimeShift(const std::map<G4double,G4double> &prev) const;
 	std::map<G4double,G4double> currentCavityMeans() const;
-
+  */
 	/// setSteppingVerbose() updates steppingVerbose. -- NOTE: many
 	/// other classes relay on the Parameter, not the valud in this class.
 	void setSteppingVerbose(int v) { steppingVerbose = v; }

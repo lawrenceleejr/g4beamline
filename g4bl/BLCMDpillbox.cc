@@ -754,12 +754,12 @@ void  PillboxField::UserSteppingAction(const G4Step *step)
     if(state == TIMING_COMPLETE) return;
 
     BLManager *mgr = BLManager::getObject();
-    if(mgr->getState() == REALISTICREFERENCE) {
+    /*    if(mgr->getState() == REALISTICREFERENCE) {
         G4double zCavity = global2local.getPosition()[2];
         G4double t = step->GetTrack()->GetGlobalTime();
         mgr->recordCavityArrival(zCavity, t, pillbox->frequency/(1e9*hertz));
         return;
-    }
+	}*/
 
     G4Track *track = step->GetTrack();
     G4StepPoint *prePoint = step->GetPreStepPoint();
@@ -785,15 +785,15 @@ void  PillboxField::UserSteppingAction(const G4Step *step)
         double arrival = saveTrack.GetGlobalTime() + dist/v;
         // If the realistic reference ensemble has already measured the mean
         // cavity arrival time, prefer that over the single-track estimate.
-        G4double zCavity = global2local.getPosition()[2];
-        G4double tmean = 0.0;
-        if(BLManager::getObject()->getMeanCavityTime(zCavity, tmean)) {
-            timeOffset = tmean;
-        } else {
+        //G4double zCavity = global2local.getPosition()[2];
+        //G4double tmean = 0.0;
+        //if(BLManager::getObject()->getMeanCavityTime(zCavity, tmean)) {
+	//  timeOffset = tmean;
+        //} else {
             // pi/2 because E is a cos() and we want phaseAcc=0
             // to be the rising zero-crossing
             timeOffset = arrival - (pillbox->phaseAcc-pi/2.0)/pillbox->omega;
-        }
+	    //}
     } else if(prePV == timingPV) {	    // leaving timingPV
         if(++timeCount > ITERATION_LIMIT)
 		G4Exception("pillbox","Iteration Limit",FatalException,"");

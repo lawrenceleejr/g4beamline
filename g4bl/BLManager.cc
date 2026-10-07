@@ -653,7 +653,7 @@ void BLManager::registerZStep(G4double z, ZSteppingAction *sa, G4int when)
         if(when & 16) insertZStep(realreferenceZStep,z,sa);
 	if(when & 4) insertZStep(beamZStep,z,sa);
 }
-
+/*
 void BLManager::recordCavityArrival(G4double z, G4double t, G4double freqGHz)
 {
 	BLManager::CavityTimes &c = cavityTimes[z];
@@ -719,6 +719,7 @@ void BLManager::printCavityTimeSummary() const
 			it->first, c.t.size(), c.tmean, c.tsigma, sphi);
 	}
 }
+*/
 
 void BLManager::trackTuneAndReferenceParticles()
 {
