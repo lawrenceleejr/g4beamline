@@ -466,13 +466,11 @@ BLManager::BLManager() : G4VUserDetectorConstruction(),
 			"Limit on wall clock time in seconds; -1 is infinite");
 	BLSetParam unused_9("realisticSamples","1",
 			"Number of stochastic realizations to run for realistic tune/reference particles; samples use different random seeds and are summarized together.");
-
 	BLSetParam unused_10("referenceStateMethod","mean",
 		"How to reduce the realistic reference ensemble: mean");
 	BLSetParam unused_11("realisticSeed","19088743",
 		"Base RNG seed for realistic samples; sample k uses "
 		"base + 7919*k");
-	
 	if(blManager)
 		G4Exception("BLManager","Object Already Exists",FatalException,
 									"");
@@ -825,7 +823,14 @@ void BLManager::trackTuneAndReferenceParticles()
 		setPrimaryTrackID(-1,-1);
 		setNextSecondaryTrackID(1000);
 
-		unsigned long seed = 0x1234567UL + (unsigned long)sample;
+		// Each realistic realization must use a different PRNG stream.
+		// A fixed seed would collapse the ensemble and make the mean equal to the
+		// nominal reference state for every sample.
+		unsigned long seed =
+			(0x1234567UL + (static_cast<unsigned long>(sample + 1) * 0x9E3779B1UL))
+			& 0x7FFFFFFFUL;
+		if(seed == 0UL)
+			seed = 1UL;
 		CLHEP::HepRandom::setTheSeed((long)seed);
 		sampleSeeds.push_back(seed);
 
@@ -888,10 +893,8 @@ void BLManager::trackTuneAndReferenceParticles()
 	// path remains available as a diagnostic alternative.
 
 	G4String referenceStateMethod = Param.getString("referenceStateMethod");
-	//	if(referenceStateMethod == "")
-	//	referenceStateMethod = "mean";
-	G4double rfGHz = Param.getDouble("referenceRFfreqGHz");  // 0 => linear mean
- 
+	if(referenceStateMethod == "")
+		referenceStateMethod = "mean";
 	if(realisticReferenceCount > 0 && referenceVector.size() > 0) {
         for(unsigned i = 0; i < referenceVector.size(); ++i) {         
 	  G4double selectedReferenceMomentum = 0.0;                                                                                                   
@@ -933,27 +936,18 @@ void BLManager::trackTuneAndReferenceParticles()
 						      selectedReferenceT,
 						      selectedReferenceXp,
 						      selectedReferenceYp);
-
-	    if(stdDev(realisticReferenceMomentumSamples[i]) == 0.0 && stdDev(realisticReferenceXSamples[i]) == 0.0) {
-	      printf("*** WARNING: zero spread across all samples -- are "
-		     "stochastics actually enabled, and is every sample "
-		     "using a different seed?\n");
-	    }
-
 	  }
 	  else{
 	    
 	    printf("WARNING: unknown referenceStateMethod");
 	      }
 	}}
+	 clearTrackIDMap();
+        setPrimaryTrackID(-1,-1);
+        setNextSecondaryTrackID(1001);
 
-clearTrackIDMap();
-setPrimaryTrackID(-1,-1);
-setNextSecondaryTrackID(1001);
-
-physics->setDoStochastics(FORCE_OFF,0);
-runManager->Initialize();
-
+        physics->setDoStochastics(FORCE_OFF,0);
+        runManager->Initialize();
 	printf("================== Assigning representative trajectory to Reference State with EventID -5 ===============\n");
 	state = MEANREFERENCE;
 	setEventID(-5);
@@ -1679,14 +1673,12 @@ void BLManager::PreUserTrackingAction(const G4Track *track)
 	// set currentZStep
 	if(state == TUNE)
 		currentZStep = &tuneZStep;
-	else if(state == REFERENCE)
+	else if(state == REFERENCE or state == MEANREFERENCE)
 		currentZStep = &referenceZStep;
 	else if(state == REALISTICTUNE)
 	        currentZStep = &realtuneZStep;
 	else if(state == REALISTICREFERENCE)
 	        currentZStep = &realreferenceZStep;
-	else if(state == MEANREFERENCE)
-		currentZStep = &referenceZStep;
 	else
 		currentZStep = &beamZStep;
 	indexZStep = 1;
@@ -1916,7 +1908,7 @@ noZstep:
 	}
 
 	// call Reference Particle stepping actions
-	if(state == REFERENCE || state == MEANREFERENCE) {
+	if(state == REFERENCE or state == MEANREFERENCE) {
 		std::vector<BLManager::SteppingAction*>::iterator i;
 		for(i=rpStepVector.begin(); i!=rpStepVector.end(); ++i) {
 			(*i)->UserSteppingAction(step);
