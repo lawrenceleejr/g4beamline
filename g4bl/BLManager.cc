@@ -931,6 +931,14 @@ void BLManager::trackTuneAndReferenceParticles()
 	    printf("WARNING: unknown referenceStateMethod");
 	      }
 	}}
+
+clearTrackIDMap();
+setPrimaryTrackID(-1,-1);
+setNextSecondaryTrackID(1001);
+
+physics->setDoStochastics(FORCE_OFF,0);
+runManager->Initialize();
+
 	printf("================== Assigning representative trajectory to Reference State with EventID -5 ===============\n");
 	state = MEANREFERENCE;
 	setEventID(-5);
