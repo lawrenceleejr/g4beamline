@@ -928,7 +928,7 @@ void BLManager::trackTuneAndReferenceParticles()
 	  }
 	  else{
 	    
-	    printf("WARNING: unknown referenceStateMethod")
+	    printf("WARNING: unknown referenceStateMethod");
 	      }
 	}}
 	printf("================== Assigning representative trajectory to Reference State with EventID -5 ===============\n");
