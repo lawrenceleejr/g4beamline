@@ -884,51 +884,59 @@ void BLManager::trackTuneAndReferenceParticles()
 	G4String referenceStateMethod = Param.getString("referenceStateMethod");
 	if(referenceStateMethod == "")
 		referenceStateMethod = "mean";
-
-	if(referenceStateMethod == "mean"){
-	  selectedReferenceMomentum =
-	    computeMean(
-			realisticReferenceMomentumSamples[i]);
+	if(realisticReferenceCount > 0 && referenceVector.size() > 0) {
+        for(unsigned i = 0; i < referenceVector.size(); ++i) {         
+	  G4double selectedReferenceMomentum = 0.0;                                                                                                   
+	  G4double selectedReferenceX        = 0.0;                                                                                                   
+	  G4double selectedReferenceY        = 0.0;                                                                                                   
+	  G4double selectedReferenceT        = 0.0;                                                                                                   
+	  G4double selectedReferenceXp       = 0.0;                                                                                                   
+	  G4double selectedReferenceYp       = 0.0;                                                                                                   
 	  
-	  selectedReferenceX =
-	    computeMean(
-			realisticReferenceXSamples[i]);
-	  
-	  selectedReferenceY =
-	    computeMean(
-			realisticReferenceYSamples[i]);
-	  
-	  selectedReferenceT =
-	    computeMean(
-			realisticReferenceTSamples[i]);
-
-	  selectedReferenceXp =
-	    computeMean(
-			realisticReferenceXpSamples[i]);
-	  
-	  selectedReferenceYp =
-	    computeMean(
-			realisticReferenceYpSamples[i]);
-
-	   referenceVector[i]->setMeanReferenceState(
-                                selectedReferenceMomentum,
-                                selectedReferenceX,
-                                selectedReferenceY,
-                                selectedReferenceT,
-                                selectedReferenceXp,
-                                selectedReferenceYp);
-                }
-	else{
-	  
-	  printf("WARNING: unknown referenceStateMethod")
-	    }
-
- printf("================== Assigning representative trajectory to Reference State with EventID -5 ===============\n");
- state = MEANREFERENCE;
- setEventID(-5);
- beamIndex = 0;
- runManager->BeamOn(referenceVector.size());
- state = IDLE;
+	  if(referenceStateMethod == "mean"){
+	    selectedReferenceMomentum =
+	      computeMean(
+			  realisticReferenceMomentumSamples[i]);
+	    
+	    selectedReferenceX =
+	      computeMean(
+			  realisticReferenceXSamples[i]);
+	    
+	    selectedReferenceY =
+	      computeMean(
+			  realisticReferenceYSamples[i]);
+	    
+	    selectedReferenceT =
+	      computeMean(
+			  realisticReferenceTSamples[i]);
+	    
+	    selectedReferenceXp =
+	      computeMean(
+			  realisticReferenceXpSamples[i]);
+	    
+	    selectedReferenceYp =
+	      computeMean(
+			  realisticReferenceYpSamples[i]);
+	    
+	    referenceVector[i]->setMeanReferenceState(
+						      selectedReferenceMomentum,
+						      selectedReferenceX,
+						      selectedReferenceY,
+						      selectedReferenceT,
+						      selectedReferenceXp,
+						      selectedReferenceYp);
+	  }
+	  else{
+	    
+	    printf("WARNING: unknown referenceStateMethod")
+	      }
+	}}
+	printf("================== Assigning representative trajectory to Reference State with EventID -5 ===============\n");
+	state = MEANREFERENCE;
+	setEventID(-5);
+	beamIndex = 0;
+	runManager->BeamOn(referenceVector.size());
+	state = IDLE;
 
 
 	/*
