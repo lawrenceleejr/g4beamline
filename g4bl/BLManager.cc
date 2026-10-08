@@ -893,16 +893,18 @@ void BLManager::trackTuneAndReferenceParticles()
 	// path remains available as a diagnostic alternative.
 
 	G4String referenceStateMethod = Param.getString("referenceStateMethod");
+	G4double selectedReferenceMomentum = 0.0;
+	G4double selectedReferenceX        = 0.0;
+	G4double selectedReferenceY        = 0.0;
+	G4double selectedReferenceT        = 0.0;
+	G4double selectedReferenceXp       = 0.0;
+	G4double selectedReferenceYp       = 0.0;
+	
+
 	if(referenceStateMethod == "")
 		referenceStateMethod = "mean";
 	if(realisticReferenceCount > 0 && referenceVector.size() > 0) {
-        for(unsigned i = 0; i < referenceVector.size(); ++i) {         
-	  G4double selectedReferenceMomentum = 0.0;                                                                                                   
-	  G4double selectedReferenceX        = 0.0;                                                                                                   
-	  G4double selectedReferenceY        = 0.0;                                                                                                   
-	  G4double selectedReferenceT        = 0.0;                                                                                                   
-	  G4double selectedReferenceXp       = 0.0;                                                                                                   
-	  G4double selectedReferenceYp       = 0.0;                                                                                                   
+        for(unsigned i = 0; i < referenceVector.size(); ++i) {
 	  
 	  if(referenceStateMethod == "mean"){
 	    selectedReferenceMomentum =
@@ -928,7 +930,13 @@ void BLManager::trackTuneAndReferenceParticles()
 	    selectedReferenceYp =
 	      computeMean(
 			  realisticReferenceYpSamples[i]);
-	    
+
+	    if(stdDev(realisticReferenceMomentumSamples[i]) == 0.0 && stdDev(realisticReferenceXSamples[i]) == 0.0) {
+		printf("*** WARNING: zero spread across all samples -- are "
+		       "stochastics actually enabled, and is every sample "
+		       "using a different seed?\n");
+	}
+
 	    referenceVector[i]->setMeanReferenceState(
 						      selectedReferenceMomentum,
 						      selectedReferenceX,
