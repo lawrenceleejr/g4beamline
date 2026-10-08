@@ -819,7 +819,7 @@ void BLManager::trackTuneAndReferenceParticles()
 		setPrimaryTrackID(-1,-1);
 		setNextSecondaryTrackID(1000);
 
-		unsigned long seed = 0x1234567UL + (unsigned long)sample;
+		unsigned long seed = 0x7FFFFFFF;// 0x1234567UL + (unsigned long)sample;
 		CLHEP::HepRandom::setTheSeed((long)seed);
 		sampleSeeds.push_back(seed);
 
@@ -885,7 +885,55 @@ void BLManager::trackTuneAndReferenceParticles()
 	if(referenceStateMethod == "")
 		referenceStateMethod = "mean";
 
+	if(referenceStateMethod == "mean"){
+	  selectedReferenceMomentum =
+	    computeMean(
+			realisticReferenceMomentumSamples[i]);
+	  
+	  selectedReferenceX =
+	    computeMean(
+			realisticReferenceXSamples[i]);
+	  
+	  selectedReferenceY =
+	    computeMean(
+			realisticReferenceYSamples[i]);
+	  
+	  selectedReferenceT =
+	    computeMean(
+			realisticReferenceTSamples[i]);
+
+	  selectedReferenceXp =
+	    computeMean(
+			realisticReferenceXpSamples[i]);
+	  
+	  selectedReferenceYp =
+	    computeMean(
+			realisticReferenceYpSamples[i]);
+
+	   referenceVector[i]->setMeanReferenceState(
+                                selectedReferenceMomentum,
+                                selectedReferenceX,
+                                selectedReferenceY,
+                                selectedReferenceT,
+                                selectedReferenceXp,
+                                selectedReferenceYp);
+                }
+	else{
+	  
+	  printf("WARNING: unknown referenceStateMethod")
+	    }
+
+ printf("================== Assigning representative trajectory to Reference State with EventID -5 ===============\n");
+ state = MEANREFERENCE;
+ setEventID(-5);
+ beamIndex = 0;
+ runManager->BeamOn(referenceVector.size());
+ state = IDLE;
+
+
+	/*
 	// Validate the method.
+	
 
 	if(referenceStateMethod != "mean" &&
 	   referenceStateMethod != "median" &&
@@ -1232,18 +1280,21 @@ if(referenceStateMethod == "medoid") {
 	// runManager->Initialize();
 
  }
+	*/
+	
 
 //runManager->setCollectiveMode(false);
 // physics->setDoStochastics(FORCE_OFF,0);
 // runManager->Initialize();
-
+/*
  printf("================== Assigning representative trajectory to Reference State with EventID -1 ===============\n");
  state = MEANREFERENCE;
  setEventID(-5);
  beamIndex = 0;
  runManager->BeamOn(referenceVector.size());
  state = IDLE;
-
+*/
+	
  //physics->setDoStochastics(FORCE_OFF,0);                                                                                                                                                              
         //runManager->Initialize(); //setCollectiveMode(collectiveMode);
   
