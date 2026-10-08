@@ -783,6 +783,9 @@ void BLManager::trackTuneAndReferenceParticles()
 	int realisticSamples = Param.getInt("realisticSamples");
 	if(realisticSamples < 1)
 		realisticSamples = 1;
+	unsigned long realisticSeedBase = (unsigned long)Param.getInt("realisticSeed");
+	if(realisticSeedBase == 0UL)
+		realisticSeedBase = 19088743UL;
 
 	G4double realisticTuneSum = 0.0;
 	G4double realisticReferenceSum = 0.0;
@@ -826,9 +829,8 @@ void BLManager::trackTuneAndReferenceParticles()
 		// Each realistic realization must use a different PRNG stream.
 		// A fixed seed would collapse the ensemble and make the mean equal to the
 		// nominal reference state for every sample.
-		unsigned long seed =
-			(0x1234567UL + (static_cast<unsigned long>(sample + 1) * 0x9E3779B1UL))
-			& 0x7FFFFFFFUL;
+		unsigned long seed = (realisticSeedBase +
+			(static_cast<unsigned long>(sample) * 7919UL)) & 0x7FFFFFFFUL;
 		if(seed == 0UL)
 			seed = 1UL;
 		CLHEP::HepRandom::setTheSeed((long)seed);
@@ -882,6 +884,7 @@ void BLManager::trackTuneAndReferenceParticles()
 			realisticReferenceXpSamples[i].push_back(referenceVector[i]->getReferenceXp());
 			realisticReferenceYpSamples[i].push_back(referenceVector[i]->getReferenceYp());
 			++realisticReferenceCount;
+
 		} //}
 	}
 	
@@ -931,10 +934,35 @@ void BLManager::trackTuneAndReferenceParticles()
 	      computeMean(
 			  realisticReferenceYpSamples[i]);
 
-	    if(stdDev(realisticReferenceMomentumSamples[i]) == 0.0 && stdDev(realisticReferenceXSamples[i]) == 0.0) {
+	    G4double spreadP = stdDev(realisticReferenceMomentumSamples[i]);
+	    G4double spreadX = stdDev(realisticReferenceXSamples[i]);
+	    G4double spreadY = stdDev(realisticReferenceYSamples[i]);
+	    G4double spreadT = stdDev(realisticReferenceTSamples[i]);
+	    if(spreadP == 0.0 && spreadX == 0.0 && spreadY == 0.0 && spreadT == 0.0) {
 		printf("*** WARNING: zero spread across all samples -- are "
 		       "stochastics actually enabled, and is every sample "
 		       "using a different seed?\n");
+		printf("    sample values: p=[");
+		for(size_t s = 0; s < realisticReferenceMomentumSamples[i].size(); ++s) {
+			if(s) printf(", ");
+			printf("%.12f", realisticReferenceMomentumSamples[i][s]);
+		}
+		printf("] x=[");
+		for(size_t s = 0; s < realisticReferenceXSamples[i].size(); ++s) {
+			if(s) printf(", ");
+			printf("%.12f", realisticReferenceXSamples[i][s]);
+		}
+		printf("] y=[");
+		for(size_t s = 0; s < realisticReferenceYSamples[i].size(); ++s) {
+			if(s) printf(", ");
+			printf("%.12f", realisticReferenceYSamples[i][s]);
+		}
+		printf("] t=[");
+		for(size_t s = 0; s < realisticReferenceTSamples[i].size(); ++s) {
+			if(s) printf(", ");
+			printf("%.12f", realisticReferenceTSamples[i][s]);
+		}
+		printf("]\n");
 	}
 
 	    referenceVector[i]->setMeanReferenceState(
