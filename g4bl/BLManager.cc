@@ -841,7 +841,8 @@ void BLManager::trackTuneAndReferenceParticles()
 		runManager->setCollectiveMode(false);
 		physics->setDoStochastics(FORCE_ON,0);
 		runManager->Initialize();
-		
+
+		/*
 		//	if(keepDiagnosticRealisticSamples) {
 			printf("================= Begin Realistic Tune Particle(s) =============\n");
 			state = REALISTICTUNE;
@@ -860,7 +861,8 @@ void BLManager::trackTuneAndReferenceParticles()
 			realisticTuneSum += referenceVector[i]->getTuneMomentum();
 			++realisticTuneCount;
 		}
-		//}
+		//}*/
+		
 		//if(keepDiagnosticRealisticSamples) {
 			printf("================== Begin Realistic Reference Particle(s) ===============\n");
 			state = REALISTICREFERENCE;
@@ -868,8 +870,16 @@ void BLManager::trackTuneAndReferenceParticles()
 			beamIndex = 0;
 			runManager->BeamOn(referenceVector.size());
 			state = IDLE;
-		
-		for(unsigned i=0; i<referenceVector.size(); ++i) {
+
+
+			for(unsigned i=0; i<referenceVector.size(); ++i) {
+			  printf("Realistics reference %u: p=%.12f x=%.12f y=%.12f t=%.12f\n",
+				 i, referenceVector[i]->getReferenceMomentum(), referenceVector[i]->getReferenceX(), referenceVector[i]->getReferenceY(), referenceVector[i]->getReferenceZ(), referenceVector[i]->getReferenceT() );
+			}
+
+
+			
+			for(unsigned i=0; i<referenceVector.size(); ++i) {
 			realisticReferenceMomentumSum[i] += referenceVector[i]->getReferenceMomentum();
 			realisticReferenceXSum[i] += referenceVector[i]->getReferenceX();
 			realisticReferenceYSum[i] += referenceVector[i]->getReferenceY();
@@ -884,8 +894,8 @@ void BLManager::trackTuneAndReferenceParticles()
 			realisticReferenceXpSamples[i].push_back(referenceVector[i]->getReferenceXp());
 			realisticReferenceYpSamples[i].push_back(referenceVector[i]->getReferenceYp());
 			++realisticReferenceCount;
+			}
 
-		} //}
 	}
 	
 	//	physics->setDoStochastics(FORCE_OFF,0);
