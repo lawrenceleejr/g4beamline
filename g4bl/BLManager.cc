@@ -479,28 +479,33 @@ void BLManager::trackTuneAndReferenceParticles()
 		// Reset the external track bookkeeping for each stochastic realization.
 		// Otherwise secondary track IDs continue to grow across samples and the
 		// output mixes distinct sample histories into one raw trace stream.
-		clearTrackIDMap();
-		setPrimaryTrackID(-1,-1);
-		setNextSecondaryTrackID(1000);
+		//clearTrackIDMap();
+		//setPrimaryTrackID(-1,-1);
+		//setNextSecondaryTrackID(1000);
 
-		unsigned long seed = 0x1234567UL + (unsigned long)sample;
-		CLHEP::HepRandom::setTheSeed((long)seed);
-		printf("=== Realistic sample %d/%d  seed=%lu ===\n", sample+1, realisticSamples, seed);
+	  //		unsigned long seed = 0x1234567UL + (unsigned long)sample;
+	  //	CLHEP::HepRandom::setTheSeed((long)seed);
+	  //	printf("=== Realistic sample %d/%d  seed=%lu ===\n", sample+1, realisticSamples, seed);
 
 		runManager->setCollectiveMode(false);
 		physics->setDoStochastics(FORCE_ON,0);
 		runManager->Initialize();
-		
+		unsigned long seed = 0x1234567UL + (unsigned long)sample;
+                CLHEP::HepRandom::setTheSeed((long)seed);
+                printf("=== Realistic sample %d/%d  seed=%lu ===\n", sample+1, realisticSamples, seed);
+
+
 		printf("================= Begin Realistic Tune Particle(s) =============\n");
 		state = REALISTICTUNE;
 		setEventID(-4);
 		beamIndex = 0;
 		runManager->BeamOn(referenceVector.size());
 		state = IDLE;
-		for(unsigned i=0; i<referenceVector.size(); ++i) {
-			realisticTuneSum += referenceVector[i]->getTuneMomentum();
-			++realisticTuneCount;
-		}
+		//for(unsigned i=0; i<referenceVector.size(); ++i) {
+		//	realisticTuneSum += referenceVector[i]->getTuneMomentum();
+		//	++realisticTuneCount;
+		//	}
+		
 
 		printf("================== Begin Realistic Reference Particle(s) ===============\n");
 		state = REALISTICREFERENCE;
@@ -508,10 +513,10 @@ void BLManager::trackTuneAndReferenceParticles()
 		beamIndex = 0;
 		runManager->BeamOn(referenceVector.size());
 		state = IDLE;
-		for(unsigned i=0; i<referenceVector.size(); ++i) {
-			realisticReferenceSum += referenceVector[i]->getReferenceMomentum();
-			++realisticReferenceCount;
-		}
+		//for(unsigned i=0; i<referenceVector.size(); ++i) {
+		//	realisticReferenceSum += referenceVector[i]->getReferenceMomentum();
+		//	++realisticReferenceCount;
+		//}
 	}
 	
 	physics->setDoStochastics(NORMAL,0);
