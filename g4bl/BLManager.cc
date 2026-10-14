@@ -112,6 +112,68 @@ struct ZTraceAccumulator {
 		sumP(0.0), sumXp(0.0), sumYp(0.0) { }
 };
 
+static std::map<G4double, ZTraceAccumulator> &getRealisticZTraceAccumulator()
+{
+	static std::map<G4double, ZTraceAccumulator> zTraceAccumulator;
+	return zTraceAccumulator;
+}
+
+static void resetRealisticZTraceAccumulator()
+{
+	getRealisticZTraceAccumulator().clear();
+}
+
+static void initRealisticZTraceAccumulator(G4double zStart, G4double zStop,
+		G4double zStep)
+{
+	std::map<G4double, ZTraceAccumulator> &zTraceAccumulator =
+		getRealisticZTraceAccumulator();
+	zTraceAccumulator.clear();
+	for(G4double z = zStart; z <= zStop + 0.5 * zStep; z += zStep) {
+		zTraceAccumulator[z] = ZTraceAccumulator();
+	}
+}
+
+static G4double nearestZGridBin(G4double z, G4double zStart, G4double zStep);
+
+static void accumulateRealisticReferenceStep(const G4Track *track)
+{
+	if(!track) return;
+	std::map<G4double, ZTraceAccumulator> &zTraceAccumulator =
+		getRealisticZTraceAccumulator();
+	if(zTraceAccumulator.empty()) return;
+
+	BLCoordinates *coord = (BLCoordinates *)track->GetUserInformation();
+	if(!coord || !coord->isValid()) return;
+
+	G4ThreeVector localPos;
+	coord->getCoords(BLCOORD_CENTERLINE, localPos);
+	G4double z = localPos[2];
+	const G4double zStart = zTraceAccumulator.begin()->first;
+	const G4double zStep = (zTraceAccumulator.size() > 1 ?
+		(zTraceAccumulator.rbegin()->first - zTraceAccumulator.begin()->first) /
+		(static_cast<G4double>(zTraceAccumulator.size()-1)) : 1.0);
+	G4double zBin = nearestZGridBin(z, zStart, zStep);
+	std::map<G4double, ZTraceAccumulator>::iterator it =
+		zTraceAccumulator.find(zBin);
+	if(it == zTraceAccumulator.end()) return;
+
+	ZTraceAccumulator &acc = it->second;
+	G4ThreeVector momentum = track->GetMomentum();
+	G4ThreeVector localMom = coord->getRotation(BLCOORD_CENTERLINE) * momentum;
+	G4double p = momentum.mag();
+	G4double xp = localMom[0] / localMom[2];
+	G4double yp = localMom[1] / localMom[2];
+
+	acc.count++;
+	acc.sumX += localPos[0];
+	acc.sumY += localPos[1];
+	acc.sumT += track->GetGlobalTime();
+	acc.sumP += p;
+	acc.sumXp += xp;
+	acc.sumYp += yp;
+}
+
 static G4double nearestZGridBin(G4double z, G4double zStart, G4double zStep)
 {
 	if(zStep <= 0.0) return zStart;
@@ -935,11 +997,10 @@ void BLManager::trackTuneAndReferenceParticles()
 	const G4double zTraceStart = Param.getDouble("realisticZMeanStart") * mm;
 	const G4double zTraceStop  = Param.getDouble("realisticZMeanStop") * mm;
 	const G4double zTraceStep  = Param.getDouble("realisticZMeanStep") * mm;
-	std::map<G4double, ZTraceAccumulator> zTraceAccumulator;
-	for(G4double z = zTraceStart; z <= zTraceStop + 0.5 * zTraceStep;
-		z += zTraceStep) {
-		zTraceAccumulator[z] = ZTraceAccumulator();
-	}
+	resetRealisticZTraceAccumulator();
+	initRealisticZTraceAccumulator(zTraceStart, zTraceStop, zTraceStep);
+	std::map<G4double, ZTraceAccumulator> &zTraceAccumulator =
+		getRealisticZTraceAccumulator();
 	realisticReferenceMomentumSamples.resize(referenceVector.size());
 	realisticReferenceXSamples.resize(referenceVector.size());
 	realisticReferenceYSamples.resize(referenceVector.size());
@@ -995,30 +1056,6 @@ void BLManager::trackTuneAndReferenceParticles()
 			beamIndex = 0;
 			runManager->BeamOn(referenceVector.size());
 			state = IDLE;
-
-			G4double zSample = BLCoordinates::getMostRecentReferenceZ();
-			G4double zSampleBin = nearestZGridBin(zSample, zTraceStart, zTraceStep);
-			std::map<G4double, ZTraceAccumulator>::iterator zIt =
-				zTraceAccumulator.find(zSampleBin);
-			if(zIt != zTraceAccumulator.end()) {
-				ZTraceAccumulator &acc = zIt->second;
-				for(unsigned i=0; i<referenceVector.size(); ++i) {
-					acc.count++;
-					acc.sumX += referenceVector[i]->getReferenceX();
-					acc.sumY += referenceVector[i]->getReferenceY();
-					acc.sumT += referenceVector[i]->getReferenceT();
-					acc.sumP += referenceVector[i]->getReferenceMomentum();
-					acc.sumXp += referenceVector[i]->getReferenceXp();
-					acc.sumYp += referenceVector[i]->getReferenceYp();
-				}
-			}
-
-			for(unsigned i=0; i<referenceVector.size(); ++i) {
-			  printf("Realistics reference %u: p=%.12f x=%.12f y=%.12f t=%.12f\n",
-				 i, referenceVector[i]->getReferenceMomentum(), referenceVector[i]->getReferenceX(), referenceVector[i]->getReferenceY(), referenceVector[i]->getReferenceT() );
-			}
-
-
 			
 			for(unsigned i=0; i<referenceVector.size(); ++i) {
 			realisticReferenceMomentumSum[i] += referenceVector[i]->getReferenceMomentum();
@@ -1035,6 +1072,9 @@ void BLManager::trackTuneAndReferenceParticles()
 			realisticReferenceXpSamples[i].push_back(referenceVector[i]->getReferenceXp());
 			realisticReferenceYpSamples[i].push_back(referenceVector[i]->getReferenceYp());
 			++realisticReferenceCount;
+			printf("Realistics reference %u: p=%.12f x=%.12f y=%.12f t=%.12f\n",
+				 i, referenceVector[i]->getReferenceMomentum(), referenceVector[i]->getReferenceX(), referenceVector[i]->getReferenceY(), referenceVector[i]->getReferenceT() );
+			
 			}
 
 	}
@@ -1058,12 +1098,16 @@ void BLManager::trackTuneAndReferenceParticles()
 		const G4double xpMean = acc.sumXp / n;
 		const G4double ypMean = acc.sumYp / n;
 
+		printf("MeanReference z=%.6f mm: x=%.12f mm y=%.12f mm t=%.12f ns p=%.12f MeV/c xp=%.12f yp=%.12f\n",
+			z / mm, xMean / mm, yMean / mm, tMean / ns,
+			pMean / MeV, xpMean, ypMean);
+
 		appendMeanReferenceTraceRow(z, xMean, yMean, tMean,
 				pMean, xpMean, ypMean, 2212, 0);
 	}
-	if(zMeanFile != "")
+	
 		writeMeanReferenceTextFile(zTraceAccumulator, zMeanFile);
-
+	
 	//	physics->setDoStochastics(FORCE_OFF,0);
 	//runManager->Initialize(); //setCollectiveMode(collectiveMode);
 
@@ -1996,6 +2040,9 @@ void BLManager::UserSteppingAction(const G4Step *step)
 		G4Exception("BLManager","Coordinates Got Lost",FatalException,
 									"");
 	}
+
+	if(state == REALISTICREFERENCE)
+		accumulateRealisticReferenceStep(track);
 
 	// steppingVerbose print moved to the top of this routine
 	if(steppingVerbose > 0) { 
