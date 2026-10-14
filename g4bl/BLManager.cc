@@ -97,6 +97,80 @@ static G4double computeMedian(const std::vector<G4double> &values)
 	return sorted[n/2];
 }
 
+namespace {
+
+struct ZTraceAccumulator {
+	int count;
+	G4double sumX;
+	G4double sumY;
+	G4double sumT;
+	G4double sumP;
+	G4double sumXp;
+	G4double sumYp;
+	ZTraceAccumulator() : count(0), sumX(0.0), sumY(0.0), sumT(0.0),
+		sumP(0.0), sumXp(0.0), sumYp(0.0) { }
+};
+
+static G4double nearestZGridBin(G4double z, G4double zStart, G4double zStep)
+{
+	if(zStep <= 0.0) return zStart;
+	return zStart + zStep * std::floor((z - zStart) / zStep + 0.5);
+}
+
+static BLNTuple *getOrCreateMeanReferenceTraceNTuple()
+{
+	const std::vector<BLNTuple*> ntuples = BLNTuple::getList();
+	for(std::vector<BLNTuple*>::const_iterator it = ntuples.begin();
+		it != ntuples.end(); ++it) {
+		if((*it)->getName() == "MeanReferenceParticle")
+			return *it;
+	}
+
+	static const char *fields =
+		"x:y:z:Px:Py:Pz:t:PDGid:EventID:TrackID:ParentID:Weight:"
+		"Bx:By:Bz:Ex:Ey:Ez";
+
+	return BLNTuple::create("", "Trace", "MeanReferenceParticle",
+				fields, "MeanReferenceParticle");
+}
+
+static void appendMeanReferenceTraceRow(G4double z,
+		G4double xMean,
+		G4double yMean,
+		G4double tMean,
+		G4double pMean,
+		G4double xpMean,
+		G4double ypMean,
+		int pdgCode,
+		int trackId)
+{
+	BLNTuple *nt = getOrCreateMeanReferenceTraceNTuple();
+	if(!nt) return;
+
+	double data[18];
+	data[0] = xMean;
+	data[1] = yMean;
+	data[2] = z;
+	data[3] = pMean * xpMean;
+	data[4] = pMean * ypMean;
+	data[5] = pMean;
+	data[6] = tMean;
+	data[7] = pdgCode;
+	data[8] = -5.0;
+	data[9] = trackId;
+	data[10] = 0.0;
+	data[11] = 1.0;
+	data[12] = 0.0;
+	data[13] = 0.0;
+	data[14] = 0.0;
+	data[15] = 0.0;
+	data[16] = 0.0;
+	data[17] = 0.0;
+	nt->appendRow(data, 18);
+}
+
+} // namespace
+
 static G4double stdDev(const std::vector<G4double> &v)
 {
 	if(v.size() < 2) return 0.0;
@@ -815,7 +889,20 @@ void BLManager::trackTuneAndReferenceParticles()
 	
 	//	const bool keepDiagnosticRealisticSamples = true;
 	std::vector<unsigned long> sampleSeeds;
-
+	const G4double zTraceStart = 500.0 * mm;
+	const G4double zTraceStop  = 2000.0 * mm;
+	const G4double zTraceStep  = 10.0 * mm;
+	std::map<G4double, ZTraceAccumulator> zTraceAccumulator;
+	for(G4double z = zTraceStart; z <= zTraceStop + 0.5 * zTraceStep;
+		z += zTraceStep) {
+		zTraceAccumulator[z] = ZTraceAccumulator();
+	}
+	realisticReferenceMomentumSamples.resize(referenceVector.size());
+	realisticReferenceXSamples.resize(referenceVector.size());
+	realisticReferenceYSamples.resize(referenceVector.size());
+	realisticReferenceTSamples.resize(referenceVector.size());
+	realisticReferenceXpSamples.resize(referenceVector.size());
+	realisticReferenceYpSamples.resize(referenceVector.size());
        
 	printf("================= Prepare Realistic Tune/Reference Particle(s) with Stochastics turned ON (%d samples) ===========\n", realisticSamples);
 	for(int sample=0; sample<realisticSamples; ++sample) {
@@ -826,24 +913,19 @@ void BLManager::trackTuneAndReferenceParticles()
 		setPrimaryTrackID(-1,-1);
 		setNextSecondaryTrackID(1000);
 
-		// Each realistic realization must use a different PRNG stream.
-		// A fixed seed would collapse the ensemble and make the mean equal to the
-		// nominal reference state for every sample.
-		unsigned long seed = (realisticSeedBase +
-			(static_cast<unsigned long>(sample) * 7919UL)) & 0x7FFFFFFFUL;
-		if(seed == 0UL)
-			seed = 1UL;
-		CLHEP::HepRandom::setTheSeed((long)seed);
-		sampleSeeds.push_back(seed);
-
-		printf("=== Realistic sample %d/%d  seed=%lu ===\n", sample+1, realisticSamples, seed);
-
 		runManager->setCollectiveMode(false);
 		physics->setDoStochastics(FORCE_ON,0);
 		runManager->Initialize();
 
-		/*
-		//	if(keepDiagnosticRealisticSamples) {
+
+		// Each realistic realization must use a different PRNG stream.
+		// A fixed seed would collapse the ensemble and make the mean equal to the
+		// nominal reference state for every sample.
+		unsigned long seed = 0x1234567UL + (unsigned long)sample;
+                CLHEP::HepRandom::setTheSeed((long)seed);
+                printf("=== Realistic sample %d/%d  seed=%lu ===\n", sample+1, realisticSamples, seed);
+
+		
 			printf("================= Begin Realistic Tune Particle(s) =============\n");
 			state = REALISTICTUNE;
 			setEventID(-4);
@@ -871,10 +953,26 @@ void BLManager::trackTuneAndReferenceParticles()
 			runManager->BeamOn(referenceVector.size());
 			state = IDLE;
 
+			G4double zSample = BLCoordinates::getMostRecentReferenceZ();
+			G4double zSampleBin = nearestZGridBin(zSample, zTraceStart, zTraceStep);
+			std::map<G4double, ZTraceAccumulator>::iterator zIt =
+				zTraceAccumulator.find(zSampleBin);
+			if(zIt != zTraceAccumulator.end()) {
+				ZTraceAccumulator &acc = zIt->second;
+				for(unsigned i=0; i<referenceVector.size(); ++i) {
+					acc.count++;
+					acc.sumX += referenceVector[i]->getReferenceX();
+					acc.sumY += referenceVector[i]->getReferenceY();
+					acc.sumT += referenceVector[i]->getReferenceT();
+					acc.sumP += referenceVector[i]->getReferenceMomentum();
+					acc.sumXp += referenceVector[i]->getReferenceXp();
+					acc.sumYp += referenceVector[i]->getReferenceYp();
+				}
+			}
 
 			for(unsigned i=0; i<referenceVector.size(); ++i) {
 			  printf("Realistics reference %u: p=%.12f x=%.12f y=%.12f t=%.12f\n",
-				 i, referenceVector[i]->getReferenceMomentum(), referenceVector[i]->getReferenceX(), referenceVector[i]->getReferenceY(), referenceVector[i]->getReferenceZ(), referenceVector[i]->getReferenceT() );
+				 i, referenceVector[i]->getReferenceMomentum(), referenceVector[i]->getReferenceX(), referenceVector[i]->getReferenceY(), referenceVector[i]->getReferenceT() );
 			}
 
 
@@ -897,7 +995,30 @@ void BLManager::trackTuneAndReferenceParticles()
 			}
 
 	}
-	
+
+	// ------------------------------------------------------------------
+	// Final mean trace by z, written into the same mean-reference trace stream.
+	// EventID is left as reserved -5 for this final representative trace.
+	// ------------------------------------------------------------------
+	for(std::map<G4double, ZTraceAccumulator>::const_iterator it =
+		zTraceAccumulator.begin(); it != zTraceAccumulator.end(); ++it) {
+		const G4double z = it->first;
+		const ZTraceAccumulator &acc = it->second;
+		if(acc.count == 0)
+			continue;
+
+		const G4double n = static_cast<G4double>(acc.count);
+		const G4double xMean  = acc.sumX / n;
+		const G4double yMean  = acc.sumY / n;
+		const G4double tMean  = acc.sumT / n;
+		const G4double pMean  = acc.sumP / n;
+		const G4double xpMean = acc.sumXp / n;
+		const G4double ypMean = acc.sumYp / n;
+
+		appendMeanReferenceTraceRow(z, xMean, yMean, tMean,
+				pMean, xpMean, ypMean, 2212, 0);
+	}
+
 	//	physics->setDoStochastics(FORCE_OFF,0);
 	//runManager->Initialize(); //setCollectiveMode(collectiveMode);
 
@@ -913,11 +1034,43 @@ void BLManager::trackTuneAndReferenceParticles()
 	G4double selectedReferenceXp       = 0.0;
 	G4double selectedReferenceYp       = 0.0;
 	
-
-	if(referenceStateMethod == "")
-		referenceStateMethod = "mean";
 	if(realisticReferenceCount > 0 && referenceVector.size() > 0) {
         for(unsigned i = 0; i < referenceVector.size(); ++i) {
+
+			const size_t nP  = realisticReferenceMomentumSamples[i].size();
+    		const size_t nX  = realisticReferenceXSamples[i].size();
+    		const size_t nY  = realisticReferenceYSamples[i].size();
+    		const size_t nT  = realisticReferenceTSamples[i].size();
+    		const size_t nXp = realisticReferenceXpSamples[i].size();
+    		const size_t nYp = realisticReferenceYpSamples[i].size();
+
+			// Require at least one value for every parameter.
+			if (nP == 0 || nX == 0 || nY == 0 ||
+				nT == 0 || nXp == 0 || nYp == 0) {
+
+				printf("ERROR: Empty sample vector for reference particle %u\n", i);
+				G4Exception("BLManager", "MissingReferenceSamples",
+							FatalException,
+							"Cannot calculate representative state from empty samples.");
+			}
+
+			// Check that each vector contains the expected number of samples.
+			if (nP  != (size_t)realisticSamples ||
+				nX  != (size_t)realisticSamples ||
+				nY  != (size_t)realisticSamples ||
+				nT  != (size_t)realisticSamples ||
+				nXp != (size_t)realisticSamples ||
+				nYp != (size_t)realisticSamples) {
+
+				printf("ERROR: Unexpected sample count for reference particle %u\n", i);
+				printf("Expected: %d; p=%zu x=%zu y=%zu t=%zu xp=%zu yp=%zu\n",
+					realisticSamples, nP, nX, nY, nT, nXp, nYp);
+
+				G4Exception("BLManager", "UnexpectedReferenceSampleCount",
+							FatalException,
+							"Sample vectors do not contain the expected number of values.");
+			}
+
 	  
 	  if(referenceStateMethod == "mean"){
 	    selectedReferenceMomentum =
