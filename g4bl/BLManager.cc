@@ -58,6 +58,7 @@ http://www.gnu.org/copyleft/gpl.html
 #include "BLTime.hh"
 #include "BLZStep.hh"
 #include "BLTrackInfo.hh"
+#include "BLWriteAsciiFile.hh"
 #ifdef G4BL_GUI
 #include "BLQt.h"
 #endif
@@ -167,6 +168,39 @@ static void appendMeanReferenceTraceRow(G4double z,
 	data[16] = 0.0;
 	data[17] = 0.0;
 	nt->appendRow(data, 18);
+}
+
+static void writeMeanReferenceTextFile(const std::map<G4double, ZTraceAccumulator> &zTraceAccumulator,
+		const G4String &filename)
+{
+	if(filename == "")
+		return;
+
+	FILE *fp = BLWriteAsciiFile::fopen(filename);
+	if(!fp)
+		return;
+
+	fprintf(fp, "# z_mm x_mm y_mm t_ns p_MeVperC xp yp EventID=-5\n");
+	for(std::map<G4double, ZTraceAccumulator>::const_iterator it =
+		zTraceAccumulator.begin(); it != zTraceAccumulator.end(); ++it) {
+		const ZTraceAccumulator &acc = it->second;
+		if(acc.count == 0)
+			continue;
+
+		const G4double n = static_cast<G4double>(acc.count);
+		const G4double z = it->first / mm;
+		const G4double xMean = acc.sumX / n;
+		const G4double yMean = acc.sumY / n;
+		const G4double tMean = acc.sumT / n;
+		const G4double pMean = acc.sumP / n;
+		const G4double xpMean = acc.sumXp / n;
+		const G4double ypMean = acc.sumYp / n;
+
+		fprintf(fp, "%.6f %.6f %.6f %.6f %.6f %.12f %.12f\n",
+			z, xMean/mm, yMean/mm, tMean/ns,
+			pMean/MeV, xpMean, ypMean);
+	}
+	fflush(fp);
 }
 
 } // namespace
@@ -545,6 +579,14 @@ BLManager::BLManager() : G4VUserDetectorConstruction(),
 	BLSetParam unused_11("realisticSeed","19088743",
 		"Base RNG seed for realistic samples; sample k uses "
 		"base + 7919*k");
+	BLSetParam unused_12("realisticZMeanFile","realistic_zmean.txt",
+		"ASCII output file for per-z mean realistic reference values.");
+	BLSetParam unused_13("realisticZMeanStart","500.0",
+		"Start z for the per-z realistic mean output, in mm.");
+	BLSetParam unused_14("realisticZMeanStop","2000.0",
+		"Stop z for the per-z realistic mean output, in mm.");
+	BLSetParam unused_15("realisticZMeanStep","10.0",
+		"Step size z for the per-z realistic mean output, in mm.");
 	if(blManager)
 		G4Exception("BLManager","Object Already Exists",FatalException,
 									"");
@@ -889,9 +931,10 @@ void BLManager::trackTuneAndReferenceParticles()
 	
 	//	const bool keepDiagnosticRealisticSamples = true;
 	std::vector<unsigned long> sampleSeeds;
-	const G4double zTraceStart = 500.0 * mm;
-	const G4double zTraceStop  = 2000.0 * mm;
-	const G4double zTraceStep  = 10.0 * mm;
+	G4String zMeanFile = Param.getString("realisticZMeanFile");
+	const G4double zTraceStart = Param.getDouble("realisticZMeanStart") * mm;
+	const G4double zTraceStop  = Param.getDouble("realisticZMeanStop") * mm;
+	const G4double zTraceStep  = Param.getDouble("realisticZMeanStep") * mm;
 	std::map<G4double, ZTraceAccumulator> zTraceAccumulator;
 	for(G4double z = zTraceStart; z <= zTraceStop + 0.5 * zTraceStep;
 		z += zTraceStep) {
@@ -1018,6 +1061,8 @@ void BLManager::trackTuneAndReferenceParticles()
 		appendMeanReferenceTraceRow(z, xMean, yMean, tMean,
 				pMean, xpMean, ypMean, 2212, 0);
 	}
+	if(zMeanFile != "")
+		writeMeanReferenceTextFile(zTraceAccumulator, zMeanFile);
 
 	//	physics->setDoStochastics(FORCE_OFF,0);
 	//runManager->Initialize(); //setCollectiveMode(collectiveMode);
@@ -1145,8 +1190,8 @@ void BLManager::trackTuneAndReferenceParticles()
         setPrimaryTrackID(-1,-1);
         setNextSecondaryTrackID(1001);
 
-        physics->setDoStochastics(FORCE_OFF,0);
-        runManager->Initialize();
+       // physics->setDoStochastics(FORCE_OFF,0);
+        //runManager->Initialize();
 	printf("================== Assigning representative trajectory to Reference State with EventID -5 ===============\n");
 	state = MEANREFERENCE;
 	setEventID(-5);
