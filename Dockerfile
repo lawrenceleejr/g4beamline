@@ -1,5 +1,7 @@
-FROM --platform=linux/amd64 rootproject/root:6.26.14-ubuntu22.04 AS rootdist
 ARG GEANT4_VERSION=11.0.2
+
+FROM rootproject/root:6.26.14-ubuntu22.04 AS rootdist
+
 FROM artemisbeta/geant4:${GEANT4_VERSION}
 ARG GEANT4_VERSION
 
@@ -33,8 +35,7 @@ RUN for f in /lib/x86_64-linux-gnu/libQt5*.so*; do \
 ENV GSL_DIR=/usr
 ENV FFTW_DIR=/usr
 
-# artemisbeta/geant4 uses install path /usr/local/share/geant4/install/4.<version>
-# with shared libraries under .../lib.
+# Preserve the Geant4 installation paths from the original Dockerfile.
 ENV GEANT4_DIR=/usr/local/share/geant4/install/4.${GEANT4_VERSION}
 ENV GEANT4_LIB_DIR="${GEANT4_DIR}/lib"
 
@@ -45,19 +46,16 @@ ENV ROOT_DIR=/opt/g4beamline/root
 ENV PATH="${ROOTSYS}/bin:${PATH}"
 ENV LD_LIBRARY_PATH="${ROOTSYS}/lib:${GEANT4_LIB_DIR}:${LD_LIBRARY_PATH}"
 ENV PYTHONPATH="${ROOTSYS}/lib"
-RUN set -eux; command -v root; command -v root-config root-config --version root-config --prefix
+RUN set -eux; \
+    command -v root; \
+    command -v root-config; \
+    root-config --version; \
+    root-config --prefix
 
-# Copy g4beamline source.
-# COPY does not remove pre-existing files (such as /opt/g4beamline/root),
-# so the ROOT tree is preserved.
+# Copy g4beamline source, preserving the ROOT tree already copied above.
 COPY . /opt/g4beamline
 
-# Build and install g4beamline.
-# IMPORTANT: CMakeLists.txt forces CMAKE_INSTALL_PREFIX == CMAKE_BINARY_DIR,
-# so "cmake --build . --target install" installs everything *into* the build
-# directory.  The programs must be run from there.  Do NOT remove the build
-# directory afterwards.  Only intermediate build artifacts are cleaned up to
-# keep the image size reasonable.
+# This project installs into the build directory; retain it for runtime.
 RUN set -eux; \
     mkdir -p /opt/g4beamline/build; \
     cd /opt/g4beamline/build; \
@@ -71,8 +69,7 @@ RUN set -eux; \
     find /opt/g4beamline/build -type f -name "*.o" -delete; \
     find /opt/g4beamline/build -type d -name "CMakeFiles" -print0 | xargs -0r rm -rf
 
-# Add the build/install directory to PATH so all g4beamline executables
-# (g4bl, g4bltest, g4blgui, …) are on the default path.
-ENV PATH="/opt/g4beamline/build:${PATH}"
+# Include both the executable directory and the build directory.
+ENV PATH="/opt/g4beamline/build/bin:/opt/g4beamline/build:${PATH}"
 
 WORKDIR /opt/g4beamline/build
