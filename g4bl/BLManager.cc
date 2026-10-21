@@ -1107,7 +1107,29 @@ void BLManager::trackTuneAndReferenceParticles()
 	}
 	
 		writeMeanReferenceTextFile(zTraceAccumulator, zMeanFile);
-	
+
+		for(unsigned i = 0; i < referenceVector.size(); ++i) {
+			referenceVector[i]->setMeanReferenceState(
+						      pMean,
+						      xMean,
+						      yMean,
+						      tMean,
+						      xpMean,
+						      ypMean);
+	  }
+		clearTrackIDMap();
+		setPrimaryTrackID(-1,-1);
+		setNextSecondaryTrackID(1001);
+
+		// physics->setDoStochastics(FORCE_OFF,0);
+		//runManager->Initialize();
+	    printf("================== Assigning representative trajectory to Reference State with EventID -5 ===============\n");
+	    state = MEANREFERENCE;
+	    setEventID(-5);
+	    beamIndex = 0;
+	    runManager->BeamOn(referenceVector.size());
+	    state = IDLE;
+
 	//	physics->setDoStochastics(FORCE_OFF,0);
 	//runManager->Initialize(); //setCollectiveMode(collectiveMode);
 
@@ -1115,7 +1137,7 @@ void BLManager::trackTuneAndReferenceParticles()
 	// ensemble median. For production we use the mean state, while the median
 	// path remains available as a diagnostic alternative.
 
-	G4String referenceStateMethod = Param.getString("referenceStateMethod");
+	/*G4String referenceStateMethod = Param.getString("referenceStateMethod");
 	G4double selectedReferenceMomentum = 0.0;
 	G4double selectedReferenceX        = 0.0;
 	G4double selectedReferenceY        = 0.0;
@@ -1230,6 +1252,7 @@ void BLManager::trackTuneAndReferenceParticles()
 	    printf("WARNING: unknown referenceStateMethod");
 	      }
 	}}
+		  
 	 clearTrackIDMap();
         setPrimaryTrackID(-1,-1);
         setNextSecondaryTrackID(1001);
@@ -1242,7 +1265,7 @@ void BLManager::trackTuneAndReferenceParticles()
 	beamIndex = 0;
 	runManager->BeamOn(referenceVector.size());
 	state = IDLE;
-
+*/
 
 	/*
 	// Validate the method.
