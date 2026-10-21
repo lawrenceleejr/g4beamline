@@ -1,7 +1,7 @@
+FROM --platform=linux/amd64 rootproject/root:6.26.14-ubuntu22.04 AS rootdist
 ARG GEANT4_VERSION=11.0.2
 FROM artemisbeta/geant4:${GEANT4_VERSION}
 ARG GEANT4_VERSION
-ARG ROOT_TARBALL=root_v6.26.14.Linux-ubuntu22-x86_64-gcc11.4.tar.gz
 
 SHELL ["/bin/bash", "-lc"]
 
@@ -38,19 +38,14 @@ ENV FFTW_DIR=/usr
 ENV GEANT4_DIR=/usr/local/share/geant4/install/4.${GEANT4_VERSION}
 ENV GEANT4_LIB_DIR="${GEANT4_DIR}/lib"
 
-RUN set -eux; \
-    wget --tries=3 --waitretry=5 --timeout=60 \
-        -O /tmp/root.tar.gz \
-        https://root.cern/download/${ROOT_TARBALL}; \
-    tar xzf /tmp/root.tar.gz -C /opt/g4beamline; \
-    rm -f /tmp/root.tar.gz
+COPY --from=rootdist /opt/root /opt/g4beamline/root
 
 ENV ROOTSYS=/opt/g4beamline/root
 ENV ROOT_DIR=/opt/g4beamline/root
 ENV PATH="${ROOTSYS}/bin:${PATH}"
 ENV LD_LIBRARY_PATH="${ROOTSYS}/lib:${GEANT4_LIB_DIR}:${LD_LIBRARY_PATH}"
 ENV PYTHONPATH="${ROOTSYS}/lib"
-RUN set -eux; command -v root; command -v root-config
+RUN set -eux; command -v root; command -v root-config root-config --version root-config --prefix
 
 # Copy g4beamline source.
 # COPY does not remove pre-existing files (such as /opt/g4beamline/root),
