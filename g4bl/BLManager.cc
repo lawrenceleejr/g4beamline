@@ -1009,9 +1009,9 @@ void BLManager::trackTuneAndReferenceParticles()
                 printf("=== Realistic sample %d/%d  seed=%lu ===\n", sample+1, realisticSamples, seed);
 
 		
-			printf("================= Begin Realistic Tune Particle(s) =============\n");
-			state = REALISTICTUNE;
-			setEventID(-4);
+		/**/	printf("================= Begin Realistic Tune Particle(s) =============\n");
+		/*	state = TUNE;
+			setEventID(-2);
 			beamIndex = 0;
 			runManager->BeamOn(referenceVector.size());
 			state = IDLE;
@@ -1025,13 +1025,13 @@ void BLManager::trackTuneAndReferenceParticles()
 			realisticTuneYpSum[i] += referenceVector[i]->getReferenceYp();
 			realisticTuneSum += referenceVector[i]->getTuneMomentum();
 			++realisticTuneCount;
-		}
+		}*/
 		//}*/
 		
 		//if(keepDiagnosticRealisticSamples) {
 			printf("================== Begin Realistic Reference Particle(s) ===============\n");
-			state = REALISTICREFERENCE;
-			setEventID(-3);
+			state = TUNE; //REALISTICREFERENCE;
+			setEventID(-2);
 			beamIndex = 0;
 			runManager->BeamOn(referenceVector.size());
 			state = IDLE;
@@ -1134,14 +1134,14 @@ void BLManager::trackTuneAndReferenceParticles()
 
 		runManager->setCollectiveMode(false);
 
-	printf("================= Prepare Tune Particle(s) ===========\n");
+	printf("================= Done Tune Particle(s) ===========\n");
 	
-	printf("================= Begin Tune Particle(s) =============\n");
-	state = TUNE;
-	setEventID(-2);
-	beamIndex = 0;
-	runManager->BeamOn(referenceVector.size());
-	state = IDLE;
+	//printf("================= Begin Tune Particle(s) =============\n");
+//state = TUNE;
+	//setEventID(-2);
+	//beamIndex = 0;
+	//runManager->BeamOn(referenceVector.size());
+	//state = IDLE;
 
 	// now track center particle
 	physics->setDoStochastics(FORCE_OFF,0);
