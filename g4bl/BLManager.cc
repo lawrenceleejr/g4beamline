@@ -1030,8 +1030,8 @@ void BLManager::trackTuneAndReferenceParticles()
 		
 		//if(keepDiagnosticRealisticSamples) {
 			printf("================== Begin Realistic Reference Particle(s) ===============\n");
-			state = TUNE; //REALISTICREFERENCE;
-			setEventID(-2);
+			state = REALISTICREFERENCE;
+			setEventID(-3);
 			beamIndex = 0;
 			runManager->BeamOn(referenceVector.size());
 			state = IDLE;
@@ -1101,7 +1101,22 @@ void BLManager::trackTuneAndReferenceParticles()
 	
 	writeMeanReferenceTextFile(zTraceAccumulator, zMeanFile);
 
-	if(populatedBins == 0) {
+	for (unsigned i = 0; i < referenceVector.size(); ++i) {
+    referenceVector[i]->setMeanReferenceState(
+        pMean, xMean, yMean, tMean, xpMean, ypMean);
+}
+// final single calibration pass
+physics->setDoStochastics(FORCE_OFF, 0);
+runManager->Initialize();
+
+state = TUNE;
+setEventID(-2);
+beamIndex = 0;
+runManager->BeamOn(referenceVector.size());
+state = IDLE;
+
+
+	/*if(populatedBins == 0) {
     	G4Exception("BLManager", "NoMeanLaunchSamples", FatalException,
                 "Cannot set mean launch state: no populated z bins.");
 	} 
@@ -1142,6 +1157,7 @@ void BLManager::trackTuneAndReferenceParticles()
 	//beamIndex = 0;
 	//runManager->BeamOn(referenceVector.size());
 	//state = IDLE;
+*/
 
 	// now track center particle
 	physics->setDoStochastics(FORCE_OFF,0);
