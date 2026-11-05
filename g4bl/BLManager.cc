@@ -655,6 +655,9 @@ BLManager::BLManager() : G4VUserDetectorConstruction(),
 		"Stop z for the per-z realistic mean output, in mm.");
 	BLSetParam unused_15("realisticZMeanStep","10.0",
 		"Step size z for the per-z realistic mean output, in mm.");
+	BLSetParam unused_16("realisticTuneMeanZ", "",
+    "Centerline z in mm at which to select the ensemble mean; "
+    "the final tune/reference generator must launch at this same z.");
 	if(blManager)
 		G4Exception("BLManager","Object Already Exists",FatalException,
 									"");
@@ -909,6 +912,249 @@ void BLManager::printCavityTimeSummary() const
 }
 */
 
+namespace {
+
+struct TunePlaneSum {
+    int count;
+    int lastSample;
+    G4double sum[6]; // x, y, t, p, xp, yp
+
+    TunePlaneSum() : count(0), lastSample(-1) {
+        for(int k = 0; k < 6; ++k) sum[k] = 0.0;
+    }
+};
+
+struct TuneEnsemble {
+    int sample;
+    unsigned referenceIndex;
+    std::map<G4double, std::vector<TunePlaneSum> > planes;
+
+    TuneEnsemble() : sample(-1), referenceIndex(0) { }
+};
+
+static TuneEnsemble *activeTuneEnsemble = 0;
+
+class TuneEnsemblePlane : public BLManager::ZSteppingAction {
+    G4double z;
+public:
+    explicit TuneEnsemblePlane(G4double planeZ) : z(planeZ) { }
+
+    virtual void UserZSteppingAction(const G4Track *track) {
+        TuneEnsemble *ensemble = activeTuneEnsemble;
+        if(!ensemble || !track || track->GetParentID() != 0) return;
+
+        std::map<G4double, std::vector<TunePlaneSum> >::iterator it =
+            ensemble->planes.find(z);
+        if(it == ensemble->planes.end() ||
+           ensemble->referenceIndex >= it->second.size()) return;
+
+        TunePlaneSum &s = it->second[ensemble->referenceIndex];
+        if(s.lastSample == ensemble->sample) return;
+
+        BLCoordinates *coord =
+            (BLCoordinates *)track->GetUserInformation();
+        if(!coord || !coord->isValid()) return;
+
+        G4ThreeVector position;
+        coord->getCoords(BLCOORD_CENTERLINE, position);
+        const G4ThreeVector momentum =
+            coord->getRotation(BLCOORD_CENTERLINE) * track->GetMomentum();
+        if(momentum[2] <= 1.0e-12 * MeV) return;
+
+        const G4double values[6] = {
+            position[0], position[1], track->GetGlobalTime(),
+            momentum.mag(), momentum[0] / momentum[2],
+            momentum[1] / momentum[2]
+        };
+        for(int k = 0; k < 6; ++k)
+            if(!std::isfinite(values[k])) return;
+
+        for(int k = 0; k < 6; ++k) s.sum[k] += values[k];
+        ++s.count;
+        s.lastSample = ensemble->sample;
+    }
+};
+
+static void registerTuneEnsemblePlane(BLManager *manager, G4double z)
+{
+    // Registered callbacks must outlive trackTuneAndReferenceParticles().
+    // Reuse them if that function is called again.
+    static std::map<G4double, TuneEnsemblePlane *> callbacks;
+    if(callbacks.find(z) == callbacks.end()) {
+        TuneEnsemblePlane *callback = new TuneEnsemblePlane(z);
+        callbacks[z] = callback;
+        manager->registerZStep(z, callback, 8); // REALISTICTUNE only
+    }
+}
+
+static void writeTuneEnsemble(const TuneEnsemble &ensemble,
+                             const G4String &filename)
+{
+    if(filename.empty()) return;
+    FILE *fp = BLWriteAsciiFile::fopen(filename);
+    if(!fp) {
+        G4Exception("BLManager", "TuneMeanOutput", FatalException,
+                    "Cannot open the stochastic tune mean output file.");
+        return;
+    }
+
+    fprintf(fp, "# reference_index z_mm N x_mm y_mm t_ns "
+                "p_MeVperC xp yp\n");
+    for(std::map<G4double, std::vector<TunePlaneSum> >::const_iterator it =
+            ensemble.planes.begin(); it != ensemble.planes.end(); ++it) {
+        for(unsigned i = 0; i < it->second.size(); ++i) {
+            const TunePlaneSum &s = it->second[i];
+            if(s.count == 0) continue;
+            const G4double n = s.count;
+            fprintf(fp, "%u %.9g %d %.12g %.12g %.12g %.12g %.12g %.12g\n",
+                    i, it->first / mm, s.count,
+                    s.sum[0] / n / mm, s.sum[1] / n / mm,
+                    s.sum[2] / n / ns, s.sum[3] / n / MeV,
+                    s.sum[4] / n, s.sum[5] / n);
+        }
+    }
+    fflush(fp);
+}
+
+} // namespace
+
+void BLManager::trackTuneAndReferenceParticles()
+{
+    if(referenceVector.empty()) return;
+    if(!physics) {
+        G4Exception("BLManager", "No physics registered", FatalException, "");
+        return;
+    }
+
+    if(Param.getString("realisticTuneMeanZ").empty()) {
+        G4Exception("BLManager", "MissingTuneMeanPlane", FatalException,
+            "Set realisticTuneMeanZ to the final tune generator launch z.");
+        return;
+    }
+
+    const int nSamples = std::max(1, Param.getInt("realisticSamples"));
+    const int configuredSeed = Param.getInt("realisticSeed");
+    const long seedBase = configuredSeed > 0 ? configuredSeed : 19088743L;
+    const G4double zStart = Param.getDouble("realisticZMeanStart") * mm;
+    const G4double zStop = Param.getDouble("realisticZMeanStop") * mm;
+    const G4double zStep = Param.getDouble("realisticZMeanStep") * mm;
+    const G4double meanZ = Param.getDouble("realisticTuneMeanZ") * mm;
+
+    if(!std::isfinite(zStart) || !std::isfinite(zStop) ||
+       !std::isfinite(zStep) || !std::isfinite(meanZ) ||
+       zStep <= 0.0 || zStop < zStart || zStart + zStep == zStart) {
+        G4Exception("BLManager", "InvalidTuneMeanGrid", FatalException,
+                    "Require finite z values, stop >= start, and step > 0.");
+        return;
+    }
+
+    TuneEnsemble ensemble;
+    for(G4double z = zStart; z <= zStop; ) {
+        ensemble.planes[z] = std::vector<TunePlaneSum>(referenceVector.size());
+        const G4double nextZ = z + zStep;
+        if(nextZ <= z) {
+            G4Exception("BLManager", "InvalidTuneMeanGrid", FatalException,
+                        "The z grid cannot advance at this precision.");
+            return;
+        }
+        z = nextZ;
+    }
+    // The selected plane is included even if it is outside the trace grid.
+    ensemble.planes[meanZ] =
+        std::vector<TunePlaneSum>(referenceVector.size());
+
+    for(std::map<G4double, std::vector<TunePlaneSum> >::const_iterator it =
+            ensemble.planes.begin(); it != ensemble.planes.end(); ++it)
+        registerTuneEnsemblePlane(this, it->first);
+
+    const bool collectiveMode = runManager->getCollectiveMode();
+    runManager->setCollectiveMode(false);
+    physics->setDoStochastics(FORCE_ON, 0);
+    runManager->Initialize();
+
+    activeTuneEnsemble = &ensemble;
+    for(int sample = 0; sample < nSamples; ++sample) {
+        ensemble.sample = sample;
+        clearTrackIDMap();
+        setPrimaryTrackID(-1, -1);
+        setNextSecondaryTrackID(1001);
+
+        // Positive seeds, with the configured base and a 7919 stride.
+        const long seed = 1L + (long)((seedBase - 1LL +
+                                      7919LL * sample) % 2147483646LL);
+        CLHEP::HepRandom::setTheSeed(seed);
+        printf("=== Stochastic tune sample %d/%d, seed=%ld ===\n",
+               sample + 1, nSamples, seed);
+
+        state = REALISTICTUNE;
+        setEventID(-4);
+        beamIndex = 0;
+        runManager->BeamOn(referenceVector.size());
+        state = IDLE;
+    }
+    activeTuneEnsemble = 0;
+
+    writeTuneEnsemble(ensemble, Param.getString("realisticZMeanFile"));
+
+    const std::vector<TunePlaneSum> &selected = ensemble.planes[meanZ];
+    for(unsigned i = 0; i < referenceVector.size(); ++i) {
+        const TunePlaneSum &s = selected[i];
+        if(s.count != nSamples) {
+            printf("Reference %u: %d/%d realizations reached z=%.9g mm\n",
+                   i, s.count, nSamples, meanZ / mm);
+            physics->setDoStochastics(NORMAL, 0);
+            runManager->setCollectiveMode(collectiveMode);
+            beamIndex = 0;
+            G4Exception("BLManager", "IncompleteTuneMean", FatalException,
+                "The selected mean plane must have one valid forward "
+                "primary crossing from every stochastic realization.");
+            return;
+        }
+
+        const G4double n = s.count;
+        const G4double x = s.sum[0] / n;
+        const G4double y = s.sum[1] / n;
+        const G4double t = s.sum[2] / n;
+        const G4double p = s.sum[3] / n;
+        const G4double xp = s.sum[4] / n;
+        const G4double yp = s.sum[5] / n;
+
+        printf("Mean tune state %u at z=%.9g mm: "
+               "x=%.12g y=%.12g t=%.12g p=%.12g xp=%.12g yp=%.12g\n",
+               i, meanZ / mm, x / mm, y / mm, t / ns, p / MeV, xp, yp);
+
+        referenceVector[i]->setMeanTuneState(p, x, y, t, xp, yp);
+        referenceVector[i]->setMeanReferenceState(p, x, y, t, xp, yp);
+    }
+
+    // One deterministic calibration phase after selecting the mean state.
+    physics->setDoStochastics(FORCE_OFF, 0);
+    runManager->Initialize();
+    clearTrackIDMap();
+    setPrimaryTrackID(-1, -1);
+    setNextSecondaryTrackID(1001);
+    state = TUNE;
+    setEventID(-2);
+    beamIndex = 0;
+    runManager->BeamOn(referenceVector.size());
+    state = IDLE;
+
+    // Preserve the subsequent deterministic reference phase.
+    clearTrackIDMap();
+    setPrimaryTrackID(-1, -1);
+    setNextSecondaryTrackID(1001);
+    state = REFERENCE;
+    setEventID(-1);
+    beamIndex = 0;
+    runManager->BeamOn(referenceVector.size());
+    state = IDLE;
+    beamIndex = 0;
+
+    physics->setDoStochastics(NORMAL, 0);
+    runManager->setCollectiveMode(collectiveMode);
+}
+
+/*
 void BLManager::trackTuneAndReferenceParticles()
 {
 	if(referenceVector.size() == 0)
@@ -1015,7 +1261,7 @@ void BLManager::trackTuneAndReferenceParticles()
                 printf("=== Realistic sample %d/%d  seed=%lu ===\n", sample+1, realisticSamples, seed);
 
 		
-		/**/	printf("================= Begin Realistic Tune Particle(s) =============\n");
+		/*	printf("================= Begin Realistic Tune Particle(s) =============\n");
 		/*	state = TUNE;
 			setEventID(-2);
 			beamIndex = 0;
@@ -1031,8 +1277,8 @@ void BLManager::trackTuneAndReferenceParticles()
 			realisticTuneYpSum[i] += referenceVector[i]->getReferenceYp();
 			realisticTuneSum += referenceVector[i]->getTuneMomentum();
 			++realisticTuneCount;
-		}*/
-		//}*/
+		}
+		//}
 		
 		//if(keepDiagnosticRealisticSamples) {
 			printf("================== Begin Realistic Reference Particle(s) ===============\n");
@@ -1141,7 +1387,7 @@ void BLManager::trackTuneAndReferenceParticles()
 		referenceVector[i]->setMeanReferenceState(
 			meanP, meanX, meanY, meanT, meanXp, meanYp);
 	}
-
+    runManager->setCollectiveMode(false);	
 	// Final single tune calibration pass: one deterministic eventID -2 block,
 	// using the ensemble mean state, not the last populated z-bin.
 	physics->setDoStochastics(FORCE_OFF, 0);
@@ -1682,7 +1928,7 @@ if(referenceStateMethod == "medoid") {
  beamIndex = 0;
  runManager->BeamOn(referenceVector.size());
  state = IDLE;
-*/
+
 	
  //physics->setDoStochastics(FORCE_OFF,0);                                                                                                                                                              
         //runManager->Initialize(); //setCollectiveMode(collectiveMode);
@@ -1691,6 +1937,7 @@ if(referenceStateMethod == "medoid") {
  runManager->setCollectiveMode(collectiveMode);
 
 }
+*/
 
 void BLManager::handleSourceRun()
 {
@@ -2117,9 +2364,7 @@ void BLManager::UserSteppingAction(const G4Step *step)
 									"");
 	}
 
-	if(state == REALISTICREFERENCE)
-		accumulateRealisticReferenceStep(track);
-
+	
 	// steppingVerbose print moved to the top of this routine
 	if(steppingVerbose > 0) { 
 		static bool first=true;
@@ -2400,13 +2645,14 @@ void BLManager::GeneratePrimaries(G4Event *event)
 		}
 		goto end_run;
 	case REALISTICTUNE:
-		while(beamIndex < referenceVector.size()) {
-		  // Event ID is already set by trackTuneAndReferenceParticles()
-		  event->SetEventID(eventID);
-		  if(referenceVector[beamIndex++]->
-		     generateReferenceParticle(event))
-		    return;
-		}
+    while(beamIndex < referenceVector.size()) {
+        event->SetEventID(eventID);
+        if(activeTuneEnsemble)
+            activeTuneEnsemble->referenceIndex = beamIndex;
+        if(referenceVector[beamIndex++]->generateReferenceParticle(event))
+            return;
+    }
+    goto end_run;
 		goto end_run;
         case REALISTICREFERENCE:
 		 while(beamIndex < referenceVector.size()) {
