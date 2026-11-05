@@ -116,6 +116,26 @@ public:
 	/// getTuneMomentum() returns the current tune momentum.
 	virtual G4double getTuneMomentum() const { return tuneMomentum; }
 
+	/// setMeanTuneState() updates the tune particle state from the ensemble
+	/// mean computed from the stochastic realistic samples.
+	void setMeanTuneState(G4double meanTuneMomentum,
+				G4double meanBeamX = 0.0,
+				G4double meanBeamY = 0.0,
+				G4double meanBeamT = 0.0,
+				G4double meanBeamXp = 0.0,
+				G4double meanBeamYp = 0.0)
+	{
+		tuneMomentum = meanTuneMomentum;
+		referenceMomentum = meanTuneMomentum;
+		beamX = meanBeamX;
+		beamY = meanBeamY;
+		beamT = meanBeamT;
+		beamXp = meanBeamXp;
+		beamYp = meanBeamYp;
+		G4ThreeVector local(beamX,beamY,beamZ);
+		BLCoordinates::getCurrentGlobal(local,position);
+	}
+
 	/// setMeanReferenceState() updates the reference particle state from the
 	/// ensemble mean computed from the stochastic realistic samples.
 	void setMeanReferenceState(G4double meanReferenceMomentum,

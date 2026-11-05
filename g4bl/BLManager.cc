@@ -1060,12 +1060,13 @@ void BLManager::trackTuneAndReferenceParticles()
 
 	// ------------------------------------------------------------------
 	// Final mean trace by z, written into the same mean-reference trace stream.
-	// EventID is left as reserved -5 for this final representative trace.
+	// This is computed once, from the stochastic ensemble, and then used for a
+	// single deterministic TUNE calibration pass.
 	// ------------------------------------------------------------------
-	G4double n, z, xMean, yMean, tMean, pMean, xpMean, ypMean;
-	G4double sumX = 0.0, sumY = 0.0, sumT = 0.0;
-	G4double sumP = 0.0, sumXp = 0.0, sumYp = 0.0;
-	std::size_t populatedBins = 0;
+	G4double z = 0.0;
+	G4double meanX = 0.0, meanY = 0.0, meanT = 0.0;
+	G4double meanP = 0.0, meanXp = 0.0, meanYp = 0.0;
+	G4double nBins = 0.0;
 	for(std::map<G4double, ZTraceAccumulator>::const_iterator it =
 		zTraceAccumulator.begin(); it != zTraceAccumulator.end(); ++it) {
 		z = it->first;
@@ -1073,81 +1074,67 @@ void BLManager::trackTuneAndReferenceParticles()
 		if(acc.count == 0)
 			continue;
 
-		 n = static_cast<G4double>(acc.count);
-		 xMean  = acc.sumX / n;
-		 yMean  = acc.sumY / n;
-		 tMean  = acc.sumT / n;
-		 pMean  = acc.sumP / n;
-		 xpMean = acc.sumXp / n;
-		 ypMean = acc.sumYp / n;
+		const G4double n = static_cast<G4double>(acc.count);
+		const G4double xBinMean  = acc.sumX / n;
+		const G4double yBinMean  = acc.sumY / n;
+		const G4double tBinMean  = acc.sumT / n;
+		const G4double pBinMean  = acc.sumP / n;
+		const G4double xpBinMean = acc.sumXp / n;
+		const G4double ypBinMean = acc.sumYp / n;
 
-		 sumX  += acc.sumX / n;
-		sumY  += acc.sumY / n;
-		sumT  += acc.sumT / n;
-		sumP  += acc.sumP / n;
-		sumXp += acc.sumXp / n;
-		sumYp += acc.sumYp / n;
-		++populatedBins;
-
-
+		meanX += xBinMean;
+		meanY += yBinMean;
+		meanT += tBinMean;
+		meanP += pBinMean;
+		meanXp += xpBinMean;
+		meanYp += ypBinMean;
+		++nBins;
 
 		printf("MeanReference z=%.6f mm: x=%.12f mm y=%.12f mm t=%.12f ns p=%.12f MeV/c xp=%.12f yp=%.12f\n",
-			z / mm, xMean / mm, yMean / mm, tMean / ns,
-			pMean / MeV, xpMean, ypMean);
+			z / mm, xBinMean / mm, yBinMean / mm, tBinMean / ns,
+			pBinMean / MeV, xpBinMean, ypBinMean);
 
-		appendMeanReferenceTraceRow(z, xMean, yMean, tMean,
-				pMean, xpMean, ypMean, 2212, 0);
+		appendMeanReferenceTraceRow(z, xBinMean, yBinMean, tBinMean,
+				pBinMean, xpBinMean, ypBinMean, 2212, 0);
 	}
-	
+
 	writeMeanReferenceTextFile(zTraceAccumulator, zMeanFile);
 
-	for (unsigned i = 0; i < referenceVector.size(); ++i) {
-    referenceVector[i]->setMeanReferenceState(
-        pMean, xMean, yMean, tMean, xpMean, ypMean);
-}
-// final single calibration pass
-physics->setDoStochastics(FORCE_OFF, 0);
-runManager->Initialize();
+	if(nBins == 0.0) {
+		G4Exception("BLManager", "NoMeanLaunchSamples", FatalException,
+				"Cannot set mean launch state: no populated z bins.");
+		return;
+	}
 
-state = TUNE;
-setEventID(-2);
-beamIndex = 0;
-runManager->BeamOn(referenceVector.size());
-state = IDLE;
+	meanX /= nBins;
+	meanY /= nBins;
+	meanT /= nBins;
+	meanP /= nBins;
+	meanXp /= nBins;
+	meanYp /= nBins;
 
+	printf("Launch means over %.0f populated z bins: "
+		   "x=%.12f mm y=%.12f mm t=%.12f ns "
+		   "p=%.12f MeV/c xp=%.12f yp=%.12f\n",
+		nBins, meanX/mm, meanY/mm, meanT/ns,
+		meanP/MeV, meanXp, meanYp);
 
-	/*if(populatedBins == 0) {
-    	G4Exception("BLManager", "NoMeanLaunchSamples", FatalException,
-                "Cannot set mean launch state: no populated z bins.");
-	} 
-	else {
-    const G4double nBins = static_cast<G4double>(populatedBins);
-    const G4double startingX  = sumX / nBins;
-    const G4double startingY  = sumY / nBins;
-    const G4double startingT  = sumT / nBins;
-    const G4double startingP  = sumP / nBins;
-    const G4double startingXp = sumXp / nBins;
-    const G4double startingYp = sumYp / nBins;
-		
-	printf("Launch means over %zu populated z bins: "
-           "x=%.12f mm y=%.12f mm t=%.12f ns "
-           "p=%.12f MeV/c xp=%.12f yp=%.12f\n",
-           populatedBins, startingX/mm, startingY/mm, startingT/ns,
-           startingP/MeV, startingXp, startingYp);
+	for(unsigned i = 0; i < referenceVector.size(); ++i) {
+		referenceVector[i]->setMeanTuneState(
+			meanP, meanX, meanY, meanT, meanXp, meanYp);
+		referenceVector[i]->setMeanReferenceState(
+			meanP, meanX, meanY, meanT, meanXp, meanYp);
+	}
 
-    // The existing accumulator is shared by all reference particles.
-    // This assigns the same averaged state to each; beamZ is unchanged.
-    for(unsigned i = 0; i < referenceVector.size(); ++i) {
-        referenceVector[i]->setMeanReferenceState(
-            startingP, startingX, startingY, startingT,
-            startingXp, startingYp);
-    }
-}
-		clearTrackIDMap();
-		setPrimaryTrackID(-1,-1);
-		setNextSecondaryTrackID(1001);
-
-		runManager->setCollectiveMode(false);
+	// Final single tune calibration pass: one deterministic eventID -2 block,
+	// using the ensemble mean state, not the last populated z-bin.
+	physics->setDoStochastics(FORCE_OFF, 0);
+	runManager->Initialize();
+	state = TUNE;
+	setEventID(-2);
+	beamIndex = 0;
+	runManager->BeamOn(referenceVector.size());
+	state = IDLE;
 
 	printf("================= Done Tune Particle(s) ===========\n");
 	
@@ -1157,7 +1144,7 @@ state = IDLE;
 	//beamIndex = 0;
 	//runManager->BeamOn(referenceVector.size());
 	//state = IDLE;
-*/
+
 
 	// now track center particle
 	physics->setDoStochastics(FORCE_OFF,0);
