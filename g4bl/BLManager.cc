@@ -162,8 +162,14 @@ static void accumulateRealisticReferenceStep(const G4Track *track)
 	G4ThreeVector momentum = track->GetMomentum();
 	G4ThreeVector localMom = coord->getRotation(BLCOORD_CENTERLINE) * momentum;
 	G4double p = momentum.mag();
-	G4double xp = localMom[0] / localMom[2];
-	G4double yp = localMom[1] / localMom[2];
+	const G4double pz = localMom[2];
+	if(std::fabs(pz) < 1.0e-12 || !std::isfinite(p) || !std::isfinite(localPos[0]) ||
+		!std::isfinite(localPos[1]) || !std::isfinite(track->GetGlobalTime()))
+		return;
+	G4double xp = localMom[0] / pz;
+	G4double yp = localMom[1] / pz;
+	if(!std::isfinite(xp) || !std::isfinite(yp))
+		return;
 
 	acc.count++;
 	acc.sumX += localPos[0];
@@ -1081,6 +1087,10 @@ void BLManager::trackTuneAndReferenceParticles()
 		const G4double pBinMean  = acc.sumP / n;
 		const G4double xpBinMean = acc.sumXp / n;
 		const G4double ypBinMean = acc.sumYp / n;
+		if(!std::isfinite(xBinMean) || !std::isfinite(yBinMean) ||
+			!std::isfinite(tBinMean) || !std::isfinite(pBinMean) ||
+			!std::isfinite(xpBinMean) || !std::isfinite(ypBinMean))
+			continue;
 
 		meanX += xBinMean;
 		meanY += yBinMean;
@@ -1112,6 +1122,12 @@ void BLManager::trackTuneAndReferenceParticles()
 	meanP /= nBins;
 	meanXp /= nBins;
 	meanYp /= nBins;
+	if(!std::isfinite(meanX) || !std::isfinite(meanY) || !std::isfinite(meanT) ||
+		!std::isfinite(meanP) || !std::isfinite(meanXp) || !std::isfinite(meanYp)) {
+		G4Exception("BLManager", "BadMeanTuneState", FatalException,
+				"Mean tune/reference state contains NaN or infinity.");
+		return;
+	}
 
 	printf("Launch means over %.0f populated z bins: "
 		   "x=%.12f mm y=%.12f mm t=%.12f ns "
